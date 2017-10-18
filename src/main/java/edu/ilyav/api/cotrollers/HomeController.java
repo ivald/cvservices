@@ -1,8 +1,8 @@
 package edu.ilyav.api.cotrollers;
 
-import edu.ilyav.api.Models.Education;
-import edu.ilyav.api.Models.Language;
-import edu.ilyav.api.Models.Profile;
+import edu.ilyav.api.models.Education;
+import edu.ilyav.api.models.Language;
+import edu.ilyav.api.models.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

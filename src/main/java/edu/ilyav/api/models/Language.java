@@ -1,4 +1,4 @@
-package edu.ilyav.api.Models;
+package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
