@@ -1,4 +1,4 @@
-package edu.ilyav.cvservices;
+package edu.ilyav.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
