@@ -21,6 +21,9 @@ public class Profile {
     @JsonManagedReference
     private List<Language> languageList;
 
+    @JsonManagedReference
+    private Summary summary;
+
 
     public String getFirstName() {
         return firstName;
@@ -76,5 +79,13 @@ public class Profile {
 
     public void setLanguageList(List<Language> languageList) {
         this.languageList = languageList;
+    }
+
+    public Summary getSummary() {
+        return summary;
+    }
+
+    public void setSummary(Summary summary) {
+        this.summary = summary;
     }
 }
