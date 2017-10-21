@@ -24,6 +24,8 @@ public class Profile {
     @JsonManagedReference
     private Summary summary;
 
+    @JsonManagedReference
+    private List<Experience> experienceList;
 
     public String getFirstName() {
         return firstName;
@@ -87,5 +89,13 @@ public class Profile {
 
     public void setSummary(Summary summary) {
         this.summary = summary;
+    }
+
+    public List<Experience> getExperienceList() {
+        return experienceList;
+    }
+
+    public void setExperienceList(List<Experience> experienceList) {
+        this.experienceList = experienceList;
     }
 }
