@@ -14,15 +14,30 @@ import java.util.List;
 @RequestMapping("/rest")
 public class HomeController {
 
-    @RequestMapping("/public")
-    public Profile home() {
+    private Profile profile;
+    private ProfileContent profileContent;
 
-        Profile profileObj = new Profile();
-        profileObj.setFirstName("Ilya");
-        profileObj.setLastName("Valdman");
-        profileObj.setOccupation("Sr. Software Engineer");
-        profileObj.setPrimaryEmail("valdman.ilya@gmail.com");
-        profileObj.setLinkedInUrl("ca.linkedin.com/in/valdmanilya");
+    public HomeController() {
+        init();
+    }
+
+    @RequestMapping("/public/sideBar")
+    public Profile sideBar() {
+        return profile;
+    }
+
+    @RequestMapping("/public/home")
+    public ProfileContent home() {
+        return profileContent;
+    }
+
+    private void init() {
+        profile = new Profile();
+        profile.setFirstName("Ilya");
+        profile.setLastName("Valdman");
+        profile.setOccupation("Sr. Software Engineer");
+        profile.setPrimaryEmail("valdman.ilya@gmail.com");
+        profile.setLinkedInUrl("ca.linkedin.com/in/valdmanilya");
 
         List<Education> educationList = new ArrayList<>();
         Education education = new Education();
@@ -65,7 +80,7 @@ public class HomeController {
         education.setIsProfessionalCourse(Boolean.TRUE);
         educationList.add(education);
 
-        profileObj.setEducationList(educationList);
+        profile.setEducationList(educationList);
 
         List<Language> languageList = new ArrayList<>();
         Language language = new Language();
@@ -83,8 +98,9 @@ public class HomeController {
         language.setLanguageDescription("Fluently");
         languageList.add(language);
 
-        profileObj.setLanguageList(languageList);
+        profile.setLanguageList(languageList);
 
+        profileContent = new ProfileContent();
         Summary summary = new Summary();
         summary.setFirstDescription("I am Java and JEE Developer with over 7 years solid experience of Information Technology. Developed a complex information system using Java Enterprise Edition. Strong analytical, problem solving, troubleshooting and debugging skills.");
         summary.setSecondDescription("I am detailed oriented person, able to learn new developing technologies quickly and efficiently. In addition to this I am constantly seeking to improve my skills and fully aware of the latest developing technologies. I have also honed good interpersonal communication skills by collaborating with teams as well as direct and indirect managers. On a personal level I have an ability to stay organized and on top of my work at all times. ");
@@ -103,7 +119,7 @@ public class HomeController {
         attributeList.add("Operating systems: Windows, Linux");
 
         summary.setAttributesList(attributeList);
-        profileObj.setSummary(summary);
+        profileContent.setSummary(summary);
 
         List<Experience> experienceList = new ArrayList<>();
         Experience experience = new Experience();
@@ -235,8 +251,7 @@ public class HomeController {
         experience.setCurrentlyWorkHere(Boolean.FALSE);
         experienceList.add(experience);
 
-        profileObj.setExperienceList(experienceList);
-
-        return profileObj;
+        profileContent.setExperienceList(experienceList);
     }
+
 }

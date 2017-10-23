@@ -20,7 +20,7 @@ public class Experience {
     private String link;
 
     @JsonBackReference
-    private Profile profile;
+    private ProfileContent homeContent;
 
     public String getTitle() {
         return title;
@@ -110,11 +110,11 @@ public class Experience {
         this.link = link;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public ProfileContent getHomeContent() {
+        return homeContent;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setHomeContent(ProfileContent homeContent) {
+        this.homeContent = homeContent;
     }
 }

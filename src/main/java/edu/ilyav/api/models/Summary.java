@@ -14,7 +14,7 @@ public class Summary {
     private String secondDescription;
 
     @JsonBackReference
-    private Profile profile;
+    private ProfileContent homeContent;
 
     public String getFirstDescription() {
         return firstDescription;
@@ -40,11 +40,11 @@ public class Summary {
         this.secondDescription = secondDescription;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public ProfileContent getHomeContent() {
+        return homeContent;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setHomeContent(ProfileContent homeContent) {
+        this.homeContent = homeContent;
     }
 }
