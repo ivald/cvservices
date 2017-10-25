@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 /**
  * Created by ilyav on 20/10/17.
  */
-public class Experience {
+    public class Experience {
 
     private String title;
     private String company;
