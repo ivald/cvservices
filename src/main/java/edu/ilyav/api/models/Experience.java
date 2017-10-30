@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
     private String description;
     private String imageName;
     private String link;
+    private String colorTag;
 
     @JsonBackReference
     private ProfileContent homeContent;
@@ -116,5 +117,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
     public void setHomeContent(ProfileContent homeContent) {
         this.homeContent = homeContent;
+    }
+
+    public String getColorTag() {
+        return colorTag;
+    }
+
+    public void setColorTag(String colorTag) {
+        this.colorTag = colorTag;
     }
 }

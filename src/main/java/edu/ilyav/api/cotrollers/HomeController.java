@@ -103,7 +103,7 @@ public class HomeController {
         profileContent = new ProfileContent();
         Summary summary = new Summary();
         summary.setFirstDescription("I am Java and JEE Developer with over 7 years solid experience of Information Technology. Developed a complex information system using Java Enterprise Edition. Strong analytical, problem solving, troubleshooting and debugging skills.");
-        summary.setSecondDescription("I am detailed oriented person, able to learn new developing technologies quickly and efficiently. In addition to this I am constantly seeking to improve my skills and fully aware of the latest developing technologies. I have also honed good interpersonal communication skills by collaborating with teams as well as direct and indirect managers. On a personal level I have an ability to stay organized and on top of my work at all times. ");
+        summary.setSecondDescription("I am detailed oriented person, able to learn new developing technologies quickly and efficiently. In addition to this I am constantly seeking to improve my skills and fully aware of the latest developing technologies. \n I have also honed good interpersonal communication skills by collaborating with teams as well as direct and indirect managers. On a personal level I have an ability to stay organized and on top of my work at all times. ");
         List<String> attributeList = new ArrayList<>();
         attributeList.add("Programming language: Java");
         attributeList.add("JEE services: EJB 3, JDBC, JSP, Servlets, JNDI, RMI, JPA, Hibernate, JSF, JAXB");
@@ -128,6 +128,8 @@ public class HomeController {
         experience.setFromYear(2015L);
         experience.setFromMonth("Dec");
         experience.setCurrentlyWorkHere(Boolean.TRUE);
+        experience.setLink("https://www.adesa.ca/about-adesa");
+        experience.setColorTag("teal");
 
         experienceList.add(experience);
 
@@ -160,6 +162,8 @@ public class HomeController {
                 "• Used development environment IntelliJ IDEA, Eclipse \n" +
                 "• Used OS Linux ");
         experience.setCurrentlyWorkHere(Boolean.FALSE);
+        experience.setLink("http://www.sapiens.com/about-sapiens/corporate-profile/");
+        experience.setColorTag("grey");
         experienceList.add(experience);
 
         experience = new Experience();
@@ -193,6 +197,8 @@ public class HomeController {
                 "• Used Tortoise SVN version control tool and MAVEN to manage a project’s build \n" +
                 "• Used development environment: IntelliJ IDEA, SQL Developer, SQL Editors, SoapUI ");
         experience.setCurrentlyWorkHere(Boolean.FALSE);
+        experience.setLink("https://www.discountbank.co.il/DB/en");
+        experience.setColorTag("blue");
         experienceList.add(experience);
 
         experience = new Experience();
@@ -220,6 +226,8 @@ public class HomeController {
                 "• Performed application deployment to application server OC4J \n" +
                 "• Used development environment such as JDeveloper 10.x, PL/SQL Developer");
         experience.setCurrentlyWorkHere(Boolean.FALSE);
+        experience.setLink("http://www.sapiens.com/about-sapiens/corporate-profile/");
+        experience.setColorTag("green");
         experienceList.add(experience);
 
         experience = new Experience();
@@ -249,6 +257,7 @@ public class HomeController {
                 "• Provided technical guidance for client needs, to allow them quick understanding of the different modules of the project \n" +
                 "• Used development environment such as Eclipse, eMerge Development Workbench, SQL Developer. ");
         experience.setCurrentlyWorkHere(Boolean.FALSE);
+        experience.setColorTag("blue");
         experienceList.add(experience);
 
         profileContent.setExperienceList(experienceList);
