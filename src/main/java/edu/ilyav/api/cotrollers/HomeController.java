@@ -146,7 +146,7 @@ public class HomeController {
                 "\n" +
                 "During my work I as part of the team has developed UI and Java Beans for all modules, including development of custom reusable composite components. The work involved processing data send and received via Web Services, building back end code to be reused by both Web Services and UI side beans, developing internationalization features, defining and building reusable modules. Work also involved reviewing code developed by other developers and assisting other DEV where needed. \n" +
                 "\n" +
-                "Responsibilities: • Developed the enterprise project software solution based on provided business requirements. \n" +
+                "Responsibilities: \n• Developed the enterprise project software solution based on provided business requirements. \n" +
                 "• Developed client side by Java Server Faces 2 using Primefaces Framework 5. \n" +
                 "• Developed a set of reusable JSF components. \n" +
                 "• Performed technical analysis and impact assessment for change requests. \n" +

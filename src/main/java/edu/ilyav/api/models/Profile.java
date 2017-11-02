@@ -9,11 +9,11 @@ import java.util.List;
  */
 public class Profile {
 
-    private String firstName;
-    private String lastName;
-    private String occupation;
-    private String primaryEmail;
-    private String linkedInUrl;
+        private String firstName;
+        private String lastName;
+        private String occupation;
+        private String primaryEmail;
+        private String linkedInUrl;
 
     @JsonManagedReference
     private List<Education> educationList;
