@@ -31,6 +31,11 @@ public class HomeController {
         return profileContent;
     }
 
+    @RequestMapping("/private/profile")
+    public ProfileContent profile() {
+        return profileContent;
+    }
+
     private void init() {
         profile = new Profile();
         profile.setFirstName("Ilya");

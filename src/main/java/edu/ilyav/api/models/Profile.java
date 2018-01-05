@@ -9,11 +9,13 @@ import java.util.List;
  */
 public class Profile {
 
-        private String firstName;
-        private String lastName;
-        private String occupation;
-        private String primaryEmail;
-        private String linkedInUrl;
+    private String firstName;
+    private String lastName;
+    private String occupation;
+    private String primaryEmail;
+    private String linkedInUrl;
+    private String userName;
+    private String password;
 
     @JsonManagedReference
     private List<Education> educationList;
@@ -77,5 +79,21 @@ public class Profile {
 
     public void setLanguageList(List<Language> languageList) {
         this.languageList = languageList;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
