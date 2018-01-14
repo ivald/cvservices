@@ -107,23 +107,21 @@ public class HomeController {
 
         profileContent = new ProfileContent();
         Summary summary = new Summary();
-        summary.setFirstDescription("I am Java and JEE Developer with over 7 years solid experience of Information Technology. Developed a complex information system using Java Enterprise Edition. Strong analytical, problem solving, troubleshooting and debugging skills.");
-        summary.setSecondDescription("I am detailed oriented person, able to learn new developing technologies quickly and efficiently. In addition to this I am constantly seeking to improve my skills and fully aware of the latest developing technologies. \n I have also honed good interpersonal communication skills by collaborating with teams as well as direct and indirect managers. On a personal level I have an ability to stay organized and on top of my work at all times. ");
-        List<String> attributeList = new ArrayList<>();
-        attributeList.add("Programming language: Java");
-        attributeList.add("JEE services: EJB 3, JDBC, JSP, Servlets, JNDI, RMI, JPA, Hibernate, JSF, JAXB");
-        attributeList.add("Client side technologies: JS, jQuery, Ajax, HTML, CSS, Primefaces, Richfaces, Myfaces");
-        attributeList.add("Markup languages: XML/XSD/XSLT");
-        attributeList.add("Web Services: SOAP Web Services, REST");
-        attributeList.add("Reporting: Jasper iReport, iText");
-        attributeList.add("Application servers: Weblogic, JBoss, GlassFish, Apache Tomcat");
-        attributeList.add("Query languages: SQL, PL/SQL");
-        attributeList.add("Database: DB2, Oracle, MS-SQL and MySql");
-        attributeList.add("Version Control: Subversion, GitHub, GitLab");
-        attributeList.add("Development tools/environments: IntelliJ IDEA, Eclipse, SQLDeveloper, J/PL/SQL Developer");
-        attributeList.add("Operating systems: Windows, Linux");
-
-        summary.setAttributesList(attributeList);
+        summary.setDescription("I am Java and JEE Developer with over 7 years solid experience of Information Technology. Developed a complex information system using Java Enterprise Edition. Strong analytical, problem solving, troubleshooting and debugging skills.\n\n" +
+                "• Programming language: Java \n" +
+                "• JEE services: EJB 3, JDBC, JSP, Servlets, JNDI, RMI, JPA, Hibernate, JSF, JAXB \n" +
+                "• Client side technologies: JS, jQuery, Ajax, HTML, CSS, Primefaces, Richfaces, Myfaces \n" +
+                "• Markup languages: XML/XSD/XSLT \n" +
+                "• Web Services: SOAP Web Services, REST \n" +
+                "• Reporting: Jasper iReport, iText \n" +
+                "• Application servers: Weblogic, JBoss, GlassFish, Apache Tomcat \n" +
+                "• Query languages: SQL, PL/SQL \n" +
+                "• Database: DB2, Oracle, MS-SQL and MySql \n" +
+                "• Version Control: Subversion, GitHub, GitLab \n" +
+                "• Development tools/environments: IntelliJ IDEA, Eclipse, SQLDeveloper, J/PL/SQL Developer \n" +
+                "• Operating systems: Windows, Linux \n\n" +
+                "I am detailed oriented person, able to learn new developing technologies quickly and efficiently. In addition to this I am constantly seeking to improve my skills and fully aware of the latest developing technologies. \n" +
+                "I have also honed good interpersonal communication skills by collaborating with teams as well as direct and indirect managers. On a personal level I have an ability to stay organized and on top of my work at all times.");
         profileContent.setSummary(summary);
 
         List<Experience> experienceList = new ArrayList<>();

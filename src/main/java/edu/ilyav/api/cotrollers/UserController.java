@@ -1,16 +1,16 @@
 package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Profile;
-import edu.ilyav.api.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -44,8 +44,11 @@ public class UserController {
 		if (!password.equals(pwd)) {
 			throw new ServletException("Invalid login. Please check your username and password");
 		}
-		
+
+		DateTime currentTime = new DateTime();
+
 		return Jwts.builder().setSubject(userName).claim("roles", "user").setIssuedAt(new Date())
+				.setExpiration(currentTime.plusMinutes(5000).toDate())
 				.signWith(SignatureAlgorithm.HS256, "secretkey").compact();
 		
 	}

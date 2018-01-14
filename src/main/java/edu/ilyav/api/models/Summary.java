@@ -9,35 +9,17 @@ import java.util.List;
  */
 public class Summary {
 
-    private String firstDescription;
-    private List<String> attributesList;
-    private String secondDescription;
+    private String description;
 
     @JsonBackReference
     private ProfileContent homeContent;
 
-    public String getFirstDescription() {
-        return firstDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setFirstDescription(String firstDescription) {
-        this.firstDescription = firstDescription;
-    }
-
-    public List<String> getAttributesList() {
-        return attributesList;
-    }
-
-    public void setAttributesList(List<String> attributesList) {
-        this.attributesList = attributesList;
-    }
-
-    public String getSecondDescription() {
-        return secondDescription;
-    }
-
-    public void setSecondDescription(String secondDescription) {
-        this.secondDescription = secondDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ProfileContent getHomeContent() {
