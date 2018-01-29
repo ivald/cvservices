@@ -1,11 +1,24 @@
 package edu.ilyav.api.cotrollers;
 
+import com.cloudinary.utils.ObjectUtils;
 import edu.ilyav.api.models.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import com.cloudinary.Cloudinary;
 
 /**
  * Created by ilyav on 17/08/17.
@@ -14,6 +27,7 @@ import java.util.List;
 @RequestMapping("/rest")
 public class HomeController {
 
+    private String imageName;
     private Profile profile;
     private ProfileContent profileContent;
 
@@ -29,6 +43,53 @@ public class HomeController {
     @RequestMapping("/public/home")
     public ProfileContent home() {
         return profileContent;
+    }
+
+    @RequestMapping(value="/photo/upload1", method = RequestMethod.POST)
+    public Map upload(HttpServletResponse response, HttpServletRequest request) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Iterator<String> it = multipartRequest.getFileNames();
+        MultipartFile multipartFile = multipartRequest.getFile(it.next());
+        String fileName = multipartFile.getOriginalFilename();
+        imageName=fileName;
+
+        PhotoUpload photoUpload = new PhotoUpload();
+        photoUpload.setFile(multipartFile);
+
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "ilyavimages",
+                "api_key", "416622563399234",
+                "api_secret", "i3Mp46Xfe8kiqCTm5T56n0iIOHU"));
+
+        Map uploadResult = null;
+        try {
+            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
+            System.out.print(uploadResult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return uploadResult;
+    }
+
+    @RequestMapping(value="/photo/upload", method = RequestMethod.POST)
+    public Map upload(@ModelAttribute PhotoUpload photoUpload) {
+
+
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "ilyavimages",
+                "api_key", "416622563399234",
+                "api_secret", "i3Mp46Xfe8kiqCTm5T56n0iIOHU"));
+
+        Map uploadResult = null;
+        try {
+            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
+            System.out.print(uploadResult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return uploadResult;
     }
 
     @RequestMapping("/private/profile")
