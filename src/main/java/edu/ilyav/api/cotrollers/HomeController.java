@@ -57,9 +57,9 @@ public class HomeController {
         photoUpload.setFile(multipartFile);
 
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "ilyavimages",
-                "api_key", "416622563399234",
-                "api_secret", "i3Mp46Xfe8kiqCTm5T56n0iIOHU"));
+                "cloud_name", "",
+                "api_key", "",
+                "api_secret", ""));
 
         Map uploadResult = null;
         try {
@@ -77,9 +77,9 @@ public class HomeController {
 
 
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "ilyavimages",
-                "api_key", "416622563399234",
-                "api_secret", "i3Mp46Xfe8kiqCTm5T56n0iIOHU"));
+                "cloud_name", "",
+                "api_key", "",
+                "api_secret", ""));
 
         Map uploadResult = null;
         try {
