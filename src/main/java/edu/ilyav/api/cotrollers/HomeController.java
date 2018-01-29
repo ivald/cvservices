@@ -56,20 +56,7 @@ public class HomeController {
         PhotoUpload photoUpload = new PhotoUpload();
         photoUpload.setFile(multipartFile);
 
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "",
-                "api_key", "",
-                "api_secret", ""));
-
-        Map uploadResult = null;
-        try {
-            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
-            System.out.print(uploadResult);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return uploadResult;
+        return upload(photoUpload);
     }
 
     @RequestMapping(value="/photo/upload", method = RequestMethod.POST)
