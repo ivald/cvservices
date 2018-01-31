@@ -2,6 +2,8 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.persistence.ManyToOne;
+
 /**
  * Created by ilyav on 17/10/17.
  */
@@ -10,6 +12,7 @@ public class Language {
     private String languageName;
     private String languageDescription;
 
+    @ManyToOne
     @JsonBackReference
     private Profile profile;
 

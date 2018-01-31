@@ -1,24 +1,11 @@
 package edu.ilyav.api.cotrollers;
 
-import com.cloudinary.utils.ObjectUtils;
 import edu.ilyav.api.models.*;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import com.cloudinary.Cloudinary;
 
 /**
  * Created by ilyav on 17/08/17.
@@ -27,12 +14,16 @@ import com.cloudinary.Cloudinary;
 @RequestMapping("/rest")
 public class HomeController {
 
-    private String imageName;
     private Profile profile;
     private ProfileContent profileContent;
 
     public HomeController() {
         init();
+    }
+
+    @RequestMapping("/public/run")
+    public Boolean isRunning() {
+        return Boolean.TRUE;
     }
 
     @RequestMapping("/public/sideBar")
@@ -43,40 +34,6 @@ public class HomeController {
     @RequestMapping("/public/home")
     public ProfileContent home() {
         return profileContent;
-    }
-
-    @RequestMapping(value="/photo/upload1", method = RequestMethod.POST)
-    public Map upload(HttpServletResponse response, HttpServletRequest request) {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        Iterator<String> it = multipartRequest.getFileNames();
-        MultipartFile multipartFile = multipartRequest.getFile(it.next());
-        String fileName = multipartFile.getOriginalFilename();
-        imageName=fileName;
-
-        PhotoUpload photoUpload = new PhotoUpload();
-        photoUpload.setFile(multipartFile);
-
-        return upload(photoUpload);
-    }
-
-    @RequestMapping(value="/photo/upload", method = RequestMethod.POST)
-    public Map upload(@ModelAttribute PhotoUpload photoUpload) {
-
-
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "",
-                "api_key", "",
-                "api_secret", ""));
-
-        Map uploadResult = null;
-        try {
-            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
-            System.out.print(uploadResult);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return uploadResult;
     }
 
     @RequestMapping("/private/profile")
@@ -193,7 +150,7 @@ public class HomeController {
         experience.setToMonth("Oct");
         experience.setDescription("Oltis specializes in Project Management, Business Analysis, Enterprise Architecture and Software Development services. \n" +
                 "\n" +
-                "I took part in developing a system for Doctors Manitoba (Canadian Medical Association). This project was to build a User Interface for a client custom application. User interface is built using JSF (Primefaces Framework) with web services used as data source. This custom application consists of multiple modules - Security, Administration, Processing and main User data management module consisting of HR and User Benefits type components. \n" +
+                "I took part in developing a system for Doctors Manitoba (Canadian Medical Association). This project was to build a UserInfo Interface for a client custom application. UserInfo interface is built using JSF (Primefaces Framework) with web services used as data source. This custom application consists of multiple modules - Security, Administration, Processing and main UserInfo data management module consisting of HR and UserInfo Benefits type components. \n" +
                 "\n" +
                 "During my work I as part of the team has developed UI and Java Beans for all modules, including development of custom reusable composite components. The work involved processing data send and received via Web Services, building back end code to be reused by both Web Services and UI side beans, developing internationalization features, defining and building reusable modules. Work also involved reviewing code developed by other developers and assisting other DEV where needed. \n" +
                 "\n" +

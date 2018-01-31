@@ -1,19 +1,18 @@
 package edu.ilyav.api.dao;
 
-import edu.ilyav.api.models.Profile;
-//import org.springframework.data.repository.CrudRepository;
+import edu.ilyav.api.models.UserInfo;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UserDao {
-//	extends CrudRepository<Profile, Long> {
-	List<Profile> findAll();
+public interface UserDao extends CrudRepository<UserInfo, Long> {
+	List<UserInfo> findAll();
 
-	Profile findByUserName(String userName);
+	UserInfo findByUserName(String userName);
 
-	Profile findByUserId(Long userId);
+	UserInfo findById(Long id);
 
-	Profile save(Profile user);
+	UserInfo save(UserInfo userInfo);
 }

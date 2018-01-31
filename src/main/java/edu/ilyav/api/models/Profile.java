@@ -2,28 +2,32 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import javax.persistence.*;
+import javax.persistence.GenerationType;
 import java.util.List;
 
 /**
  * Created by ilyav on 17/10/17.
  */
+//@Entity
 public class Profile {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String firstName;
     private String lastName;
     private String occupation;
     private String primaryEmail;
     private String linkedInUrl;
-    private String userName;
-    private String password;
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JsonManagedReference
     private List<Education> educationList;
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JsonManagedReference
     private List<Language> languageList;
-
-
 
     public String getFirstName() {
         return firstName;
@@ -81,19 +85,11 @@ public class Profile {
         this.languageList = languageList;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

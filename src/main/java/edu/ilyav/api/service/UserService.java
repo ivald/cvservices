@@ -1,14 +1,14 @@
 package edu.ilyav.api.service;
 
-import edu.ilyav.api.models.Profile;
+import edu.ilyav.api.models.UserInfo;
 
 import java.util.List;
 
 public interface UserService {
-	List<Profile> findAllUsers();
+	List<UserInfo> findAllUsers();
 
-	Profile findByUserName(String userName);
+	UserInfo findByUserName(String userName);
 
-	Profile save(Profile user);
+	UserInfo save(UserInfo userInfo);
 
 }

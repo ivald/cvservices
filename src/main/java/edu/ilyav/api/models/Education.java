@@ -2,6 +2,8 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.persistence.ManyToOne;
+
 /**
  * Created by ilyav on 17/10/17.
  */
@@ -19,6 +21,7 @@ public class Education {
     private String link;
     private Boolean isProfessionalCourse;
 
+    @ManyToOne
     @JsonBackReference
     private Profile profile;
 
