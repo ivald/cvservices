@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import sun.security.provider.certpath.OCSPResponse;
 
 import javax.servlet.ServletException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,5 +55,10 @@ public class UserController {
 	@RequestMapping(value="/register", method = RequestMethod.POST)
 	public UserInfo registerUser(@RequestBody UserInfo user) {
 		return userService.save(user);
+	}
+
+	@RequestMapping(value="/all", method = RequestMethod.GET)
+	public List<UserInfo> getAllUsers() {
+		return userService.findAllUsers();
 	}
 }
