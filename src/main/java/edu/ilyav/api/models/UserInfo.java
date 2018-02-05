@@ -1,9 +1,8 @@
 package edu.ilyav.api.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 
 /**
  * Created by ilyav on 17/10/17.
@@ -16,6 +15,11 @@ public class UserInfo {
     private Long id;
     private String userName;
     private String password;
+    private String token;
+
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Profile profile;
 
     public String getUserName() {
         return userName;
@@ -39,5 +43,21 @@ public class UserInfo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

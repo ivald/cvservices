@@ -1,31 +1,40 @@
 package edu.ilyav.api.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import javax.persistence.GenerationType;
 import java.util.List;
 
 /**
  * Created by ilyav on 17/10/17.
  */
-//@Entity
+@Entity
 public class Profile {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
     private String occupation;
     private String primaryEmail;
     private String linkedInUrl;
+    private String imageUrl;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @OneToOne
+    @JsonBackReference
+    private UserInfo userInfo;
+
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private ProfileContent profileContent;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private List<Education> educationList;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private List<Language> languageList;
 
@@ -91,5 +100,29 @@ public class Profile {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public ProfileContent getProfileContent() {
+        return profileContent;
+    }
+
+    public void setProfileContent(ProfileContent profileContent) {
+        this.profileContent = profileContent;
     }
 }

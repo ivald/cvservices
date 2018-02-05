@@ -2,10 +2,17 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.persistence.*;
+
 /**
  * Created by ilyav on 20/10/17.
  */
-    public class Experience {
+@Entity
+public class Experience {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String title;
     private String company;
@@ -15,13 +22,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
     private Long toYearOrExpected;
     private String toMonth;
     private Boolean currentlyWorkHere;
+    @Column(length = 2048)
     private String description;
     private String imageName;
     private String link;
     private String colorTag;
 
+    @ManyToOne
     @JsonBackReference
-    private ProfileContent homeContent;
+    private ProfileContent profileContent;
 
     public String getTitle() {
         return title;
@@ -111,19 +120,27 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
         this.link = link;
     }
 
-    public ProfileContent getHomeContent() {
-        return homeContent;
-    }
-
-    public void setHomeContent(ProfileContent homeContent) {
-        this.homeContent = homeContent;
-    }
-
     public String getColorTag() {
         return colorTag;
     }
 
     public void setColorTag(String colorTag) {
         this.colorTag = colorTag;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ProfileContent getProfileContent() {
+        return profileContent;
+    }
+
+    public void setProfileContent(ProfileContent profileContent) {
+        this.profileContent = profileContent;
     }
 }

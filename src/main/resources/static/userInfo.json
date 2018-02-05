@@ -1,0 +1,187 @@
+{
+  "id": 1,
+  "userName": "ilyav",
+  "password": "Ivald79",
+  "profile": {
+    "id": 1,
+    "firstName": "Ilya",
+    "lastName": "Valdman",
+    "occupation": "Sr. Software Engineer",
+    "primaryEmail": "valdman.ilya@gmail.com",
+    "linkedInUrl": "ca.linkedin.com/in/valdmanilya",
+    "imageUrl": null,
+    "profileContent": {
+      "id": 10,
+      "summary": {
+        "id": 16,
+        "description": "I am Java and JEE Developer with over 7 years solid experience of Information Technology. Developed a complex information system using Java Enterprise Edition. Strong analytical, problem solving, troubleshooting and debugging skills.\n\n• Programming language: Java \n• JEE services: EJB 3, JDBC, JSP, Servlets, JNDI, RMI, JPA, Hibernate, JSF, JAXB \n• Client side technologies: JS, jQuery, Ajax, HTML, CSS, Primefaces, Richfaces, Myfaces \n• Markup languages: XML/XSD/XSLT \n• Web Services: SOAP Web Services, REST \n• Reporting: Jasper iReport, iText \n• Application servers: Weblogic, JBoss, GlassFish, Apache Tomcat \n• Query languages: SQL, PL/SQL \n• Database: DB2, Oracle, MS-SQL and MySql \n• Version Control: Subversion, GitHub, GitLab \n• Development tools/environments: IntelliJ IDEA, Eclipse, SQLDeveloper, J/PL/SQL Developer \n• Operating systems: Windows, Linux \n\nI am detailed oriented person, able to learn new developing technologies quickly and efficiently. In addition to this I am constantly seeking to improve my skills and fully aware of the latest developing technologies. \nI have also honed good interpersonal communication skills by collaborating with teams as well as direct and indirect managers. On a personal level I have an ability to stay organized and on top of my work at all times."
+      },
+      "experienceList": [
+        {
+          "id": 15,
+          "title": "Software Developer",
+          "company": "Sapiens",
+          "location": null,
+          "fromYear": 2008,
+          "fromMonth": "Jun",
+          "toYearOrExpected": 2012,
+          "toMonth": "Mar",
+          "currentlyWorkHere": false,
+          "description": "Sapiens Life and Pensions Solution. The Sapiens solution (eMerge) was developed as a rule-based platform for all pension products. eMerge tools enable rapid prototyping and iterative development of rich Internet applications. \n\nI worked in Life and Pension division in collaboration with Menora Mivtachim. Worked with a complex information system that was developed using Sapiens internal tools. \n\nImplementation of customer project: \n\n• Developed a complex information system \n• Developed server side by using eMerge, Java \n• Developed client side by using an internal web technology and JS \n• Developed complex and robust SQL queries for DB2 db \n• Maintained and developed interfaces with external systems (web services) \n\nDebugging and troubleshooting: \n• Prepared unit tests preparation and close work with QA department on test cases refinement \n• Performed debugging, troubleshooting and resolving software issues found during internal testing \n\nSoftware development process: \n• Provided technical guidance for client needs, to allow them quick understanding of the different modules of the project \n• Used development environment such as Eclipse, eMerge Development Workbench, SQL Developer. ",
+          "imageName": null,
+          "link": "http://www.sapiens.com/about-sapiens/corporate-profile/",
+          "colorTag": "blue"
+        },
+        {
+          "id": 14,
+          "title": "Java Developer",
+          "company": "Discount Bank",
+          "location": null,
+          "fromYear": 2012,
+          "fromMonth": "Apr",
+          "toYearOrExpected": 2013,
+          "toMonth": "Jul",
+          "currentlyWorkHere": false,
+          "description": "Israel Discount Bank is the third largest bank and a leading financial group in Israel. Discount Bank provides a full spectrum of corporate and retail financial products and services to its clients. \n\nI participated in development of an overdraft system for big companies. It is N-tier distributed components system, developed in Java and J2EE technologies. The application uses the information required to process from a main system which runs in IBM mainframe. At the end of the process all data is synchronized with main systems by batch jobs. \n\nImplementation of customer projects: \n• Created UI, Data model and business logic implementation \n• Developed server side by using Servlets, JSF 1.2, JDBC, Toplink \n• Developed client side by using JSP, JS, Ajax, jQuery, Richfaces, Myfaces \n• Created reports and forms automatically by using Jasper iReport, iText \n• Prepared variety of SQL queries and stored procedures for Oracle db \n\nDebugging and troubleshooting: \n• Prepared unit tests and performed debugging, troubleshooting and resolving software issues found during internal testing \n\nSoftware development process: \n• Performed application deployment to application server OC4J \n• Used development environment such as JDeveloper 10.x, PL/SQL Developer",
+          "imageName": null,
+          "link": "https://www.discountbank.co.il/DB/en",
+          "colorTag": "green"
+        },
+        {
+          "id": 13,
+          "title": "Java and JEE Developer",
+          "company": "Sapiens (IDIT)",
+          "location": null,
+          "fromYear": 2013,
+          "fromMonth": "Jul",
+          "toYearOrExpected": 2015,
+          "toMonth": "Mar",
+          "currentlyWorkHere": false,
+          "description": "Sapiens P&C (IDIT) is a component based software solution, addressing the specific needs of general insurance carriers for traditional insurance, direct insurance, bancassurance and brokers markets. \nI collaborated with Euler Hermes, Partner Re and MLOZ insurance companies in developing an end to end implementation of customer projects, including UI, SQL data model and business logic implementation. During these projects, I had been involved in customizing and development code of different modules such as Contact, Policy, Claim, Billing, Accounting, Batch Jobs. \n\nEnd to end implementation of customer projects \n• Created UI, Data model and business logic implementation \n• Developed server side by using EJB3, JPA, Hibernate, JDBC, Servlets, JSP \n• Developed client side by using JS, Ajax, jQuery \n• Prepared and developed web services with external systems by using REST, SOAP,XSLT \n• Prepared variety of SQL queries for different data bases like Oracle, MS SQL, DB2 \n• Handled migration data from different external systems (legacy) to native objects format of app \n\nDocument design, functional, and technical specifications \n• Prepared and designed documents based on SRS documents issued by business analysts, ensuring that all of the initial requirements were met \n• Prepared unit tests and worked closely with QA department on test cases refinement to provide quality products and fine-tune the details \n\nDebugging and troubleshooting \n• Performed debugging, troubleshooting and resolving software issues found during internal testing, allocating time for changes to be made into existing solution \n• Used JIRA tool for tasks development and bug tracking throughout our entire software development \n\nSoftware development process \n• Performed application deployment to different application servers such as Weblogic/JBoss \n• Used Tortoise SVN version control tool and MAVEN to manage a project’s build \n• Used development environment: IntelliJ IDEA, SQL Developer, SQL Editors, SoapUI ",
+          "imageName": null,
+          "link": "http://www.sapiens.com/about-sapiens/corporate-profile/",
+          "colorTag": "blue"
+        },
+        {
+          "id": 12,
+          "title": "Java Web Developer",
+          "company": "Oltis Systems",
+          "location": null,
+          "fromYear": 2015,
+          "fromMonth": "May",
+          "toYearOrExpected": 2015,
+          "toMonth": "Oct",
+          "currentlyWorkHere": false,
+          "description": "Oltis specializes in Project Management, Business Analysis, Enterprise Architecture and Software Development services. \n\nI took part in developing a system for Doctors Manitoba (Canadian Medical Association). This project was to build a UserInfo Interface for a client custom application. UserInfo interface is built using JSF (Primefaces Framework) with web services used as data source. This custom application consists of multiple modules - Security, Administration, Processing and main UserInfo data management module consisting of HR and UserInfo Benefits type components. \n\nDuring my work I as part of the team has developed UI and Java Beans for all modules, including development of custom reusable composite components. The work involved processing data send and received via Web Services, building back end code to be reused by both Web Services and UI side beans, developing internationalization features, defining and building reusable modules. Work also involved reviewing code developed by other developers and assisting other DEV where needed. \n\nResponsibilities: \n• Developed the enterprise project software solution based on provided business requirements. \n• Developed client side by Java Server Faces 2 using Primefaces Framework 5. \n• Developed a set of reusable JSF components. \n• Performed technical analysis and impact assessment for change requests. \n• Maintained and rearchitecting and refactoring web based client server Java application. \n• Performed debugging, troubleshooting and resolving software issues found during internal testing. \n• Worked with GitLab tool for tasks development and bug tracking throughout our entire software development. \n\nTechnologies:\tJAVA/JEE, JSF 2, Web Services (REST), XML, XSD, JAXB, HTML 5, CSS 3, Java Script, jQuery, Ajax, Sql, Git, MySQL, Apache Tomcat 8. \n\nSoftware development process: \n• Used application servers Apache Tomcat/JBoss \n• Used during developing Git version control tool \n• Used development environment IntelliJ IDEA, Eclipse \n• Used OS Linux ",
+          "imageName": null,
+          "link": "http://www.oltis.ca/about-us.html",
+          "colorTag": "grey"
+        },
+        {
+          "id": 11,
+          "title": "Sr. Java Developer",
+          "company": "ADESA",
+          "location": null,
+          "fromYear": 2015,
+          "fromMonth": "Dec",
+          "toYearOrExpected": null,
+          "toMonth": null,
+          "currentlyWorkHere": true,
+          "description": null,
+          "imageName": null,
+          "link": "https://www.adesa.ca/about-adesa",
+          "colorTag": "teal"
+        }
+      ]
+    },
+    "educationList": [
+      {
+        "id": 2,
+        "schoolName": "SCE - Shamoon College of Engineering, Israel",
+        "degreeName": "Bachelor of Technology (B.Tech.)",
+        "fieldOfStudy": null,
+        "grade": null,
+        "activitiesAndSocieties": null,
+        "fromYear": 2004,
+        "toYearOrExpected": 2008,
+        "description": null,
+        "imageName": null,
+        "link": null,
+        "isProfessionalCourse": false
+      },
+      {
+        "id": 3,
+        "schoolName": "TCB - Technological College of Beer-Sheva, Israel",
+        "degreeName": "Practical Engineer",
+        "fieldOfStudy": null,
+        "grade": null,
+        "activitiesAndSocieties": null,
+        "fromYear": 1998,
+        "toYearOrExpected": 2000,
+        "description": null,
+        "imageName": null,
+        "link": null,
+        "isProfessionalCourse": false
+      },
+      {
+        "id": 4,
+        "schoolName": "SCALED AGILE",
+        "degreeName": "SAFe for Teams Course (4.5)",
+        "fieldOfStudy": null,
+        "grade": null,
+        "activitiesAndSocieties": null,
+        "fromYear": 2017,
+        "toYearOrExpected": 2017,
+        "description": null,
+        "imageName": null,
+        "link": null,
+        "isProfessionalCourse": true
+      },
+      {
+        "id": 5,
+        "schoolName": "John Bryce, Israel",
+        "degreeName": "Course Asp.Net Using Visual C# 2010",
+        "fieldOfStudy": null,
+        "grade": null,
+        "activitiesAndSocieties": null,
+        "fromYear": 2012,
+        "toYearOrExpected": 2012,
+        "description": null,
+        "imageName": null,
+        "link": null,
+        "isProfessionalCourse": true
+      },
+      {
+        "id": 6,
+        "schoolName": "John Bryce, Israel",
+        "degreeName": "Re-qualification to JAVA and J2EE",
+        "fieldOfStudy": null,
+        "grade": null,
+        "activitiesAndSocieties": null,
+        "fromYear": 2011,
+        "toYearOrExpected": 2012,
+        "description": null,
+        "imageName": null,
+        "link": null,
+        "isProfessionalCourse": true
+      }
+    ],
+    "languageList": [
+      {
+        "id": 7,
+        "languageName": "Russian",
+        "languageDescription": "Native"
+      },
+      {
+        "id": 8,
+        "languageName": "English",
+        "languageDescription": "Professional"
+      },
+      {
+        "id": 9,
+        "languageName": "Hebrew",
+        "languageDescription": "Fluently"
+      }
+    ]
+  }
+}

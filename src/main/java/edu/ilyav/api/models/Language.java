@@ -1,13 +1,19 @@
 package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Created by ilyav on 17/10/17.
  */
+@Entity
 public class Language {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String languageName;
     private String languageDescription;
@@ -38,5 +44,13 @@ public class Language {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
