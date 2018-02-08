@@ -18,9 +18,9 @@ public class Experience {
     private String company;
     private String location;
     private Long fromYear;
-    private String fromMonth;
     private Long toYearOrExpected;
-    private String toMonth;
+    private String startDate;
+    private String endDate;
     private Boolean currentlyWorkHere;
     @Column(length = 2048)
     private String description;
@@ -56,6 +56,22 @@ public class Experience {
         this.location = location;
     }
 
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
     public Long getFromYear() {
         return fromYear;
     }
@@ -64,28 +80,12 @@ public class Experience {
         this.fromYear = fromYear;
     }
 
-    public String getFromMonth() {
-        return fromMonth;
-    }
-
-    public void setFromMonth(String fromMonth) {
-        this.fromMonth = fromMonth;
-    }
-
     public Long getToYearOrExpected() {
         return toYearOrExpected;
     }
 
     public void setToYearOrExpected(Long toYearOrExpected) {
         this.toYearOrExpected = toYearOrExpected;
-    }
-
-    public String getToMonth() {
-        return toMonth;
-    }
-
-    public void setToMonth(String toMonth) {
-        this.toMonth = toMonth;
     }
 
     public Boolean getCurrentlyWorkHere() {
