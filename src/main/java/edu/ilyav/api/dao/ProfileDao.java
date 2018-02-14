@@ -12,5 +12,7 @@ public interface ProfileDao extends CrudRepository<Profile, Long> {
 
 	Profile findById(Long id);
 
+	Profile findByPrimaryEmail(String primaryEmail);
+
 	Profile save(Profile profile);
 }

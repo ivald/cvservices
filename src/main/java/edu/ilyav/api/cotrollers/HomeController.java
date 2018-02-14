@@ -3,6 +3,7 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.UserService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,9 @@ public class HomeController {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private UserService userService;
+
     private Profile profile;
 
     public HomeController() {
@@ -27,6 +31,11 @@ public class HomeController {
     @RequestMapping("/public/run")
     public Boolean isRunning() {
         return Boolean.TRUE;
+    }
+
+    @RequestMapping("/public/main/sideBar/{userName}")
+    public Profile sideBar(@PathVariable String userName) {
+        return getProfileByUserName(userName);
     }
 
     @RequestMapping("/public/sideBar/{id}")
@@ -39,8 +48,13 @@ public class HomeController {
         return getProfile(id).getProfileContent();
     }
 
+    @RequestMapping("/public/main/home/{userName}")
+    public ProfileContent home(@PathVariable String userName) {
+        return getProfileByUserName(userName).getProfileContent();
+    }
+
     @RequestMapping("/private/profile/{id}")
-    public ProfileContent profile(@PathVariable Long id) {
+        public ProfileContent profile(@PathVariable Long id) {
         return getProfile(id).getProfileContent();
     }
 
@@ -48,6 +62,17 @@ public class HomeController {
         synchronized (this) {
             if(this.profile == null) {
                 this.profile = profileService.findById(id);
+            }
+            Hibernate.initialize(profile.getEducationList());
+            Hibernate.initialize(profile.getLanguageList());
+            return this.profile;
+        }
+    }
+
+    public Profile getProfileByUserName(String userName) {
+        synchronized (this) {
+            if(this.profile == null) {
+                this.profile = userService.findByUserName(userName).getProfile();
             }
             Hibernate.initialize(profile.getEducationList());
             Hibernate.initialize(profile.getLanguageList());

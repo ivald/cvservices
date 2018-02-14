@@ -9,6 +9,8 @@ public interface ProfileService {
 
 	Profile findById(Long id);
 
+	Profile findByPrimaryEmail(String primaryEmail);
+
 	Profile save(Profile profile);
 
 }

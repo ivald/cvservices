@@ -25,6 +25,11 @@ public class ProfileServiceImpl implements ProfileService{
 	}
 
 	@Override
+	public Profile findByPrimaryEmail(String primaryEmail){
+		return profileDao.findByPrimaryEmail(primaryEmail);
+	}
+
+	@Override
 	public Profile save(Profile profile) {
 		return profileDao.save(profile);
 	}
