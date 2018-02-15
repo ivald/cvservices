@@ -1,6 +1,6 @@
 package edu.ilyav.api.service.impl;
 
-import edu.ilyav.api.dao.ProfileDao;
+import edu.ilyav.api.dao.ProfileRepository;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.List;
 public class ProfileServiceImpl implements ProfileService{
 
 	@Autowired
-	private ProfileDao profileDao;
+	private ProfileRepository profileDao;
 	
 	@Override
 	public List<Profile> findAllProfiles() {

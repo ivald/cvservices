@@ -1,33 +1,32 @@
 package edu.ilyav.api.service.impl;
 
-import edu.ilyav.api.dao.UserDao;
+import edu.ilyav.api.dao.UserRepository;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService{
 
 	@Autowired
-	private UserDao userDao;
+	private UserRepository userRepository;
 	
 	@Override
 	public List<UserInfo> findAllUsers() {
-		return userDao.findAll();
+		return userRepository.findAll();
 	}
 
 	@Override
 	public UserInfo findByUserName(String userName) {
-		return userDao.findByUserName(userName);
+		return userRepository.findByUserName(userName);
 	}
 
 	@Override
 	public UserInfo save(UserInfo userInfo) {
-		return userDao.save(userInfo);
+		return userRepository.save(userInfo);
 	}
 	
 }

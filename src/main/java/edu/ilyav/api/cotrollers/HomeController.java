@@ -53,11 +53,6 @@ public class HomeController {
         return getProfileByUserName(userName).getProfileContent();
     }
 
-    @RequestMapping("/private/profile/{id}")
-        public ProfileContent profile(@PathVariable Long id) {
-        return getProfile(id).getProfileContent();
-    }
-
     public Profile getProfile(Long id) {
         synchronized (this) {
             if(this.profile == null) {

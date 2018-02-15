@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProfileDao extends CrudRepository<Profile, Long> {
+public interface ProfileRepository extends CrudRepository<Profile, Long> {
 	List<Profile> findAll();
 
 	Profile findById(Long id);
