@@ -21,6 +21,7 @@ public class Profile {
     private String primaryEmail;
     private String linkedInUrl;
     private String imageUrl;
+    private Long userInfoId;
 
     @OneToOne
     @JsonBackReference
@@ -124,5 +125,13 @@ public class Profile {
 
     public void setProfileContent(ProfileContent profileContent) {
         this.profileContent = profileContent;
+    }
+
+    public Long getUserInfoId() {
+        return userInfoId;
+    }
+
+    public void setUserInfoId(Long userInfoId) {
+        this.userInfoId = userInfoId;
     }
 }

@@ -1,8 +1,11 @@
 package edu.ilyav.api.service.impl;
 
+import edu.ilyav.api.cotrollers.HomeController;
 import edu.ilyav.api.dao.ExperienceRepository;
 import edu.ilyav.api.models.Experience;
+import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
+import edu.ilyav.api.service.ProfileContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +13,9 @@ import java.util.List;
 
 @Service
 public class ExperienceServiceImpl implements ExperienceService {
+
+	@Autowired
+	private ProfileContentService profileContentService;
 
 	@Autowired
 	private ExperienceRepository experienceRepository;
@@ -26,6 +32,9 @@ public class ExperienceServiceImpl implements ExperienceService {
 	
 	@Override
 	public Experience saveOrUpdate(Experience experience) {
+		ProfileContent profileContent = profileContentService.findById(experience.getProfileContentId());
+		experience.setProfileContent(profileContent);
+		HomeController.isChanged = Boolean.TRUE;
 		return experienceRepository.save(experience);
 	}
 	

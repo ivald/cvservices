@@ -16,6 +16,7 @@ public class ProfileContent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Long profileId;
 
     @OneToOne
     @JsonBackReference
@@ -65,5 +66,13 @@ public class ProfileContent {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 }

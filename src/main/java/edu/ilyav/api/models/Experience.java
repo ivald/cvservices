@@ -27,6 +27,7 @@ public class Experience {
     private String imageName;
     private String link;
     private String colorTag;
+    private Long profileContentId;
 
     @ManyToOne
     @JsonBackReference
@@ -142,5 +143,13 @@ public class Experience {
 
     public void setProfileContent(ProfileContent profileContent) {
         this.profileContent = profileContent;
+    }
+
+    public Long getProfileContentId() {
+        return profileContentId;
+    }
+
+    public void setProfileContentId(Long profileContentId) {
+        this.profileContentId = profileContentId;
     }
 }

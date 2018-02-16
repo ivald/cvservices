@@ -1,7 +1,9 @@
 package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Experience;
+import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
+import edu.ilyav.api.service.ProfileContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

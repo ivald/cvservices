@@ -1,37 +1,32 @@
 package edu.ilyav.api.service.impl;
 
-import edu.ilyav.api.dao.ProfileRepository;
-import edu.ilyav.api.models.Profile;
-import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.dao.ProfileContentRepository;
+import edu.ilyav.api.models.ProfileContent;
+import edu.ilyav.api.service.ProfileContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProfileContentServiceImpl implements ProfileService{
+public class ProfileContentServiceImpl implements ProfileContentService {
 
 	@Autowired
-	private ProfileRepository profileDao;
+	private ProfileContentRepository profileContentRepository;
 	
 	@Override
-	public List<Profile> findAllProfiles() {
-		return profileDao.findAll();
+	public List<ProfileContent> findAll() {
+		return profileContentRepository.findAll();
 	}
 
 	@Override
-	public Profile findById(Long id){
-		return profileDao.findById(id);
+	public ProfileContent findById(Long id){
+		return profileContentRepository.findById(id);
 	}
 
 	@Override
-	public Profile findByPrimaryEmail(String primaryEmail){
-		return profileDao.findByPrimaryEmail(primaryEmail);
-	}
-
-	@Override
-	public Profile save(Profile profile) {
-		return profileDao.save(profile);
+	public ProfileContent saveOrUpdate(ProfileContent profileContent) {
+		return profileContentRepository.save(profileContent);
 	}
 	
 }

@@ -25,6 +25,7 @@ public class Education {
     private String imageName;
     private String link;
     private Boolean isProfessionalCourse;
+    private Long profileId;
 
     @ManyToOne
     @JsonBackReference
@@ -132,5 +133,13 @@ public class Education {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 }

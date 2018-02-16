@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest")
 public class HomeController {
 
+    public static Boolean isChanged = Boolean.FALSE;
+
     @Autowired
     private ProfileService profileService;
 
@@ -55,8 +57,9 @@ public class HomeController {
 
     public Profile getProfile(Long id) {
         synchronized (this) {
-            if(this.profile == null) {
+            if(this.profile == null || isChanged) {
                 this.profile = profileService.findById(id);
+                isChanged = Boolean.FALSE;
             }
             Hibernate.initialize(profile.getEducationList());
             Hibernate.initialize(profile.getLanguageList());
@@ -66,8 +69,9 @@ public class HomeController {
 
     public Profile getProfileByUserName(String userName) {
         synchronized (this) {
-            if(this.profile == null) {
+            if(this.profile == null || isChanged) {
                 this.profile = userService.findByUserName(userName).getProfile();
+                isChanged = Boolean.FALSE;
             }
             Hibernate.initialize(profile.getEducationList());
             Hibernate.initialize(profile.getLanguageList());

@@ -1,18 +1,16 @@
 package edu.ilyav.api.dao;
 
-import edu.ilyav.api.models.Profile;
+import edu.ilyav.api.models.ProfileContent;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ProfileContentRepository extends CrudRepository<Profile, Long> {
-	List<Profile> findAll();
+public interface ProfileContentRepository extends CrudRepository<ProfileContent, Long> {
+	List<ProfileContent> findAll();
 
-	Profile findById(Long id);
+	ProfileContent findById(Long id);
 
-	Profile findByPrimaryEmail(String primaryEmail);
-
-	Profile save(Profile profile);
+	ProfileContent save(ProfileContent profileContent);
 }

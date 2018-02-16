@@ -16,6 +16,7 @@ public class UserInfo {
     private String userName;
     private String password;
     private String token;
+    private Long profileId;
 
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -59,5 +60,13 @@ public class UserInfo {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 }

@@ -16,6 +16,7 @@ public class Summary {
     private Long id;
     @Column(length = 2048)
     private String description;
+    private Long profileContentId;
 
     @OneToOne
     @JsonBackReference
@@ -43,5 +44,13 @@ public class Summary {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProfileContentId() {
+        return profileContentId;
+    }
+
+    public void setProfileContentId(Long profileContentId) {
+        this.profileContentId = profileContentId;
     }
 }
