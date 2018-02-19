@@ -1,6 +1,8 @@
 package edu.ilyav.api.service.impl;
 
 import edu.ilyav.api.cotrollers.HomeController;
+import edu.ilyav.api.cotrollers.PhotoController;
+import edu.ilyav.api.cotrollers.ProfileController;
 import edu.ilyav.api.dao.ExperienceRepository;
 import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.ProfileContent;
@@ -21,7 +23,7 @@ public class ExperienceServiceImpl implements ExperienceService {
 	private ExperienceRepository experienceRepository;
 	
 	@Override
-	public List<Experience> findAllProfiles() {
+	public List<Experience> findAll() {
 		return experienceRepository.findAll();
 	}
 
@@ -35,6 +37,7 @@ public class ExperienceServiceImpl implements ExperienceService {
 		ProfileContent profileContent = profileContentService.findById(experience.getProfileContentId());
 		experience.setProfileContent(profileContent);
 		HomeController.isChanged = Boolean.TRUE;
+		ProfileController.isChanged = Boolean.TRUE;
 		return experienceRepository.save(experience);
 	}
 	

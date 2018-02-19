@@ -30,7 +30,7 @@ public class ProfileServiceImpl implements ProfileService{
 	}
 
 	@Override
-	public Profile save(Profile profile) {
+	public Profile saveOrUpdate(Profile profile) {
 		return profileDao.save(profile);
 	}
 	

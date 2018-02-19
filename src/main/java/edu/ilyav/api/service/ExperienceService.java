@@ -5,7 +5,7 @@ import edu.ilyav.api.models.Experience;
 import java.util.List;
 
 public interface ExperienceService {
-	List<Experience> findAllProfiles();
+	List<Experience> findAll();
 
 	Experience findById(Long id);
 

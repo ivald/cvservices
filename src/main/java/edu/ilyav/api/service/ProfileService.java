@@ -11,6 +11,6 @@ public interface ProfileService {
 
 	Profile findByPrimaryEmail(String primaryEmail);
 
-	Profile save(Profile profile);
+	Profile saveOrUpdate(Profile profile);
 
 }

@@ -1,9 +1,7 @@
 package edu.ilyav.api.cotrollers;
 
-import edu.ilyav.api.models.Experience;
-import edu.ilyav.api.models.ProfileContent;
-import edu.ilyav.api.service.ExperienceService;
-import edu.ilyav.api.service.ProfileContentService;
+import edu.ilyav.api.models.Summary;
+import edu.ilyav.api.service.SummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,25 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/private/experience")
-public class ExperienceController {
+@RequestMapping("/rest/private/summary")
+public class SummaryController {
 
 	@Autowired
-	private ExperienceService experienceService;
+	private SummaryService summaryService;
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Experience add(@RequestBody Experience experience) {
-		return experienceService.saveOrUpdate(experience);
+	public Summary add(@RequestBody Summary summary) {
+		return summaryService.saveOrUpdate(summary);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public Experience update(@RequestBody Experience experience) {
-		return experienceService.saveOrUpdate(experience);
+	public Summary update(@RequestBody Summary summary) {
+		return summaryService.saveOrUpdate(summary);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public List<Experience> getAll() {
-		return experienceService.findAll();
+	public List<Summary> getAll() {
+		return summaryService.findAll();
 	}
 
 

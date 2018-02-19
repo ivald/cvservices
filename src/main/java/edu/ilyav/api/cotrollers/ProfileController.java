@@ -13,6 +13,8 @@ import java.util.List;
 @RequestMapping("/rest/private/profile")
 public class ProfileController {
 
+	public static Boolean isChanged = Boolean.FALSE;
+
 	private Profile profile;
 
 	@Autowired
@@ -20,7 +22,7 @@ public class ProfileController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Profile save(@RequestBody Profile profile) {
-		return profileService.save(profile);
+		return profileService.saveOrUpdate(profile);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -35,11 +37,12 @@ public class ProfileController {
 
 	public Profile getProfile(Long id) {
 		synchronized (this) {
-			if(this.profile == null) {
+			if(this.profile == null || isChanged) {
 				this.profile = profileService.findById(id);
+				ProfileController.isChanged = Boolean.FALSE;
+				Hibernate.initialize(profile.getEducationList());
+				Hibernate.initialize(profile.getLanguageList());
 			}
-			Hibernate.initialize(profile.getEducationList());
-			Hibernate.initialize(profile.getLanguageList());
 			return this.profile;
 		}
 	}
