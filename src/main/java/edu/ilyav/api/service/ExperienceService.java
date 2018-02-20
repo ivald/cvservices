@@ -9,6 +9,8 @@ public interface ExperienceService {
 
 	Experience findById(Long id);
 
+	void delete(Long id);
+
 	Experience saveOrUpdate(Experience experience);
 
 }

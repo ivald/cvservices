@@ -5,10 +5,7 @@ import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ProfileContentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +24,12 @@ public class ExperienceController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public Experience update(@RequestBody Experience experience) {
 		return experienceService.saveOrUpdate(experience);
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public void delete(@RequestBody Experience experience) {
+		long i = experience.getId();
+//		return experienceService.delete(id);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)

@@ -9,6 +9,7 @@ import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ProfileContentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,11 @@ public class ExperienceServiceImpl implements ExperienceService {
 	@Override
 	public Experience findById(Long id){
 		return experienceRepository.findById(id);
+	}
+
+	@Override
+	public void delete(Long id){
+		experienceRepository.delete(id);
 	}
 	
 	@Override
