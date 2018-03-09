@@ -21,9 +21,12 @@ public class Education {
     private String activitiesAndSocieties;
     private Long fromYear;
     private Long toYearOrExpected;
+    @Column(length = 2048)
     private String description;
     private String imageName;
     private String link;
+    private String colorTag;
+    private String location;
     private Boolean isProfessionalCourse;
     private Long profileId;
 
@@ -141,5 +144,21 @@ public class Education {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public String getColorTag() {
+        return colorTag;
+    }
+
+    public void setColorTag(String colorTag) {
+        this.colorTag = colorTag;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
