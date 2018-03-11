@@ -61,7 +61,7 @@ public class UserController {
 	@RequestMapping(value="/register", method = RequestMethod.POST)
 	public UserInfo registerUser(@RequestBody UserInfo user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		return userService.save(user);
+		return userService.saveOrUpdate(user);
 	}
 
 	@RequestMapping(value="/all", method = RequestMethod.GET)

@@ -9,6 +9,6 @@ public interface UserService {
 
 	UserInfo findByUserName(String userName);
 
-	UserInfo save(UserInfo userInfo);
+	UserInfo saveOrUpdate(UserInfo userInfo);
 
 }

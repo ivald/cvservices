@@ -2,6 +2,7 @@ package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.models.ProfileContent;
+import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.ProfileService;
 import edu.ilyav.api.service.UserService;
 import org.hibernate.Hibernate;
@@ -59,9 +60,7 @@ public class HomeController {
         synchronized (this) {
             if(this.profile == null || isChanged) {
                 this.profile = profileService.findById(id);
-                isChanged = Boolean.FALSE;
-                Hibernate.initialize(profile.getEducationList());
-                Hibernate.initialize(profile.getLanguageList());
+                updateLazyFetch(this.profile);
             }
             return this.profile;
         }
@@ -70,12 +69,19 @@ public class HomeController {
     public Profile getProfile(String userName) {
         synchronized (this) {
             if(this.profile == null || isChanged) {
-                this.profile = userService.findByUserName(userName).getProfile();
-                isChanged = Boolean.FALSE;
-                Hibernate.initialize(profile.getEducationList());
-                Hibernate.initialize(profile.getLanguageList());
+                UserInfo userInfo = userService.findByUserName(userName);
+                if(userInfo.getProfile() == null) {
+                    this.profile = profileService.findById(userInfo.getProfileId());
+                }
+                updateLazyFetch(this.profile);
             }
             return this.profile;
         }
+    }
+
+    private void updateLazyFetch(Profile profile) {
+        isChanged = Boolean.FALSE;
+        Hibernate.initialize(profile.getEducationList());
+        Hibernate.initialize(profile.getLanguageList());
     }
 }

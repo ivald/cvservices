@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserInfo save(UserInfo userInfo) {
+	public UserInfo saveOrUpdate(UserInfo userInfo) {
 		return userRepository.save(userInfo);
 	}
 	

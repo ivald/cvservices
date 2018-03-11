@@ -21,7 +21,12 @@ public class ProfileController {
 	private ProfileService profileService;
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Profile save(@RequestBody Profile profile) {
+	public Profile add(@RequestBody Profile profile) {
+		return profileService.saveOrUpdate(profile);
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public Profile update(@RequestBody Profile profile) {
 		return profileService.saveOrUpdate(profile);
 	}
 
