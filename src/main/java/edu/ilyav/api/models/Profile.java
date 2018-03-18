@@ -80,7 +80,14 @@ public class Profile {
     }
 
     public List<Education> getEducationList() {
+       educationList.sort((o1, o2) -> {
+            if(o1.getToYearOrExpected() != null)
+                return Integer.parseInt(Long.toString(o2.getFromYear() - o1.getFromYear()));
+            else
+                return -1;
+        });
         return educationList;
+
     }
 
     public void setEducationList(List<Education> educationList) {
