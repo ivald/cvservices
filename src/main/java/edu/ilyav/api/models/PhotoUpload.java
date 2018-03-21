@@ -6,8 +6,9 @@ import com.cloudinary.Transformation;
 import org.springframework.web.multipart.MultipartFile;
 
 public class PhotoUpload extends StoredFile {
-    private String title;
 
+    private Long profileId;
+    private String title;
     private MultipartFile file;
 
     public String getUrl() {
@@ -53,5 +54,13 @@ public class PhotoUpload extends StoredFile {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 }
