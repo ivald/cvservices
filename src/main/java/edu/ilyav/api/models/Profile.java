@@ -21,6 +21,7 @@ public class Profile {
     private String primaryEmail;
     private String linkedInUrl;
     private String imageUrl;
+    private String publicId;
     private Long userInfoId;
 
     @OneToOne
@@ -140,5 +141,13 @@ public class Profile {
 
     public void setUserInfoId(Long userInfoId) {
         this.userInfoId = userInfoId;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
     }
 }

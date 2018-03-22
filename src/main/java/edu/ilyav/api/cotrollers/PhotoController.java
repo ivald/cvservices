@@ -38,7 +38,7 @@ public class PhotoController {
     private ProfileService profileService;
 
     @RequestMapping(value = "/private/photo/profile/{id}", method = RequestMethod.POST)
-    public Profile uploadProfileImage(HttpServletRequest request, @PathVariable Long id) {
+    public String uploadProfileImage(HttpServletRequest request, @PathVariable Long id) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Iterator<String> it = multipartRequest.getFileNames();
         MultipartFile multipartFile = multipartRequest.getFile(it.next());
@@ -50,7 +50,7 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/private/photo/upload", method = RequestMethod.POST)
-    public Profile uploadImage(@ModelAttribute PhotoUpload photoUpload) {
+    public String uploadImage(@ModelAttribute PhotoUpload photoUpload) {
         Profile profile = null;
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
@@ -63,7 +63,11 @@ public class PhotoController {
             System.out.print(uploadResult);
 
             profile = profileService.findById(photoUpload.getProfileId());
-            profile.setImageUrl(uploadResult.get("url").toString());
+
+            Map result = cloudinary.uploader().destroy(profile.getPublicId(), null);
+
+            profile.setImageUrl(uploadResult.get("secure_url").toString());
+            profile.setPublicId(uploadResult.get("public_id").toString());
 
             profile = profileService.saveOrUpdate(profile);
 
@@ -71,7 +75,7 @@ public class PhotoController {
             e.printStackTrace();
         }
 
-        return profile;
+        return profile.getImageUrl();
     }
 
 }
