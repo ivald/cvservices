@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PhotoUpload extends StoredFile {
 
     private Long profileId;
+    private Long experienceId;
     private String title;
     private MultipartFile file;
 
@@ -62,5 +63,13 @@ public class PhotoUpload extends StoredFile {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public Long getExperienceId() {
+        return experienceId;
+    }
+
+    public void setExperienceId(Long experienceId) {
+        this.experienceId = experienceId;
     }
 }

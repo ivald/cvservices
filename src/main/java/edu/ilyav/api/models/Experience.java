@@ -1,8 +1,10 @@
 package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by ilyav on 20/10/17.
@@ -32,6 +34,10 @@ public class Experience {
     @ManyToOne
     @JsonBackReference
     private ProfileContent profileContent;
+
+    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @JsonManagedReference
+    private List<Image> imageList;
 
     public String getTitle() {
         return title;
@@ -151,5 +157,13 @@ public class Experience {
 
     public void setProfileContentId(Long profileContentId) {
         this.profileContentId = profileContentId;
+    }
+
+    public List<Image> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<Image> imageList) {
+        this.imageList = imageList;
     }
 }

@@ -2,8 +2,12 @@ package edu.ilyav.api.cotrollers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import edu.ilyav.api.models.Experience;
+import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.PhotoUpload;
 import edu.ilyav.api.models.Profile;
+import edu.ilyav.api.service.ExperienceService;
+import edu.ilyav.api.service.ImageService;
 import edu.ilyav.api.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +18,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,8 +40,17 @@ public class PhotoController {
     @Value("${apiSecret}")
     private String apiSecret;
 
+    private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+            "cloud_name", this.cloudName, "api_key", this.apiKey, "api_secret", this.apiSecret));
+
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ExperienceService experienceService;
+
+    @Autowired
+    private ImageService imageService;
 
     @RequestMapping(value = "/private/photo/profile/{id}", method = RequestMethod.POST)
     public String uploadProfileImage(HttpServletRequest request, @PathVariable Long id) {
@@ -49,13 +64,22 @@ public class PhotoController {
         return uploadImage(photoUpload);
     }
 
+    @RequestMapping(value = "/private/photo/experience/{id}/{desc}", method = RequestMethod.POST)
+    public String uploadExperienceImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Iterator<String> it = multipartRequest.getFileNames();
+        MultipartFile multipartFile = multipartRequest.getFile(it.next());
+
+        PhotoUpload photoUpload = new PhotoUpload();
+        photoUpload.setFile(multipartFile);
+        photoUpload.setExperienceId(id);
+        photoUpload.setTitle(desc);
+        return uploadExperienceImage(photoUpload);
+    }
+
     @RequestMapping(value = "/private/photo/upload", method = RequestMethod.POST)
     public String uploadImage(@ModelAttribute PhotoUpload photoUpload) {
         Profile profile = null;
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", this.cloudName,
-                "api_key", this.apiKey,
-                "api_secret", this.apiSecret));
 
         Map uploadResult = null;
         try {
@@ -76,6 +100,46 @@ public class PhotoController {
         }
 
         return profile.getImageUrl();
+    }
+
+    public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
+        Experience experience = null;
+        List<Image> images = null;
+        Image image = null;
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+
+        Map uploadResult = null;
+        try {
+            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
+            System.out.print(uploadResult);
+
+            experience = experienceService.findById(photoUpload.getExperienceId());
+
+            if(experience.getImageList() == null || experience.getImageList().isEmpty())
+                images = new ArrayList<>();
+            else
+                images = experience.getImageList();
+
+            image = new Image();
+            image.setImageUrl(uploadResult.get("secure_url").toString());
+            image.setPublicId(uploadResult.get("public_id").toString());
+            image.setExperienceId(experience.getId());
+            image.setDescription(photoUpload.getTitle());
+            image.setExperience(experience);
+            image = imageService.saveOrUpdate(image);
+            images.add(image);
+
+            experience.setImageList(images);
+            experienceService.saveOrUpdate(experience);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image.getImageUrl();
     }
 
 }
