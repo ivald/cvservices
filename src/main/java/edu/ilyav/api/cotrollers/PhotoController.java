@@ -40,9 +40,6 @@ public class PhotoController {
     @Value("${apiSecret}")
     private String apiSecret;
 
-    private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", this.cloudName, "api_key", this.apiKey, "api_secret", this.apiSecret));
-
     @Autowired
     private ProfileService profileService;
 
@@ -80,7 +77,10 @@ public class PhotoController {
     @RequestMapping(value = "/private/photo/upload", method = RequestMethod.POST)
     public String uploadImage(@ModelAttribute PhotoUpload photoUpload) {
         Profile profile = null;
-
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
         Map uploadResult = null;
         try {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
@@ -100,6 +100,25 @@ public class PhotoController {
         }
 
         return profile.getImageUrl();
+    }
+
+    @RequestMapping(value = "/private/image/delete", method = RequestMethod.POST)
+    public String deleteImage(@RequestBody Image image) {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+        Map result = null;
+        try {
+            result = cloudinary.uploader().destroy(image.getPublicId(), null);
+            imageService.delete(image.getId());
+            HomeController.isChanged = Boolean.TRUE;
+            ProfileController.isChanged = Boolean.TRUE;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
     }
 
     public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
