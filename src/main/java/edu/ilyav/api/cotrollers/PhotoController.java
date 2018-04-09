@@ -88,7 +88,9 @@ public class PhotoController {
 
             profile = profileService.findById(photoUpload.getProfileId());
 
-            Map result = cloudinary.uploader().destroy(profile.getPublicId(), null);
+            if(profile.getPublicId() != null && !profile.getPublicId().isEmpty()) {
+                Map result = cloudinary.uploader().destroy(profile.getPublicId(), null);
+            }
 
             profile.setImageUrl(uploadResult.get("secure_url").toString());
             profile.setPublicId(uploadResult.get("public_id").toString());
@@ -158,7 +160,7 @@ public class PhotoController {
             e.printStackTrace();
         }
 
-        return image.getImageUrl();
+        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
     }
 
 }
