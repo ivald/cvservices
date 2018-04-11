@@ -113,9 +113,11 @@ public class PhotoController {
         Map result = null;
         try {
             result = cloudinary.uploader().destroy(image.getPublicId(), null);
-            imageService.delete(image.getId());
-            HomeController.isChanged = Boolean.TRUE;
-            ProfileController.isChanged = Boolean.TRUE;
+            if(!"not found".equals(result.get("result"))) {
+                imageService.delete(image.getId());
+                HomeController.isChanged = Boolean.TRUE;
+                ProfileController.isChanged = Boolean.TRUE;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
