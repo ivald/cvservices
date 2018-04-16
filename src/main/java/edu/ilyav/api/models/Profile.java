@@ -32,9 +32,9 @@ public class Profile {
     @JsonManagedReference
     private ProfileContent profileContent;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @JsonManagedReference
-    private List<Education> educationList;
+//    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+//    @JsonManagedReference
+//    private List<Education> educationList;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
@@ -80,20 +80,20 @@ public class Profile {
         this.linkedInUrl = linkedInUrl;
     }
 
-    public List<Education> getEducationList() {
-       educationList.sort((o1, o2) -> {
-            if(o1.getToYearOrExpected() != null)
-                return Integer.parseInt(Long.toString(o2.getFromYear() - o1.getFromYear()));
-            else
-                return -1;
-        });
-        return educationList;
-
-    }
-
-    public void setEducationList(List<Education> educationList) {
-        this.educationList = educationList;
-    }
+//    public List<Education> getEducationList() {
+//       educationList.sort((o1, o2) -> {
+//            if(o1.getToYearOrExpected() != null)
+//                return Integer.parseInt(Long.toString(o2.getFromYear() - o1.getFromYear()));
+//            else
+//                return -1;
+//        });
+//        return educationList;
+//
+//    }
+//
+//    public void setEducationList(List<Education> educationList) {
+//        this.educationList = educationList;
+//    }
 
     public List<Language> getLanguageList() {
         return languageList;

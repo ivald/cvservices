@@ -2,10 +2,8 @@ package edu.ilyav.api.cotrollers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import edu.ilyav.api.models.Experience;
-import edu.ilyav.api.models.Image;
-import edu.ilyav.api.models.PhotoUpload;
-import edu.ilyav.api.models.Profile;
+import edu.ilyav.api.models.*;
+import edu.ilyav.api.service.EducationService;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ImageService;
 import edu.ilyav.api.service.ProfileService;
@@ -47,6 +45,9 @@ public class PhotoController {
     private ExperienceService experienceService;
 
     @Autowired
+    private EducationService educationService;
+
+    @Autowired
     private ImageService imageService;
 
     @RequestMapping(value = "/private/photo/profile/{id}", method = RequestMethod.POST)
@@ -72,6 +73,19 @@ public class PhotoController {
         photoUpload.setExperienceId(id);
         photoUpload.setTitle(desc);
         return uploadExperienceImage(photoUpload);
+    }
+
+    @RequestMapping(value = "/private/photo/education/{id}/{desc}", method = RequestMethod.POST)
+    public String uploadEducationImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Iterator<String> it = multipartRequest.getFileNames();
+        MultipartFile multipartFile = multipartRequest.getFile(it.next());
+
+        PhotoUpload photoUpload = new PhotoUpload();
+        photoUpload.setFile(multipartFile);
+        photoUpload.setEducationId(id);
+        photoUpload.setTitle(desc);
+        return uploadEducationImage(photoUpload);
     }
 
     @RequestMapping(value = "/private/photo/upload", method = RequestMethod.POST)
@@ -157,6 +171,46 @@ public class PhotoController {
 
             experience.setImageList(images);
             experienceService.saveOrUpdate(experience);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+    }
+
+    public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) {
+        Education education = null;
+        List<Image> images = null;
+        Image image = null;
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+
+        Map uploadResult = null;
+        try {
+            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
+            System.out.print(uploadResult);
+
+            education = educationService.findById(photoUpload.getEducationId());
+
+            if(education.getImageList() == null || education.getImageList().isEmpty())
+                images = new ArrayList<>();
+            else
+                images = education.getImageList();
+
+            image = new Image();
+            image.setImageUrl(uploadResult.get("secure_url").toString());
+            image.setPublicId(uploadResult.get("public_id").toString());
+            image.setEducationId(education.getId());
+            image.setEducation(education);
+            image.setDescription(photoUpload.getTitle());
+            image = imageService.saveOrUpdate(image);
+            images.add(image);
+
+            education.setImageList(images);
+            educationService.saveOrUpdate(education);
 
         } catch (IOException e) {
             e.printStackTrace();

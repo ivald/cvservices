@@ -36,7 +36,7 @@ public class Experience {
     private ProfileContent profileContent;
 
     @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference(value="experience-image")
     private List<Image> imageList;
 
     public String getTitle() {

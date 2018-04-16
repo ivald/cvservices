@@ -30,6 +30,10 @@ public class ProfileContent {
     @JsonManagedReference
     private List<Experience> experienceList;
 
+    @OneToMany(mappedBy = "profileContent", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @JsonManagedReference
+    private List<Education> educationList;
+
     public Summary getSummary() {
         return summary;
     }
@@ -50,6 +54,21 @@ public class ProfileContent {
 
     public void setExperienceList(List<Experience> experienceList) {
         this.experienceList = experienceList;
+    }
+
+    public List<Education> getEducationList() {
+        educationList.sort((o1, o2) -> {
+            if(o1.getToYearOrExpected() != null)
+                return Integer.parseInt(Long.toString(o2.getFromYear() - o1.getFromYear()));
+            else
+                return -1;
+        });
+        return educationList;
+
+    }
+
+    public void setEducationList(List<Education> educationList) {
+        this.educationList = educationList;
     }
 
     public Profile getProfile() {

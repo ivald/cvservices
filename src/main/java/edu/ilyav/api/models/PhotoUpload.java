@@ -9,6 +9,7 @@ public class PhotoUpload extends StoredFile {
 
     private Long profileId;
     private Long experienceId;
+    private Long educationId;
     private String title;
     private MultipartFile file;
 
@@ -71,5 +72,13 @@ public class PhotoUpload extends StoredFile {
 
     public void setExperienceId(Long experienceId) {
         this.experienceId = experienceId;
+    }
+
+    public Long getEducationId() {
+        return educationId;
+    }
+
+    public void setEducationId(Long educationId) {
+        this.educationId = educationId;
     }
 }

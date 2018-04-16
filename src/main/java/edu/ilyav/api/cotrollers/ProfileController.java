@@ -45,7 +45,7 @@ public class ProfileController {
 			if(this.profile == null || isChanged) {
 				this.profile = profileService.findById(id);
 				ProfileController.isChanged = Boolean.FALSE;
-				Hibernate.initialize(profile.getEducationList());
+				Hibernate.initialize(profile.getProfileContent().getEducationList());
 				Hibernate.initialize(profile.getLanguageList());
 			}
 			return this.profile;

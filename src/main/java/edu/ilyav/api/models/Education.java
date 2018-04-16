@@ -1,8 +1,10 @@
 package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by ilyav on 17/10/17.
@@ -29,10 +31,19 @@ public class Education {
     private String location;
     private Boolean isProfessionalCourse;
     private Long profileId;
+    private Long profileContentId;
+
+//    @ManyToOne
+//    @JsonBackReference
+//    private Profile profile;
 
     @ManyToOne
     @JsonBackReference
-    private Profile profile;
+    private ProfileContent profileContent;
+
+    @OneToMany(mappedBy = "education", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @JsonManagedReference(value="education-image")
+    private List<Image> imageList;
 
     public String getSchoolName() {
         return schoolName;
@@ -122,13 +133,13 @@ public class Education {
         this.isProfessionalCourse = isProfessionalCourse;
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
+//    public Profile getProfile() {
+//        return profile;
+//    }
+//
+//    public void setProfile(Profile profile) {
+//        this.profile = profile;
+//    }
 
     public Long getId() {
         return id;
@@ -160,5 +171,29 @@ public class Education {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public List<Image> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<Image> imageList) {
+        this.imageList = imageList;
+    }
+
+    public ProfileContent getProfileContent() {
+        return profileContent;
+    }
+
+    public void setProfileContent(ProfileContent profileContent) {
+        this.profileContent = profileContent;
+    }
+
+    public Long getProfileContentId() {
+        return profileContentId;
+    }
+
+    public void setProfileContentId(Long profileContentId) {
+        this.profileContentId = profileContentId;
     }
 }

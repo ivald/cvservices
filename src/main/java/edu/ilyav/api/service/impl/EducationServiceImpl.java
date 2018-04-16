@@ -43,7 +43,7 @@ public class EducationServiceImpl implements EducationService {
 	@Override
 	public Education saveOrUpdate(Education education) {
 		Profile profile = profileService.findById(education.getProfileId());
-		education.setProfile(profile);
+		education.setProfileContent(profile.getProfileContent());
 		HomeController.isChanged = Boolean.TRUE;
 		ProfileController.isChanged = Boolean.TRUE;
 		return educationRepository.save(education);

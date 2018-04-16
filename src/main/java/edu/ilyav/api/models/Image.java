@@ -18,10 +18,15 @@ public class Image {
     private String publicId;
     private String description;
     private Long experienceId;
+    private Long educationId;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value="experience-image")
     private Experience experience;
+
+    @ManyToOne
+    @JsonBackReference(value="education-image")
+    private Education education;
 
     public Long getId() {
         return id;
@@ -69,5 +74,21 @@ public class Image {
 
     public void setExperience(Experience experience) {
         this.experience = experience;
+    }
+
+    public Education getEducation() {
+        return education;
+    }
+
+    public void setEducation(Education education) {
+        this.education = education;
+    }
+
+    public Long getEducationId() {
+        return educationId;
+    }
+
+    public void setEducationId(Long educationId) {
+        this.educationId = educationId;
     }
 }
