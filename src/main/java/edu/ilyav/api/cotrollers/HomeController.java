@@ -81,6 +81,7 @@ public class HomeController {
 
     private void updateLazyFetch(Profile profile) {
         isChanged = Boolean.FALSE;
+        Hibernate.initialize(profile.getProfileContent().getExperienceList());
         Hibernate.initialize(profile.getProfileContent().getEducationList());
         Hibernate.initialize(profile.getLanguageList());
     }

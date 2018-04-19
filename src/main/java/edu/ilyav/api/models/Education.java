@@ -33,10 +33,6 @@ public class Education {
     private Long profileId;
     private Long profileContentId;
 
-//    @ManyToOne
-//    @JsonBackReference
-//    private Profile profile;
-
     @ManyToOne
     @JsonBackReference
     private ProfileContent profileContent;

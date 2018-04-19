@@ -26,7 +26,7 @@ public class ProfileContent {
     @JsonManagedReference
     private Summary summary;
 
-    @OneToMany(mappedBy = "profileContent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "profileContent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Experience> experienceList;
 
