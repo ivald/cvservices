@@ -35,7 +35,7 @@ public class Experience {
     @JsonBackReference
     private ProfileContent profileContent;
 
-    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JsonManagedReference(value="experience-image")
     private List<Image> imageList;
 

@@ -37,7 +37,7 @@ public class Education {
     @JsonBackReference
     private ProfileContent profileContent;
 
-    @OneToMany(mappedBy = "education", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "education", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JsonManagedReference(value="education-image")
     private List<Image> imageList;
 

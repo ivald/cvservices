@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ilyav on 17/08/17.
@@ -127,11 +124,24 @@ public class PhotoController {
         Map result = null;
         try {
             result = cloudinary.uploader().destroy(image.getPublicId(), null);
+            ListIterator it;
             if(!"not found".equals(result.get("result"))) {
+                it = educationService.findById(image.getEducationId()).getImageList().listIterator();
+                while (it.hasNext()) {
+                    Image img = (Image) it.next();
+                    if (image.getId().equals(img.getId())) {
+                        it.remove();
+                        System.out.println("Image: " + img.getId() + " was removed.");
+                    }
+                }
                 imageService.delete(image.getId());
-                HomeController.isChanged = Boolean.TRUE;
-                ProfileController.isChanged = Boolean.TRUE;
             }
+//            else if(imageService.findById(image.getId()) != null) {
+//                        imageService.delete(image.getId());
+//                        result.put("result", "ok");
+//            }
+            HomeController.isChanged = Boolean.TRUE;
+            ProfileController.isChanged = Boolean.TRUE;
         } catch (IOException e) {
             e.printStackTrace();
         }
