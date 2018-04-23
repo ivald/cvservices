@@ -115,8 +115,8 @@ public class PhotoController {
         return profile.getImageUrl();
     }
 
-    @RequestMapping(value = "/private/image/delete", method = RequestMethod.POST)
-    public String deleteImage(@RequestBody Image image) {
+    @RequestMapping(value = "/private/image/education/delete", method = RequestMethod.POST)
+    public String deleteEducationImage(@RequestBody Image image) {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
@@ -127,19 +127,16 @@ public class PhotoController {
             ListIterator it;
             if(!"not found".equals(result.get("result"))) {
                 it = educationService.findById(image.getEducationId()).getImageList().listIterator();
-                while (it.hasNext()) {
-                    Image img = (Image) it.next();
-                    if (image.getId().equals(img.getId())) {
-                        it.remove();
-                        System.out.println("Image: " + img.getId() + " was removed.");
-                    }
+                checkImgExist(image, it, "Education");
+                imageService.delete(image.getId());
+            } else if(imageService.findById(image.getId()) != null) {
+                if(image.getEducationId() != null) {
+                    it = educationService.findById(image.getEducationId()).getImageList().listIterator();
+                    checkImgExist(image, it, "Education");
                 }
                 imageService.delete(image.getId());
+                result.put("result", "ok");
             }
-//            else if(imageService.findById(image.getId()) != null) {
-//                        imageService.delete(image.getId());
-//                        result.put("result", "ok");
-//            }
             HomeController.isChanged = Boolean.TRUE;
             ProfileController.isChanged = Boolean.TRUE;
         } catch (IOException e) {
@@ -147,6 +144,47 @@ public class PhotoController {
         }
 
         return result.toString();
+    }
+
+    @RequestMapping(value = "/private/image/experience/delete", method = RequestMethod.POST)
+    public String deleteExperienceImage(@RequestBody Image image) {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+        Map result = null;
+        try {
+            result = cloudinary.uploader().destroy(image.getPublicId(), null);
+            ListIterator it;
+            if(!"not found".equals(result.get("result"))) {
+                it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
+                checkImgExist(image, it, "Experience");
+                imageService.delete(image.getId());
+            } else if(imageService.findById(image.getId()) != null) {
+                if(image.getExperienceId() != null) {
+                    it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
+                    checkImgExist(image, it, "Experience");
+                }
+                imageService.delete(image.getId());
+                result.put("result", "ok");
+            }
+            HomeController.isChanged = Boolean.TRUE;
+            ProfileController.isChanged = Boolean.TRUE;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
+    private void checkImgExist(Image image, ListIterator it, String type) {
+        while (it.hasNext()) {
+            Image img = (Image) it.next();
+            if (image.getId().equals(img.getId())) {
+                it.remove();
+                System.out.println(type + " Image: " + img.getId() + " was removed.");
+            }
+        }
     }
 
     public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
