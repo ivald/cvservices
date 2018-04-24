@@ -133,6 +133,9 @@ public class PhotoController {
                 if(image.getEducationId() != null) {
                     it = educationService.findById(image.getEducationId()).getImageList().listIterator();
                     checkImgExist(image, it, "Education");
+                } else {
+                    it = educationService.findAll().listIterator();
+                    checkEduImgExist(image, it, "Education");
                 }
                 imageService.delete(image.getId());
                 result.put("result", "ok");
@@ -164,6 +167,9 @@ public class PhotoController {
                 if(image.getExperienceId() != null) {
                     it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
                     checkImgExist(image, it, "Experience");
+                } else {
+                    it = experienceService.findAll().listIterator();
+                    checkExpImgExist(image, it, "Experience");
                 }
                 imageService.delete(image.getId());
                 result.put("result", "ok");
@@ -175,6 +181,34 @@ public class PhotoController {
         }
 
         return result.toString();
+    }
+
+    private void checkExpImgExist(Image image, ListIterator it, String type) {
+        while (it.hasNext()) {
+            Experience exp = (Experience) it.next();
+            ListIterator itExp = exp.getImageList().listIterator();
+            while (itExp.hasNext()) {
+                Image img = (Image) itExp.next();
+                if (image.getId().equals(img.getId())) {
+                    itExp.remove();
+                    System.out.println(type + " Image: " + img.getId() + " was removed.");
+                }
+            }
+        }
+    }
+
+    private void checkEduImgExist(Image image, ListIterator it, String type) {
+        while (it.hasNext()) {
+            Education edu = (Education) it.next();
+            ListIterator itEdu = edu.getImageList().listIterator();
+            while (itEdu.hasNext()) {
+                Image img = (Image) itEdu.next();
+                if (image.getId().equals(img.getId())) {
+                    itEdu.remove();
+                    System.out.println(type + " Image: " + img.getId() + " was removed.");
+                }
+            }
+        }
     }
 
     private void checkImgExist(Image image, ListIterator it, String type) {
