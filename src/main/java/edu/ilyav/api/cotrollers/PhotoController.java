@@ -26,6 +26,9 @@ import java.util.*;
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
 public class PhotoController {
 
+    public final static String EDUCATION = "Education";
+    public final static String EXPERIENCE = "Experience";
+
     @Value("${cloudName}")
     private String cloudName;
 
@@ -127,26 +130,30 @@ public class PhotoController {
             ListIterator it;
             if(!"not found".equals(result.get("result"))) {
                 it = educationService.findById(image.getEducationId()).getImageList().listIterator();
-                checkImgExist(image, it, "Education");
+                checkImgExist(image, it, EDUCATION);
                 imageService.delete(image.getId());
             } else if(imageService.findById(image.getId()) != null) {
                 if(image.getEducationId() != null) {
                     it = educationService.findById(image.getEducationId()).getImageList().listIterator();
-                    checkImgExist(image, it, "Education");
+                    checkImgExist(image, it, EDUCATION);
                 } else {
                     it = educationService.findAll().listIterator();
-                    checkEduImgExist(image, it, "Education");
+                    checkExpEduImgExist(image, it, EDUCATION);
                 }
                 imageService.delete(image.getId());
                 result.put("result", "ok");
             }
-            HomeController.isChanged = Boolean.TRUE;
-            ProfileController.isChanged = Boolean.TRUE;
+            updateHomeProfileObjects();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return result.toString();
+    }
+
+    private void updateHomeProfileObjects() {
+        HomeController.isChanged = Boolean.TRUE;
+        ProfileController.isChanged = Boolean.TRUE;
     }
 
     @RequestMapping(value = "/private/image/experience/delete", method = RequestMethod.POST)
@@ -161,21 +168,20 @@ public class PhotoController {
             ListIterator it;
             if(!"not found".equals(result.get("result"))) {
                 it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
-                checkImgExist(image, it, "Experience");
+                checkImgExist(image, it, EXPERIENCE);
                 imageService.delete(image.getId());
             } else if(imageService.findById(image.getId()) != null) {
                 if(image.getExperienceId() != null) {
                     it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
-                    checkImgExist(image, it, "Experience");
+                    checkImgExist(image, it, EXPERIENCE);
                 } else {
                     it = experienceService.findAll().listIterator();
-                    checkExpImgExist(image, it, "Experience");
+                    checkExpEduImgExist(image, it, EXPERIENCE);
                 }
                 imageService.delete(image.getId());
                 result.put("result", "ok");
             }
-            HomeController.isChanged = Boolean.TRUE;
-            ProfileController.isChanged = Boolean.TRUE;
+            updateHomeProfileObjects();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -183,31 +189,12 @@ public class PhotoController {
         return result.toString();
     }
 
-    private void checkExpImgExist(Image image, ListIterator it, String type) {
+    private void checkExpEduImgExist(Image image, ListIterator it, String type) {
+        ListIterator itImg;
         while (it.hasNext()) {
-            Experience exp = (Experience) it.next();
-            ListIterator itExp = exp.getImageList().listIterator();
-            while (itExp.hasNext()) {
-                Image img = (Image) itExp.next();
-                if (image.getId().equals(img.getId())) {
-                    itExp.remove();
-                    System.out.println(type + " Image: " + img.getId() + " was removed.");
-                }
-            }
-        }
-    }
-
-    private void checkEduImgExist(Image image, ListIterator it, String type) {
-        while (it.hasNext()) {
-            Education edu = (Education) it.next();
-            ListIterator itEdu = edu.getImageList().listIterator();
-            while (itEdu.hasNext()) {
-                Image img = (Image) itEdu.next();
-                if (image.getId().equals(img.getId())) {
-                    itEdu.remove();
-                    System.out.println(type + " Image: " + img.getId() + " was removed.");
-                }
-            }
+            itImg = ("Experience".equals(type) ? ((Experience) it.next()).getImageList().listIterator() :
+                    ((Education) it.next()).getImageList().listIterator());
+            checkImgExist(image, itImg, type);
         }
     }
 
@@ -230,7 +217,7 @@ public class PhotoController {
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
 
-        Map uploadResult = null;
+        Map uploadResult;
         try {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
             System.out.print(uploadResult);
@@ -262,15 +249,15 @@ public class PhotoController {
     }
 
     public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) {
-        Education education = null;
-        List<Image> images = null;
+        Education education;
+        List<Image> images;
         Image image = null;
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
 
-        Map uploadResult = null;
+        Map uploadResult;
         try {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
             System.out.print(uploadResult);
