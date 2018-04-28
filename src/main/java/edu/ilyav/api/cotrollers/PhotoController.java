@@ -166,7 +166,7 @@ public class PhotoController {
         try {
             result = cloudinary.uploader().destroy(image.getPublicId(), null);
             ListIterator it;
-            if(!"not found".equals(result.get("result"))) {
+            if(!"not found".equals(result.get("result")) && image.getExperienceId() != null) {
                 it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
                 checkImgExist(image, it, EXPERIENCE);
                 imageService.delete(image.getId());
