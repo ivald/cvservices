@@ -3,17 +3,13 @@ package edu.ilyav.api.cotrollers;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import edu.ilyav.api.models.*;
-import edu.ilyav.api.service.EducationService;
-import edu.ilyav.api.service.ExperienceService;
-import edu.ilyav.api.service.ImageService;
-import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
@@ -50,6 +46,9 @@ public class PhotoController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private PhotoService photoService;
+
     @RequestMapping(value = "/private/photo/profile/{id}", method = RequestMethod.POST)
     public String uploadProfileImage(HttpServletRequest request, @PathVariable Long id) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -62,6 +61,38 @@ public class PhotoController {
         return uploadImage(photoUpload);
     }
 
+    @RequestMapping(value = "/private/experience/link/{id}", method = RequestMethod.POST)
+    public String uploadExpLinkImage(HttpServletRequest request, @PathVariable Long id) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Image image = new Image();
+
+        try {
+            if (multipartRequest != null && multipartRequest.getParameter("url") != null) {
+                image = photoService.uploadExperienceLink(multipartRequest.getParameter("url"), id);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+    }
+
+    @RequestMapping(value = "/private/education/link/{id}", method = RequestMethod.POST)
+    public String uploadEduLinkImage(HttpServletRequest request, @PathVariable Long id) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Image image = new Image();
+
+        try {
+            if (multipartRequest != null && multipartRequest.getParameter("url") != null) {
+                image = photoService.uploadEducationLink(multipartRequest.getParameter("url"), id);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+    }
+
     @RequestMapping(value = "/private/photo/experience/{id}/{desc}", method = RequestMethod.POST)
     public String uploadExperienceImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -72,7 +103,7 @@ public class PhotoController {
         photoUpload.setFile(multipartFile);
         photoUpload.setExperienceId(id);
         photoUpload.setTitle(desc);
-        return uploadExperienceImage(photoUpload);
+        return photoService.uploadExperienceImage(photoUpload);
     }
 
     @RequestMapping(value = "/private/photo/education/{id}/{desc}", method = RequestMethod.POST)
@@ -85,7 +116,7 @@ public class PhotoController {
         photoUpload.setFile(multipartFile);
         photoUpload.setEducationId(id);
         photoUpload.setTitle(desc);
-        return uploadEducationImage(photoUpload);
+        return photoService.uploadEducationImage(photoUpload);
     }
 
     @RequestMapping(value = "/private/photo/upload", method = RequestMethod.POST)
@@ -207,85 +238,4 @@ public class PhotoController {
             }
         }
     }
-
-    public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
-        Experience experience = null;
-        List<Image> images = null;
-        Image image = null;
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", this.cloudName,
-                "api_key", this.apiKey,
-                "api_secret", this.apiSecret));
-
-        Map uploadResult;
-        try {
-            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
-            System.out.print(uploadResult);
-
-            experience = experienceService.findById(photoUpload.getExperienceId());
-
-            if(experience.getImageList() == null || experience.getImageList().isEmpty())
-                images = new ArrayList<>();
-            else
-                images = experience.getImageList();
-
-            image = new Image();
-            image.setImageUrl(uploadResult.get("secure_url").toString());
-            image.setPublicId(uploadResult.get("public_id").toString());
-            image.setExperienceId(experience.getId());
-            image.setDescription(photoUpload.getTitle());
-            image.setExperience(experience);
-            image = imageService.saveOrUpdate(image);
-            images.add(image);
-
-            experience.setImageList(images);
-            experienceService.saveOrUpdate(experience);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
-    }
-
-    public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) {
-        Education education;
-        List<Image> images;
-        Image image = null;
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", this.cloudName,
-                "api_key", this.apiKey,
-                "api_secret", this.apiSecret));
-
-        Map uploadResult;
-        try {
-            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
-            System.out.print(uploadResult);
-
-            education = educationService.findById(photoUpload.getEducationId());
-
-            if(education.getImageList() == null || education.getImageList().isEmpty())
-                images = new ArrayList<>();
-            else
-                images = education.getImageList();
-
-            image = new Image();
-            image.setImageUrl(uploadResult.get("secure_url").toString());
-            image.setPublicId(uploadResult.get("public_id").toString());
-            image.setEducationId(education.getId());
-            image.setEducation(education);
-            image.setDescription(photoUpload.getTitle());
-            image = imageService.saveOrUpdate(image);
-            images.add(image);
-
-            education.setImageList(images);
-            educationService.saveOrUpdate(education);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
-    }
-
 }
