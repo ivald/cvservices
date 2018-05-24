@@ -187,6 +187,8 @@ public class PhotoServiceImpl implements PhotoService {
     private Image urlAnalise(String url) throws IOException {
         Document doc = Jsoup.connect(url).get();
         Elements meta = doc.select("meta[content]");
+        Elements title = doc.select("title");
+
         Image image = new Image();
         for (Element src : meta) {
             String s = src.attr("property");
@@ -206,26 +208,40 @@ public class PhotoServiceImpl implements PhotoService {
             }
         }
 
-        if(!image.getImageUrl().isEmpty() && !image.getDescription().isEmpty()) {
-            try {
-                //Initialize SecureRandom: NativePRNG, SHA1PRNG
-                SecureRandom prng = new SecureRandom();
+        for (Element src : title) {
+            String t = src.html().toString().replaceAll("amp;", "");
+            image.setTitle(t);
+        }
 
-                //generate a random number
-                String randomNum = new Integer(prng.nextInt()).toString();
-
-                //get its digest
-                //Algorithm Name: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512
-                MessageDigest sha = MessageDigest.getInstance("MD2");
-                byte[] result = sha.digest(randomNum.getBytes());
-
-                image.setPublicId(hexEncode(result));
-            } catch (NoSuchAlgorithmException ex) {
-                System.err.println(ex);
-            }
+        if(image.getImageUrl() != null && !image.getImageUrl().isEmpty() && !image.getDescription().isEmpty()) {
+            image.setSourceUrl(url);
+            createImagePublicId(image);
+        } else {
+            image.setImageUrl("http://res.cloudinary.com/ilyavimages/image/upload/v1527140348/white-image_rcvvfm.png");
+            createImagePublicId(image);
         }
 
         return image;
+    }
+
+    private void createImagePublicId(Image image) {
+        try {
+
+            //Initialize SecureRandom: NativePRNG, SHA1PRNG
+            SecureRandom prng = new SecureRandom();
+
+            //generate a random number
+            String randomNum = new Integer(prng.nextInt()).toString();
+
+            //get its digest
+            //Algorithm Name: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512
+            MessageDigest sha = MessageDigest.getInstance("MD2");
+            byte[] result = sha.digest(randomNum.getBytes());
+
+            image.setPublicId(hexEncode(result));
+        } catch (NoSuchAlgorithmException ex) {
+            System.err.println(ex);
+        }
     }
 
     /**

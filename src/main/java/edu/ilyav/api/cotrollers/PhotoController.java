@@ -74,7 +74,12 @@ public class PhotoController {
             e.printStackTrace();
         }
 
-        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+        return image.getImageUrl() + "@" +
+                image.getPublicId() + "@" +
+                image.getId() + "@" +
+                image.getTitle() + "@" +
+                image.getSourceUrl() + "@" +
+                image.getDescription();
     }
 
     @RequestMapping(value = "/private/education/link/{id}", method = RequestMethod.POST)
@@ -90,7 +95,12 @@ public class PhotoController {
             e.printStackTrace();
         }
 
-        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+        return image.getImageUrl() + "@" +
+                image.getPublicId() + "@" +
+                image.getId() + "@" +
+                image.getTitle() + "@" +
+                image.getSourceUrl() + "@" +
+                image.getDescription();
     }
 
     @RequestMapping(value = "/private/photo/experience/{id}/{desc}", method = RequestMethod.POST)

@@ -17,6 +17,8 @@ public class Image {
     private String imageUrl;
     private String publicId;
     private String description;
+    private String sourceUrl;
+    private String title;
     private Long experienceId;
     private Long educationId;
 
@@ -90,5 +92,21 @@ public class Image {
 
     public void setEducationId(Long educationId) {
         this.educationId = educationId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 }
