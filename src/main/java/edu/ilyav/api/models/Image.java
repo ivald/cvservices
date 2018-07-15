@@ -8,11 +8,7 @@ import javax.persistence.*;
  * Created by ilyav on 17/10/17.
  */
 @Entity
-public class Image {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Image extends BaseModule {
 
     private String imageUrl;
     private String publicId;
@@ -29,14 +25,6 @@ public class Image {
     @ManyToOne
     @JsonBackReference(value="education-image")
     private Education education;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getImageUrl() {
         return imageUrl;

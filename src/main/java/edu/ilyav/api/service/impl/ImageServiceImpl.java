@@ -7,6 +7,7 @@ import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ImageService;
+import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +41,7 @@ public class ImageServiceImpl implements ImageService {
 	public Image saveOrUpdate(Image image) {
 		Experience experience = experienceService.findById(image.getExperienceId());
 		image.setExperience(experience);
-		HomeController.isChanged = Boolean.TRUE;
-		ProfileController.isChanged = Boolean.TRUE;
+		Constants.updateHomeProfileObjects();
 		return imageRepository.save(image);
 	}
 	

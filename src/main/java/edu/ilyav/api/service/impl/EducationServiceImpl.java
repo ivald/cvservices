@@ -11,6 +11,7 @@ import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.EducationService;
 import edu.ilyav.api.service.ProfileContentService;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +45,7 @@ public class EducationServiceImpl implements EducationService {
 	public Education saveOrUpdate(Education education) {
 		Profile profile = profileService.findById(education.getProfileId());
 		education.setProfileContent(profile.getProfileContent());
-		HomeController.isChanged = Boolean.TRUE;
-		ProfileController.isChanged = Boolean.TRUE;
+		Constants.updateHomeProfileObjects();
 		return educationRepository.save(education);
 	}
 	

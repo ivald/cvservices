@@ -9,11 +9,8 @@ import java.util.List;
  * Created by ilyav on 19/10/17.
  */
 @Entity
-public class Summary {
+public class Summary extends BaseModule {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @Column(length = 2048)
     private String description;
     private Long profileContentId;
@@ -36,14 +33,6 @@ public class Summary {
 
     public void setProfileContent(ProfileContent profileContent) {
         this.profileContent = profileContent;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getProfileContentId() {

@@ -5,6 +5,7 @@ import edu.ilyav.api.cotrollers.ProfileController;
 import edu.ilyav.api.dao.ProfileRepository;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +34,7 @@ public class ProfileServiceImpl implements ProfileService{
 
 	@Override
 	public Profile saveOrUpdate(Profile profile) {
-		HomeController.isChanged = Boolean.TRUE;
-		ProfileController.isChanged = Boolean.TRUE;
+		Constants.updateHomeProfileObjects();
 		return profileDao.save(profile);
 	}
 	

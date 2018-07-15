@@ -7,6 +7,7 @@ import edu.ilyav.api.models.Language;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.LanguageService;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +41,7 @@ public class LanguageServiceImpl implements LanguageService {
 	public Language saveOrUpdate(Language language) {
 		Profile profile = profileService.findById(language.getProfileId());
 		language.setProfile(profile);
-		HomeController.isChanged = Boolean.TRUE;
-		ProfileController.isChanged = Boolean.TRUE;
+		Constants.updateHomeProfileObjects();
 		return languageRepository.save(language);
 	}
 	

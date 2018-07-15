@@ -10,11 +10,7 @@ import java.util.List;
  * Created by ilyav on 20/10/17.
  */
 @Entity
-public class Experience {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Experience extends BaseModule {
 
     private String title;
     private String company;
@@ -133,14 +129,6 @@ public class Experience {
 
     public void setColorTag(String colorTag) {
         this.colorTag = colorTag;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public ProfileContent getProfileContent() {

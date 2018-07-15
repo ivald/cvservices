@@ -9,7 +9,7 @@ public interface ExperienceService {
 
 	Experience findById(Long id);
 
-	void delete(Long id);
+	String delete(Long id) throws Exception;
 
 	Experience saveOrUpdate(Experience experience);
 

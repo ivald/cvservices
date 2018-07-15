@@ -7,6 +7,7 @@ import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.models.Summary;
 import edu.ilyav.api.service.ProfileContentService;
 import edu.ilyav.api.service.SummaryService;
+import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,7 @@ public class SummaryServiceImpl implements SummaryService {
 	public Summary saveOrUpdate(Summary summary) {
 		ProfileContent profileContent = profileContentService.findById(summary.getProfileContentId());
 		summary.setProfileContent(profileContent);
-		HomeController.isChanged = Boolean.TRUE;
-		ProfileController.isChanged = Boolean.TRUE;
+		Constants.updateHomeProfileObjects();
 		return summaryRepository.save(summary);
 	}
 

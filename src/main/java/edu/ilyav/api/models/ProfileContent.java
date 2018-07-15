@@ -11,11 +11,8 @@ import java.util.List;
  * Created by ilyav on 22/10/17.
  */
 @Entity
-public class ProfileContent {
+public class ProfileContent extends BaseModule {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private Long profileId;
 
     @OneToOne
@@ -77,14 +74,6 @@ public class ProfileContent {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getProfileId() {

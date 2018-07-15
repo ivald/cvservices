@@ -9,11 +9,7 @@ import javax.persistence.*;
  * Created by ilyav on 17/10/17.
  */
 @Entity
-public class Language {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Language extends BaseModule {
 
     private String languageName;
     private String languageDescription;
@@ -45,14 +41,6 @@ public class Language {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getProfileId() {

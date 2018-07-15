@@ -27,9 +27,9 @@ public class ExperienceController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public void delete(@RequestBody Experience experience) {
-		long i = experience.getId();
-//		return experienceService.delete(id);
+	public String delete(@RequestBody Experience experience) throws Exception {
+		long id = experience.getId();
+		return experienceService.delete(id);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)

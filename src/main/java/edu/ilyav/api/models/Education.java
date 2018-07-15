@@ -10,11 +10,7 @@ import java.util.List;
  * Created by ilyav on 17/10/17.
  */
 @Entity
-public class Education {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Education extends BaseModule {
 
     private String schoolName;
     private String degreeName;
@@ -127,22 +123,6 @@ public class Education {
 
     public void setIsProfessionalCourse(Boolean isProfessionalCourse) {
         this.isProfessionalCourse = isProfessionalCourse;
-    }
-
-//    public Profile getProfile() {
-//        return profile;
-//    }
-//
-//    public void setProfile(Profile profile) {
-//        this.profile = profile;
-//    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getProfileId() {

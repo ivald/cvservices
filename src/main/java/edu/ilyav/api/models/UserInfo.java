@@ -8,11 +8,8 @@ import javax.persistence.*;
  * Created by ilyav on 17/10/17.
  */
 @Entity
-public class UserInfo {
+public class UserInfo extends BaseModule {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String userName;
     private String password;
     private String token;
@@ -36,14 +33,6 @@ public class UserInfo {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Profile getProfile() {

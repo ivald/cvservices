@@ -2,15 +2,12 @@ package edu.ilyav.api.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import edu.ilyav.api.models.Education;
-import edu.ilyav.api.models.Experience;
-import edu.ilyav.api.models.Image;
-import edu.ilyav.api.models.PhotoUpload;
-import edu.ilyav.api.service.EducationService;
-import edu.ilyav.api.service.ExperienceService;
-import edu.ilyav.api.service.ImageService;
-import edu.ilyav.api.service.PhotoService;
+import edu.ilyav.api.cotrollers.HomeController;
+import edu.ilyav.api.cotrollers.ProfileController;
+import edu.ilyav.api.models.*;
+import edu.ilyav.api.service.*;
 
+import edu.ilyav.api.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,6 +17,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -27,6 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
  */
 @Service
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
-public class PhotoServiceImpl implements PhotoService {
+public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
 
     @Value("${cloudName}")
     private String cloudName;
@@ -55,6 +56,9 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private ProfileService profileService;
 
     public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
         Experience experience = null;
@@ -267,5 +271,109 @@ public class PhotoServiceImpl implements PhotoService {
 
     private void print(String msg, Object... args) {
         System.out.println(String.format(msg, args));
+    }
+
+    public String uploadImage(@ModelAttribute PhotoUpload photoUpload) throws Exception {
+        Profile profile = null;
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+        Map uploadResult = null;
+        try {
+            uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
+            System.out.print(uploadResult);
+
+            profile = profileService.findById(photoUpload.getProfileId());
+
+            if(profile.getPublicId() != null && !profile.getPublicId().isEmpty()) {
+                Map result = cloudinary.uploader().destroy(profile.getPublicId(), null);
+            }
+
+            profile.setImageUrl(uploadResult.get("secure_url").toString());
+            profile.setPublicId(uploadResult.get("public_id").toString());
+
+            profile = profileService.saveOrUpdate(profile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return profile.getImageUrl();
+    }
+
+    public String deleteEducationImage(Image image) throws Exception {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+        Map result = null;
+        try {
+            result = cloudinary.uploader().destroy(image.getPublicId(), null);
+            ListIterator it;
+            if(!"not found".equals(result.get("result")) && image.getEducationId() != null) {
+                it = educationService.findById(image.getEducationId()).getImageList().listIterator();
+                checkBaseObjExist(image, it, Constants.EDUCATION);
+                imageService.delete(image.getId());
+            } else if(imageService.findById(image.getId()) != null) {
+                if(image.getEducationId() != null) {
+                    it = educationService.findById(image.getEducationId()).getImageList().listIterator();
+                    checkBaseObjExist(image, it, Constants.EDUCATION);
+                } else {
+                    it = educationService.findAll().listIterator();
+                    checkExpEduImgExist(image, it, Constants.EDUCATION);
+                }
+                imageService.delete(image.getId());
+                result.put("result", "ok");
+            }
+            Constants.updateHomeProfileObjects();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+
+        return result.toString();
+    }
+
+    public String deleteExperienceImage(Image image) throws Exception {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", this.cloudName,
+                "api_key", this.apiKey,
+                "api_secret", this.apiSecret));
+        Map result = null;
+        try {
+            result = cloudinary.uploader().destroy(image.getPublicId(), null);
+            ListIterator it;
+            if(!"not found".equals(result.get("result")) && image.getExperienceId() != null) {
+                it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
+                checkBaseObjExist(image, it, Constants.EXPERIENCE);
+                imageService.delete(image.getId());
+            } else if(imageService.findById(image.getId()) != null) {
+                if(image.getExperienceId() != null) {
+                    it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
+                    checkBaseObjExist(image, it, Constants.EXPERIENCE);
+                } else {
+                    it = experienceService.findAll().listIterator();
+                    checkExpEduImgExist(image, it, Constants.EXPERIENCE);
+                }
+                imageService.delete(image.getId());
+                result.put("result", "ok");
+            }
+            Constants.updateHomeProfileObjects();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+
+        return result.toString();
+    }
+
+    private void checkExpEduImgExist(Image image, ListIterator it, String type) {
+        ListIterator itImg;
+        while (it.hasNext()) {
+            itImg = ("Experience".equals(type) ? ((Experience) it.next()).getImageList().listIterator() :
+                    ((Education) it.next()).getImageList().listIterator());
+            checkBaseObjExist(image, itImg, type);
+        }
     }
 }
