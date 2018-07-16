@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ImageServiceImpl implements ImageService {
+public class ImageServiceImpl extends BaseServiceImpl implements ImageService {
 
 	@Autowired
 	private ExperienceService experienceService;
@@ -41,7 +41,7 @@ public class ImageServiceImpl implements ImageService {
 	public Image saveOrUpdate(Image image) {
 		Experience experience = experienceService.findById(image.getExperienceId());
 		image.setExperience(experience);
-		Constants.updateHomeProfileObjects();
+		updateHomeProfileObjects();
 		return imageRepository.save(image);
 	}
 	

@@ -55,9 +55,12 @@ public class ProfileContent extends BaseModule {
 
     public List<Education> getEducationList() {
         educationList.sort((o1, o2) -> {
-            if(o1.getToYearOrExpected() != null)
-                return Integer.parseInt(Long.toString(o2.getFromYear() - o1.getFromYear()));
-            else
+            if(o1.getToYearOrExpected() != null) {
+                if(o2.getFromYear() == null || o1.getFromYear() == null)
+                    return -1 ;
+                else
+                    return Integer.parseInt(Long.toString(o2.getFromYear() - o1.getFromYear()));
+            } else
                 return -1;
         });
         return educationList;

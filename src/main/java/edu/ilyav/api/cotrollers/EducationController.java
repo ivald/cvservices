@@ -28,9 +28,8 @@ public class EducationController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public void delete(@RequestBody Education education) {
-		long i = education.getId();
-//		return educationService.delete(id);
+	public String delete(@RequestBody Education education) throws Exception {
+		return educationService.delete(education.getId());
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)

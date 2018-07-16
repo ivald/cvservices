@@ -326,7 +326,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
                 imageService.delete(image.getId());
                 result.put("result", "ok");
             }
-            Constants.updateHomeProfileObjects();
+            updateHomeProfileObjects();
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
@@ -359,7 +359,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
                 imageService.delete(image.getId());
                 result.put("result", "ok");
             }
-            Constants.updateHomeProfileObjects();
+            updateHomeProfileObjects();
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());

@@ -11,9 +11,4 @@ public class Constants {
     public final static String EDUCATION = "Education";
     public final static String EXPERIENCE = "Experience";
 
-    public static void updateHomeProfileObjects() {
-        HomeController.isChanged = Boolean.TRUE;
-        ProfileController.isChanged = Boolean.TRUE;
-    }
-
 }

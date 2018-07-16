@@ -1,20 +1,17 @@
 package edu.ilyav.api.service.impl;
 
-import edu.ilyav.api.cotrollers.HomeController;
-import edu.ilyav.api.cotrollers.ProfileController;
 import edu.ilyav.api.dao.LanguageRepository;
 import edu.ilyav.api.models.Language;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.LanguageService;
 import edu.ilyav.api.service.ProfileService;
-import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class LanguageServiceImpl implements LanguageService {
+public class LanguageServiceImpl extends BaseServiceImpl implements LanguageService {
 
 	@Autowired
 	private ProfileService profileService;
@@ -41,7 +38,7 @@ public class LanguageServiceImpl implements LanguageService {
 	public Language saveOrUpdate(Language language) {
 		Profile profile = profileService.findById(language.getProfileId());
 		language.setProfile(profile);
-		Constants.updateHomeProfileObjects();
+		updateHomeProfileObjects();
 		return languageRepository.save(language);
 	}
 	

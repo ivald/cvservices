@@ -9,7 +9,7 @@ public interface EducationService {
 
 	Education findById(Long id);
 
-	void delete(Long id);
+	String delete(Long id) throws Exception;
 
 	Education saveOrUpdate(Education experience);
 

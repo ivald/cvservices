@@ -1,18 +1,15 @@
 package edu.ilyav.api.service.impl;
 
-import edu.ilyav.api.cotrollers.HomeController;
-import edu.ilyav.api.cotrollers.ProfileController;
 import edu.ilyav.api.dao.ProfileRepository;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.ProfileService;
-import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProfileServiceImpl implements ProfileService{
+public class ProfileServiceImpl extends BaseServiceImpl implements ProfileService{
 
 	@Autowired
 	private ProfileRepository profileDao;
@@ -34,7 +31,7 @@ public class ProfileServiceImpl implements ProfileService{
 
 	@Override
 	public Profile saveOrUpdate(Profile profile) {
-		Constants.updateHomeProfileObjects();
+		updateHomeProfileObjects();
 		return profileDao.save(profile);
 	}
 	

@@ -19,6 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -42,13 +43,6 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 	@Autowired
 	private ExperienceRepository experienceRepository;
 
-	@Autowired
-	private PhotoService photoService;
-
-
-	@Autowired
-	private ImageService imageService;
-	
 	@Override
 	public List<Experience> findAll() {
 		return experienceRepository.findAll();
@@ -62,7 +56,7 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 	@Override
 	@Transactional
 	public String delete(Long id) throws Exception {
-		Map result = null;
+		Map result = new HashMap<>();
 
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
 				"cloud_name", this.cloudName,
@@ -84,7 +78,7 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 					ListIterator it = list.listIterator();
 					checkBaseObjExist(experience, it, Constants.EXPERIENCE);
 					experienceRepository.delete(id);
-					Constants.updateHomeProfileObjects();
+					updateHomeProfileObjects();
 					result.put("result", "ok");
 				}
 			} else {
@@ -101,7 +95,7 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 	public Experience saveOrUpdate(Experience experience) {
 		ProfileContent profileContent = profileContentService.findById(experience.getProfileContentId());
 		experience.setProfileContent(profileContent);
-		Constants.updateHomeProfileObjects();
+		updateHomeProfileObjects();
 		return experienceRepository.save(experience);
 	}
 
