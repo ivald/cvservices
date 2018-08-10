@@ -22,8 +22,8 @@ public interface PhotoService {
 
     String uploadImage(@ModelAttribute PhotoUpload photoUpload) throws Exception;
 
-    String deleteExperienceImage(Image image) throws Exception;
+    String deleteExperienceImage(Long id) throws Exception;
 
-    String deleteEducationImage(Image image) throws Exception;
+    String deleteEducationImage(Long Id) throws Exception;
 
 }

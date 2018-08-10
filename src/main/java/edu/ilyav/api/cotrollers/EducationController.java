@@ -3,11 +3,9 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Education;
 import edu.ilyav.api.service.EducationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -22,14 +20,14 @@ public class EducationController {
 		return educationService.saveOrUpdate(education);
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public Education update(@RequestBody Education education) {
 		return educationService.saveOrUpdate(education);
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String delete(@RequestBody Education education) throws Exception {
-		return educationService.delete(education.getId());
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+	public String delete(@PathVariable Long id) throws Exception {
+		return educationService.delete(id);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)

@@ -302,13 +302,14 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return profile.getImageUrl();
     }
 
-    public String deleteEducationImage(Image image) throws Exception {
+    public String deleteEducationImage(Long id) throws Exception {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
         Map result = null;
         try {
+            Image image = imageService.findById(id);
             result = cloudinary.uploader().destroy(image.getPublicId(), null);
             ListIterator it;
             if(!"not found".equals(result.get("result")) && image.getEducationId() != null) {
@@ -335,13 +336,14 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return result.toString();
     }
 
-    public String deleteExperienceImage(Image image) throws Exception {
+    public String deleteExperienceImage(Long id) throws Exception {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
         Map result = null;
         try {
+            Image image = imageService.findById(id);
             result = cloudinary.uploader().destroy(image.getPublicId(), null);
             ListIterator it;
             if(!"not found".equals(result.get("result")) && image.getExperienceId() != null) {

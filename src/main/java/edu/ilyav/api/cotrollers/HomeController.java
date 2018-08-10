@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,27 +32,27 @@ public class HomeController {
     public HomeController() {
     }
 
-    @RequestMapping("/public/run")
+    @RequestMapping(value = "/public/run", method = RequestMethod.GET)
     public Boolean isRunning() {
         return Boolean.TRUE;
     }
 
-    @RequestMapping("/public/main/sideBar/{userName}")
+    @RequestMapping(value = "/public/main/sideBar/{userName}", method = RequestMethod.GET)
     public Profile sideBar(@PathVariable String userName) {
         return getProfile(userName);
     }
 
-    @RequestMapping("/public/sideBar/{id}")
+    @RequestMapping(value = "/public/sideBar/{id}", method = RequestMethod.GET)
     public Profile sideBar(@PathVariable Long id) {
         return getProfile(id);
     }
 
-    @RequestMapping("/public/home/{id}")
+    @RequestMapping(value = "/public/home/{id}", method = RequestMethod.GET)
     public ProfileContent home(@PathVariable Long id) {
         return getProfile(id).getProfileContent();
     }
 
-    @RequestMapping("/public/main/home/{userName}")
+    @RequestMapping(value = "/public/main/home/{userName}", method = RequestMethod.GET)
     public ProfileContent home(@PathVariable String userName) {
         return getProfile(userName).getProfileContent();
     }

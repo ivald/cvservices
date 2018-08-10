@@ -25,7 +25,7 @@ public class ProfileController {
 		return profileService.saveOrUpdate(profile);
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public Profile update(@RequestBody Profile profile) {
 		return profileService.saveOrUpdate(profile);
 	}
@@ -35,7 +35,7 @@ public class ProfileController {
 		return profileService.findAllProfiles();
 	}
 
-	@RequestMapping("/{id}")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ProfileContent profile(@PathVariable Long id) {
 		return getProfile(id).getProfileContent();
 	}

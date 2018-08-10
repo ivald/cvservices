@@ -109,14 +109,14 @@ public class PhotoController {
         return photoService.uploadImage(photoUpload);
     }
 
-    @RequestMapping(value = "/private/image/education/delete", method = RequestMethod.POST)
-    public String deleteEducationImage(@RequestBody Image image) throws Exception {
-        return photoService.deleteEducationImage(image);
+    @RequestMapping(value = "/private/image/education/delete/{id}", method = RequestMethod.DELETE)
+    public String deleteEducationImage(@PathVariable Long id) throws Exception {
+        return photoService.deleteEducationImage(id);
     }
 
-    @RequestMapping(value = "/private/image/experience/delete", method = RequestMethod.POST)
-    public String deleteExperienceImage(@RequestBody Image image) throws Exception {
-        return photoService.deleteExperienceImage(image);
+    @RequestMapping(value = "/private/image/experience/delete/{id}", method = RequestMethod.DELETE)
+    public String deleteExperienceImage(@PathVariable Long id) throws Exception {
+        return photoService.deleteExperienceImage(id);
     }
 
 }

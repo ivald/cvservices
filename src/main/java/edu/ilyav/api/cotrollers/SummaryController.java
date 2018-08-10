@@ -22,7 +22,7 @@ public class SummaryController {
 		return summaryService.saveOrUpdate(summary);
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public Summary update(@RequestBody Summary summary) {
 		return summaryService.saveOrUpdate(summary);
 	}

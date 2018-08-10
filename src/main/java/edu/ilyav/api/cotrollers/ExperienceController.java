@@ -7,6 +7,7 @@ import edu.ilyav.api.service.ProfileContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -21,14 +22,14 @@ public class ExperienceController {
 		return experienceService.saveOrUpdate(experience);
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public Experience update(@RequestBody Experience experience) {
 		return experienceService.saveOrUpdate(experience);
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String delete(@RequestBody Experience experience) throws Exception {
-		return experienceService.delete(experience.getId());
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+	public String delete(@PathVariable Long id) throws Exception {
+		return experienceService.delete(id);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)

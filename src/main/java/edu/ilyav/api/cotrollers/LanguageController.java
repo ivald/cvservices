@@ -22,12 +22,12 @@ public class LanguageController {
 		return languageService.saveOrUpdate(language);
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public Language update(@RequestBody Language language) {
 		return languageService.saveOrUpdate(language);
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public void delete(@RequestBody Language language) {
 		long i = language.getId();
 //		return educationService.delete(id);
