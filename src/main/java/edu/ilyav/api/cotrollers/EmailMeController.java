@@ -27,7 +27,7 @@ public class EmailMeController {
 			emailSender.send(message);
 			me.setMessage("Your message has been sent.");
 		} catch (Exception e) {
-			me.setError("Your message has not been sent. <br> Please try to send again later.");
+			me.setError("Your message has not been sent.");
 		}
 
 
