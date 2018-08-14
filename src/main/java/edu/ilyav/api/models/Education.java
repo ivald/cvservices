@@ -19,7 +19,7 @@ public class Education extends BaseModule {
     private String activitiesAndSocieties;
     private Long fromYear;
     private Long toYearOrExpected;
-    @Column(length = 2048)
+    @Column(length = 10240)
     private String description;
     private String imageName;
     private String link;

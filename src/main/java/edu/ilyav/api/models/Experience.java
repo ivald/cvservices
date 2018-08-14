@@ -20,7 +20,7 @@ public class Experience extends BaseModule {
     private String startDate;
     private String endDate;
     private Boolean currentlyWorkHere;
-    @Column(length = 2048)
+    @Column(length = 10240)
     private String description;
     private String imageName;
     private String link;
