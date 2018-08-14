@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 public class Summary extends BaseModule {
 
-    @Column(length = 2048)
+    @Column(length = 10240)
     private String description;
     private Long profileContentId;
 
