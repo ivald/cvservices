@@ -19,10 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
@@ -64,19 +61,19 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 				"api_secret", this.apiSecret));
 
 		try {
-			Experience experience = experienceRepository.findById(id);
-			if (experience != null) {
-				List list = profileContentService.findById(experience.getProfileContentId()).getExperienceList();
+			Optional<Experience> experience = Optional.ofNullable(experienceRepository.findById(id));
+			if (experience.isPresent()) {
+				List list = profileContentService.findById(experience.get().getProfileContentId()).getExperienceList();
 				if (list.isEmpty()) {
 					throw new Exception("Experience object cannot be removed. Experience list is empty.");
 				} else {
-					List<Image> images = experience.getImageList();
+					List<Image> images = experience.get().getImageList();
 					if (!images.isEmpty()) {
 						for(Image image : images)
 							result = cloudinary.uploader().destroy(image.getPublicId(), null);
 					}
 					ListIterator it = list.listIterator();
-					checkBaseObjExist(experience, it, Constants.EXPERIENCE);
+					checkBaseObjExist(experience.get(), it, Constants.EXPERIENCE);
 					experienceRepository.delete(id);
 					updateHomeProfileObjects();
 					result.put("result", "ok");

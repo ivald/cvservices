@@ -2,7 +2,9 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ilyav on 17/10/17.
@@ -12,8 +14,10 @@ public class Image extends BaseModule {
 
     private String imageUrl;
     private String publicId;
+    @Column(length = 10240)
     private String description;
     private String sourceUrl;
+    @Column(length = 2048)
     private String title;
     private Long experienceId;
     private Long educationId;

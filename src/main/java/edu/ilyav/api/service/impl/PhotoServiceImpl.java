@@ -2,11 +2,8 @@ package edu.ilyav.api.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import edu.ilyav.api.cotrollers.HomeController;
-import edu.ilyav.api.cotrollers.ProfileController;
 import edu.ilyav.api.models.*;
 import edu.ilyav.api.service.*;
-
 import edu.ilyav.api.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,18 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -189,40 +180,55 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
     }
 
     private Image urlAnalise(String url) throws IOException {
-        Document doc = Jsoup.connect(url).get();
-        Elements meta = doc.select("meta[content]");
-        Elements title = doc.select("title");
-
+        Document doc;
         Image image = new Image();
-        for (Element src : meta) {
-            String s = src.attr("property");
-            if (!"".equals(s)) {
-                Pattern p = Pattern.compile("image");   // the pattern to search for
-                Matcher m = p.matcher(s);
-                if (m.find()) {
-//                    print(" * %s: %s", s, src.attr("content"));
-                    image.setImageUrl(src.attr("content"));
+        try {
+            doc = Jsoup.connect(url).get();
+
+            Elements meta = doc.select("meta[content]");
+            Elements title = doc.select("title");
+            Elements media = doc.select("[src]");
+
+            for (Element src : meta) {
+                String s = src.attr("property");
+                if (!"".equals(s)) {
+                    Pattern p = Pattern.compile("image");   // the pattern to search for
+                    Matcher m = p.matcher(s);
+                    if (m.find()) {
+                        image.setImageUrl(src.attr("content"));
+                    }
+                }
+
+                s = src.attr("name");
+                if ("description".equals(s)) {
+                    image.setDescription(src.attr("content"));
                 }
             }
 
-            s = src.attr("name");
-            if ("description".equals(s)) {
-//                print(" * %s: %s", s, src.attr("content"));
-                image.setDescription(src.attr("content"));
+            for (Element src : title) {
+                Optional<String> t = Optional.ofNullable(src.html().toString().replaceAll("amp;", ""));
+                if(t.isPresent()) image.setTitle(t.get());
             }
-        }
 
-        for (Element src : title) {
-            String t = src.html().toString().replaceAll("amp;", "");
-            image.setTitle(t);
-        }
+            Optional<String> imageUrl = Optional.ofNullable(image.getImageUrl());
+            if(!imageUrl.isPresent()) {
+                media.stream().filter(src -> src.tagName().equals("img")).forEach(src -> {
+                    if (src.attr("abs:src").split("logo").length > 1 || src.attr("abs:src").split("card").length > 1) {
+                        image.setImageUrl(src.attr("abs:src"));
+                    }
+                });
+            }
 
-        if(image.getImageUrl() != null && !image.getImageUrl().isEmpty() && !image.getDescription().isEmpty()) {
-            image.setSourceUrl(url);
-            createImagePublicId(image);
-        } else {
-            image.setImageUrl("http://res.cloudinary.com/ilyavimages/image/upload/v1527140348/white-image_rcvvfm.png");
-            createImagePublicId(image);
+            imageUrl = Optional.ofNullable(image.getImageUrl());
+            if(imageUrl.isPresent()) {
+                image.setSourceUrl(url);
+                createImagePublicId(image);
+            } else {
+                image.setImageUrl(Constants.WHITE_IMAGE);
+                createImagePublicId(image);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return image;
@@ -279,14 +285,15 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
-        Map uploadResult = null;
+        Map uploadResult;
         try {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
             System.out.print(uploadResult);
 
             profile = profileService.findById(photoUpload.getProfileId());
+            Optional<String> publicId = Optional.ofNullable(profile.getPublicId());
 
-            if(profile.getPublicId() != null && !profile.getPublicId().isEmpty()) {
+            if(publicId.isPresent() && !publicId.get().isEmpty()) {
                 Map result = cloudinary.uploader().destroy(profile.getPublicId(), null);
             }
 
@@ -302,29 +309,39 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return profile.getImageUrl();
     }
 
-    public String deleteEducationImage(Long id) throws Exception {
+    public String deleteImage(Long id, String objectType) throws Exception {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
-        Map result = null;
+        Map result;
         try {
-            Image image = imageService.findById(id);
-            result = cloudinary.uploader().destroy(image.getPublicId(), null);
+            Optional<Image> image = imageService.findById(id);
+            if(!image.isPresent()) {
+                throw new Exception("Image id does not exist.");
+            }
+            Optional<String> publicId = Optional.ofNullable(image.get().getPublicId());
+            if(publicId.isPresent()) {
+                result = cloudinary.uploader().destroy(image.get().getPublicId(), null);
+            } else {
+                result = new HashMap();
+                result.put("result", "empty");
+            }
             ListIterator it;
-            if(!"not found".equals(result.get("result")) && image.getEducationId() != null) {
-                it = educationService.findById(image.getEducationId()).getImageList().listIterator();
-                checkBaseObjExist(image, it, Constants.EDUCATION);
-                imageService.delete(image.getId());
-            } else if(imageService.findById(image.getId()) != null) {
-                if(image.getEducationId() != null) {
-                    it = educationService.findById(image.getEducationId()).getImageList().listIterator();
-                    checkBaseObjExist(image, it, Constants.EDUCATION);
+            Optional<Long> objectId = Optional.ofNullable(getObjectIdByObjectType(image.get(), objectType));
+            if(!"not found".equals(result.get("result")) && objectId.isPresent()) {
+                it = getListIteratorByObjectType(image.get(), objectType);
+                checkBaseObjExist(image.get(), it, objectType);
+                imageService.delete(image.get().getId());
+            } else if (image.isPresent()) {
+                if (objectId.isPresent()) {
+                    it = getListIteratorByObjectType(image.get(), objectType);
+                    checkBaseObjExist(image.get(), it, objectType);
                 } else {
-                    it = educationService.findAll().listIterator();
-                    checkExpEduImgExist(image, it, Constants.EDUCATION);
+                    it = getAllListIteratorByObjectType(objectType);
+                    checkExpEduImgExist(image.get(), it, objectType);
                 }
-                imageService.delete(image.getId());
+                imageService.delete(image.get().getId());
                 result.put("result", "ok");
             }
             updateHomeProfileObjects();
@@ -336,38 +353,41 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return result.toString();
     }
 
-    public String deleteExperienceImage(Long id) throws Exception {
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", this.cloudName,
-                "api_key", this.apiKey,
-                "api_secret", this.apiSecret));
-        Map result = null;
-        try {
-            Image image = imageService.findById(id);
-            result = cloudinary.uploader().destroy(image.getPublicId(), null);
-            ListIterator it;
-            if(!"not found".equals(result.get("result")) && image.getExperienceId() != null) {
-                it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
-                checkBaseObjExist(image, it, Constants.EXPERIENCE);
-                imageService.delete(image.getId());
-            } else if(imageService.findById(image.getId()) != null) {
-                if(image.getExperienceId() != null) {
-                    it = experienceService.findById(image.getExperienceId()).getImageList().listIterator();
-                    checkBaseObjExist(image, it, Constants.EXPERIENCE);
-                } else {
-                    it = experienceService.findAll().listIterator();
-                    checkExpEduImgExist(image, it, Constants.EXPERIENCE);
-                }
-                imageService.delete(image.getId());
-                result.put("result", "ok");
-            }
-            updateHomeProfileObjects();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e.getMessage());
+    private ListIterator<Image> getListIteratorByObjectType(Image image, String objectType) {
+        if(Constants.EXPERIENCE.equals(objectType)) {
+            Optional<Experience> exp = Optional.ofNullable(image.getExperience());
+            if(exp.isPresent())
+                return exp.get().getImageList().listIterator();
+            else
+                return experienceService.findById(image.getExperienceId()).getImageList().listIterator();
+        } else {
+            Optional<Education> edu = Optional.ofNullable(image.getEducation());
+            if(edu.isPresent())
+                return edu.get().getImageList().listIterator();
+            else
+                return educationService.findById(image.getEducationId()).getImageList().listIterator();
         }
+    }
 
-        return result.toString();
+    private ListIterator getAllListIteratorByObjectType(String objectType) {
+        return (Constants.EXPERIENCE.equals(objectType) ? experienceService.findAll().listIterator() :
+                educationService.findAll().listIterator());
+    }
+
+    private Long getObjectIdByObjectType(Image image, String objectType) {
+        if(Constants.EXPERIENCE.equals(objectType)) {
+            Optional<Experience> exp = Optional.ofNullable(image.getExperience());
+            if(exp.isPresent())
+                return exp.get().getId();
+            else
+                return experienceService.findById(image.getExperienceId()).getId();
+        } else {
+            Optional<Education> edu = Optional.ofNullable(image.getEducation());
+            if(edu.isPresent())
+                return edu.get().getId();
+            else
+                return educationService.findById(image.getEducationId()).getId();
+        }
     }
 
     private void checkExpEduImgExist(Image image, ListIterator it, String type) {

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 /**
  * Created by ilyav on 17/08/17.
  */
@@ -71,7 +73,8 @@ public class HomeController {
         synchronized (this) {
             if(this.profile == null || isChanged) {
                 UserInfo userInfo = userService.findByUserName(userName);
-                if(userInfo.getProfile() == null) {
+                Optional<Profile> profile = Optional.ofNullable(userInfo.getProfile());
+                if(!profile.isPresent()) {
                     this.profile = profileService.findById(userInfo.getProfileId());
                 }
                 updateLazyFetch(this.profile);

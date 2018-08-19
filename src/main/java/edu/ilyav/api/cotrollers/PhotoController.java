@@ -3,6 +3,7 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.PhotoUpload;
 import edu.ilyav.api.service.PhotoService;
+import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * Created by ilyav on 17/08/17.
@@ -38,12 +40,12 @@ public class PhotoController {
 
     @RequestMapping(value = "/private/experience/link/{id}", method = RequestMethod.POST)
     public String uploadExpLinkImage(HttpServletRequest request, @PathVariable Long id) {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
         Image image = new Image();
 
         try {
-            if (multipartRequest != null && multipartRequest.getParameter("url") != null) {
-                image = photoService.uploadExperienceLink(multipartRequest.getParameter("url"), id);
+            if (multipartRequest.isPresent() && multipartRequest.get().getParameter("url") != null) {
+                image = photoService.uploadExperienceLink(multipartRequest.get().getParameter("url"), id);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,12 +61,12 @@ public class PhotoController {
 
     @RequestMapping(value = "/private/education/link/{id}", method = RequestMethod.POST)
     public String uploadEduLinkImage(HttpServletRequest request, @PathVariable Long id) {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
         Image image = new Image();
 
         try {
-            if (multipartRequest != null && multipartRequest.getParameter("url") != null) {
-                image = photoService.uploadEducationLink(multipartRequest.getParameter("url"), id);
+            if (multipartRequest.isPresent() && multipartRequest.get().getParameter("url") != null) {
+                image = photoService.uploadEducationLink(multipartRequest.get().getParameter("url"), id);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,12 +113,12 @@ public class PhotoController {
 
     @RequestMapping(value = "/private/image/education/delete/{id}", method = RequestMethod.DELETE)
     public String deleteEducationImage(@PathVariable Long id) throws Exception {
-        return photoService.deleteEducationImage(id);
+        return photoService.deleteImage(id, Constants.EDUCATION);
     }
 
     @RequestMapping(value = "/private/image/experience/delete/{id}", method = RequestMethod.DELETE)
     public String deleteExperienceImage(@PathVariable Long id) throws Exception {
-        return photoService.deleteExperienceImage(id);
+        return photoService.deleteImage(id, Constants.EXPERIENCE);
     }
 
 }

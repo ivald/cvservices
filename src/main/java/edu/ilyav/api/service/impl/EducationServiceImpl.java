@@ -17,10 +17,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
@@ -65,19 +62,19 @@ public class EducationServiceImpl extends BaseServiceImpl implements EducationSe
 				"api_secret", this.apiSecret));
 
 		try {
-			Education education = educationRepository.findById(id);
-			if (education != null) {
-				List list = profileContentService.findById(education.getProfileContentId()).getEducationList();
+			Optional<Education> education = Optional.ofNullable(educationRepository.findById(id));
+			if (education.isPresent()) {
+				List list = profileContentService.findById(education.get().getProfileContentId()).getEducationList();
 				if (list.isEmpty()) {
 					throw new Exception("Education object cannot be removed. Education list is empty.");
 				} else {
-					List<Image> images = education.getImageList();
+					List<Image> images = education.get().getImageList();
 					if (!images.isEmpty()) {
 						for(Image image : images)
 							result = cloudinary.uploader().destroy(image.getPublicId(), null);
 					}
 					ListIterator it = list.listIterator();
-					checkBaseObjExist(education, it, Constants.EDUCATION);
+					checkBaseObjExist(education.get(), it, Constants.EDUCATION);
 					educationRepository.delete(id);
 					updateHomeProfileObjects();
 					result.put("result", "ok");
