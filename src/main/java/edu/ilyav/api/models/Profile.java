@@ -18,6 +18,8 @@ public class Profile extends BaseModule {
     private String primaryEmail;
     private String linkedInUrl;
     private String imageUrl;
+    @Lob
+    private Byte[] imageBytes;
     private String publicId;
     private Long userInfoId;
 
@@ -119,5 +121,13 @@ public class Profile extends BaseModule {
 
     public void setPublicId(String publicId) {
         this.publicId = publicId;
+    }
+
+    public Byte[] getImageBytes() {
+        return imageBytes;
+    }
+
+    public void setImageBytes(Byte[] imageBytes) {
+        this.imageBytes = imageBytes;
     }
 }

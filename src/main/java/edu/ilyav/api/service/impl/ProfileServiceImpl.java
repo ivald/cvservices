@@ -6,6 +6,7 @@ import edu.ilyav.api.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -20,6 +21,7 @@ public class ProfileServiceImpl extends BaseServiceImpl implements ProfileServic
 	}
 
 	@Override
+	@Transactional
 	public Profile findById(Long id){
 		return profileDao.findById(id);
 	}

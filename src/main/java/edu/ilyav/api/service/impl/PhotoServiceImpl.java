@@ -15,7 +15,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import javax.imageio.ImageIO;
+import javax.transaction.Transactional;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -52,8 +57,8 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
     private ProfileService profileService;
 
     public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
-        Experience experience = null;
-        List<Image> images = null;
+        Experience experience;
+        List<Image> images;
         Image image = null;
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
@@ -275,10 +280,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return result.toString();
     }
 
-    private void print(String msg, Object... args) {
-        System.out.println(String.format(msg, args));
-    }
-
+    @Transactional
     public String uploadImage(@ModelAttribute PhotoUpload photoUpload) throws Exception {
         Profile profile = null;
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
@@ -288,15 +290,31 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         Map uploadResult;
         try {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
+
+            String[] arr = uploadResult.get("secure_url").toString().split("upload/");
+            URL url = new URL(arr[0] + "upload/w_130,h_130,c_thumb,g_face,r_max/" + arr[1]);
+            BufferedImage img = ImageIO.read(url);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write( img, "jpg", outputStream );
+            outputStream.flush();
+            byte[] imageInByte = outputStream.toByteArray();
+            outputStream.close();
+            Byte[] byteObjects = new Byte[imageInByte.length];
+            int i = 0;
+            for(byte b: imageInByte) {
+                byteObjects[i++] = b;
+            }
+
             System.out.print(uploadResult);
 
             profile = profileService.findById(photoUpload.getProfileId());
             Optional<String> publicId = Optional.ofNullable(profile.getPublicId());
 
             if(publicId.isPresent() && !publicId.get().isEmpty()) {
-                Map result = cloudinary.uploader().destroy(profile.getPublicId(), null);
+                cloudinary.uploader().destroy(profile.getPublicId(), null);
             }
 
+            profile.setImageBytes(byteObjects);
             profile.setImageUrl(uploadResult.get("secure_url").toString());
             profile.setPublicId(uploadResult.get("public_id").toString());
 
