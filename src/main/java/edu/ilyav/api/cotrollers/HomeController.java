@@ -5,6 +5,7 @@ import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.ProfileService;
 import edu.ilyav.api.service.UserService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,26 +42,26 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/public/main/sideBar/{userName}", method = RequestMethod.GET)
-    public Profile sideBar(@PathVariable String userName) {
+    public Profile sideBar(@PathVariable String userName) throws ResourceNotFoundException {
         return getProfile(userName);
     }
 
     @RequestMapping(value = "/public/sideBar/{id}", method = RequestMethod.GET)
-    public Profile sideBar(@PathVariable Long id) {
+    public Profile sideBar(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id);
     }
 
     @RequestMapping(value = "/public/home/{id}", method = RequestMethod.GET)
-    public ProfileContent home(@PathVariable Long id) {
+    public ProfileContent home(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id).getProfileContent();
     }
 
     @RequestMapping(value = "/public/main/home/{userName}", method = RequestMethod.GET)
-    public ProfileContent home(@PathVariable String userName) {
+    public ProfileContent home(@PathVariable String userName) throws ResourceNotFoundException {
         return getProfile(userName).getProfileContent();
     }
 
-    public Profile getProfile(Long id) {
+    public Profile getProfile(Long id) throws ResourceNotFoundException {
         synchronized (this) {
             if(this.profile == null || isChanged) {
                 this.profile = profileService.findById(id);
@@ -71,7 +72,7 @@ public class HomeController {
     }
 
     @Transactional
-    public Profile getProfile(String userName) {
+    public Profile getProfile(String userName) throws ResourceNotFoundException {
         synchronized (this) {
             if(this.profile == null || isChanged) {
                 UserInfo userInfo = userService.findByUserName(userName);

@@ -5,6 +5,7 @@ import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ImageService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +38,12 @@ public class ImageServiceImpl extends BaseServiceImpl implements ImageService {
 	}
 	
 	@Override
-	public Image saveOrUpdate(Image image) {
-		Experience experience = experienceService.findById(image.getExperienceId());
-		image.setExperience(experience);
+	public Image saveOrUpdate(Image image) throws ResourceNotFoundException {
+		Optional<Experience> experience = Optional.ofNullable(experienceService.findById(image.getExperienceId()));
+		if(!experience.isPresent()) {
+			throw new ResourceNotFoundException("ProfileContent not found");
+		}
+		image.setExperience(experience.get());
 		updateHomeProfileObjects();
 		return imageRepository.save(image);
 	}

@@ -3,6 +3,7 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,11 +37,12 @@ public class ProfileController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ProfileContent profile(@PathVariable Long id) {
-		return getProfile(id).getProfileContent();
+	public ProfileContent profile(@PathVariable Long id) throws ResourceNotFoundException {
+		Profile profile = getProfile(id);
+		return profile.getProfileContent();
 	}
 
-	public Profile getProfile(Long id) {
+	public Profile getProfile(Long id) throws ResourceNotFoundException {
 		synchronized (this) {
 			if(this.profile == null || isChanged) {
 				this.profile = profileService.findById(id);

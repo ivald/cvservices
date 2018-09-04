@@ -2,16 +2,15 @@ package edu.ilyav.api.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import edu.ilyav.api.cotrollers.HomeController;
-import edu.ilyav.api.cotrollers.ProfileController;
 import edu.ilyav.api.dao.ExperienceRepository;
 import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
-import edu.ilyav.api.service.ImageService;
-import edu.ilyav.api.service.PhotoService;
 import edu.ilyav.api.service.ProfileContentService;
+import edu.ilyav.api.service.exceptions.CloudinaryException;
+import edu.ilyav.api.service.exceptions.ExperienceServiceException;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +18,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -52,7 +52,7 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 
 	@Override
 	@Transactional
-	public String delete(Long id) throws Exception {
+	public String delete(Long id) throws ExperienceServiceException, CloudinaryException, ResourceNotFoundException {
 		Map result = new HashMap<>();
 
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
@@ -60,38 +60,42 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 				"api_key", this.apiKey,
 				"api_secret", this.apiSecret));
 
-		try {
-			Optional<Experience> experience = Optional.ofNullable(experienceRepository.findById(id));
-			if (experience.isPresent()) {
-				List list = profileContentService.findById(experience.get().getProfileContentId()).getExperienceList();
-				if (list.isEmpty()) {
-					throw new Exception("Experience object cannot be removed. Experience list is empty.");
-				} else {
-					List<Image> images = experience.get().getImageList();
-					if (!images.isEmpty()) {
-						for(Image image : images)
-							result = cloudinary.uploader().destroy(image.getPublicId(), null);
-					}
-					ListIterator it = list.listIterator();
-					checkBaseObjExist(experience.get(), it, Constants.EXPERIENCE);
-					experienceRepository.delete(id);
-					updateHomeProfileObjects();
-					result.put("result", "ok");
-				}
+		Optional<Experience> experience = Optional.ofNullable(experienceRepository.findById(id));
+		if (experience.isPresent()) {
+			List list = profileContentService.findById(experience.get().getProfileContentId()).getExperienceList();
+			if (list.isEmpty()) {
+				throw new ExperienceServiceException("Experience object cannot be removed. Experience list is empty.");
 			} else {
-				throw new Exception("Experience id does not exist.");
+				List<Image> images = experience.get().getImageList();
+				if (!images.isEmpty()) {
+					for(Image image : images)
+						try {
+							result = cloudinary.uploader().destroy(image.getPublicId(), null);
+						} catch (IOException e) {
+							e.printStackTrace();
+							throw new CloudinaryException("Cloudinary delete image: " + e.getMessage());
+						}
+				}
+				ListIterator it = list.listIterator();
+				checkBaseObjExist(experience.get(), it, Constants.EXPERIENCE);
+				experienceRepository.delete(id);
+				updateHomeProfileObjects();
+				result.put("result", "ok");
 			}
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
+		} else {
+			throw new ExperienceServiceException("Experience id: " + id.toString() + " does not exist.");
 		}
 
 		return result.toString();
 	}
 	
 	@Override
-	public Experience saveOrUpdate(Experience experience) {
-		ProfileContent profileContent = profileContentService.findById(experience.getProfileContentId());
-		experience.setProfileContent(profileContent);
+	public Experience saveOrUpdate(Experience experience) throws ResourceNotFoundException {
+		Optional<ProfileContent> profileContent = Optional.ofNullable(profileContentService.findById(experience.getProfileContentId()));
+		if(!profileContent.isPresent()) {
+			throw new ResourceNotFoundException("ProfileContent not found");
+		}
+		experience.setProfileContent(profileContent.get());
 		updateHomeProfileObjects();
 		return experienceRepository.save(experience);
 	}

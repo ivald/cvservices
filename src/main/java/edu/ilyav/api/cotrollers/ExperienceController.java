@@ -4,6 +4,7 @@ import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ProfileContentService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +19,12 @@ public class ExperienceController {
 	private ExperienceService experienceService;
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Experience add(@RequestBody Experience experience) {
+	public Experience add(@RequestBody Experience experience) throws ResourceNotFoundException {
 		return experienceService.saveOrUpdate(experience);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public Experience update(@RequestBody Experience experience) {
+	public Experience update(@RequestBody Experience experience) throws ResourceNotFoundException {
 		return experienceService.saveOrUpdate(experience);
 	}
 

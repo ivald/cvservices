@@ -3,6 +3,7 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Education;
 import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Profile;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;

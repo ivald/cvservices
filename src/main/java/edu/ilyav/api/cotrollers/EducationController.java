@@ -2,6 +2,7 @@ package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Education;
 import edu.ilyav.api.service.EducationService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,12 @@ public class EducationController {
 	private EducationService educationService;
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Education add(@RequestBody Education education) {
+	public Education add(@RequestBody Education education) throws ResourceNotFoundException {
 		return educationService.saveOrUpdate(education);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public Education update(@RequestBody Education education) {
+	public Education update(@RequestBody Education education) throws ResourceNotFoundException {
 		return educationService.saveOrUpdate(education);
 	}
 

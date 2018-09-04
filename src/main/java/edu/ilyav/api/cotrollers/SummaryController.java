@@ -2,6 +2,7 @@ package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Summary;
 import edu.ilyav.api.service.SummaryService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +19,12 @@ public class SummaryController {
 	private SummaryService summaryService;
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Summary add(@RequestBody Summary summary) {
+	public Summary add(@RequestBody Summary summary) throws ResourceNotFoundException {
 		return summaryService.saveOrUpdate(summary);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public Summary update(@RequestBody Summary summary) {
+	public Summary update(@RequestBody Summary summary) throws ResourceNotFoundException {
 		return summaryService.saveOrUpdate(summary);
 	}
 

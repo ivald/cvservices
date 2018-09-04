@@ -4,6 +4,8 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import edu.ilyav.api.models.*;
 import edu.ilyav.api.service.*;
+import edu.ilyav.api.service.exceptions.CloudinaryException;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import edu.ilyav.api.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,7 +58,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
     @Autowired
     private ProfileService profileService;
 
-    public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) {
+    public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException {
         Experience experience;
         List<Image> images;
         Image image = null;
@@ -96,10 +98,10 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
     }
 
-    public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) {
+    public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException, CloudinaryException {
         Education education;
         List<Image> images;
-        Image image = null;
+        Image image;
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
@@ -108,35 +110,35 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         Map uploadResult;
         try {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
-            System.out.print(uploadResult);
-
-            education = educationService.findById(photoUpload.getEducationId());
-
-            if(education.getImageList() == null || education.getImageList().isEmpty())
-                images = new ArrayList<>();
-            else
-                images = education.getImageList();
-
-            image = new Image();
-            image.setImageUrl(uploadResult.get("secure_url").toString());
-            image.setPublicId(uploadResult.get("public_id").toString());
-            image.setEducationId(education.getId());
-            image.setEducation(education);
-            image.setDescription(photoUpload.getTitle());
-            image = imageService.saveOrUpdate(image);
-            images.add(image);
-
-            education.setImageList(images);
-            educationService.saveOrUpdate(education);
-
         } catch (IOException e) {
             e.printStackTrace();
+            throw new CloudinaryException("Cloudinary delete image: " + e.getMessage());
         }
+        System.out.print(uploadResult);
+
+        education = educationService.findById(photoUpload.getEducationId());
+
+        if(education.getImageList() == null || education.getImageList().isEmpty())
+            images = new ArrayList<>();
+        else
+            images = education.getImageList();
+
+        image = new Image();
+        image.setImageUrl(uploadResult.get("secure_url").toString());
+        image.setPublicId(uploadResult.get("public_id").toString());
+        image.setEducationId(education.getId());
+        image.setEducation(education);
+        image.setDescription(photoUpload.getTitle());
+        image = imageService.saveOrUpdate(image);
+        images.add(image);
+
+        education.setImageList(images);
+        educationService.saveOrUpdate(education);
 
         return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
     }
 
-    public Image uploadExperienceLink(String url, Long id) throws IOException {
+    public Image uploadExperienceLink(String url, Long id) throws IOException, ResourceNotFoundException, NoSuchAlgorithmException {
         Experience experience;
         List<Image> images;
         Image image;
@@ -160,7 +162,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return image;
     }
 
-    public Image uploadEducationLink(String url, Long id) throws IOException {
+    public Image uploadEducationLink(String url, Long id) throws IOException, ResourceNotFoundException, NoSuchAlgorithmException {
         Education education;
         List<Image> images;
         Image image;
@@ -184,79 +186,71 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return image;
     }
 
-    private Image urlAnalise(String url) throws IOException {
+    private Image urlAnalise(String url) throws IOException, NoSuchAlgorithmException {
         Document doc;
         Image image = new Image();
-        try {
-            doc = Jsoup.connect(url).get();
 
-            Elements meta = doc.select("meta[content]");
-            Elements title = doc.select("title");
-            Elements media = doc.select("[src]");
+        doc = Jsoup.connect(url).get();
 
-            for (Element src : meta) {
-                String s = src.attr("property");
-                if (!"".equals(s)) {
-                    Pattern p = Pattern.compile("image");   // the pattern to search for
-                    Matcher m = p.matcher(s);
-                    if (m.find()) {
-                        image.setImageUrl(src.attr("content"));
-                    }
-                }
+        Elements meta = doc.select("meta[content]");
+        Elements title = doc.select("title");
+        Elements media = doc.select("[src]");
 
-                s = src.attr("name");
-                if ("description".equals(s)) {
-                    image.setDescription(src.attr("content"));
+        for (Element src : meta) {
+            String s = src.attr("property");
+            if (!"".equals(s)) {
+                Pattern p = Pattern.compile("image");   // the pattern to search for
+                Matcher m = p.matcher(s);
+                if (m.find()) {
+                    image.setImageUrl(src.attr("content"));
                 }
             }
 
-            for (Element src : title) {
-                Optional<String> t = Optional.ofNullable(src.html().toString().replaceAll("amp;", ""));
-                if(t.isPresent()) image.setTitle(t.get());
+            s = src.attr("name");
+            if ("description".equals(s)) {
+                image.setDescription(src.attr("content"));
             }
+        }
 
-            Optional<String> imageUrl = Optional.ofNullable(image.getImageUrl());
-            if(!imageUrl.isPresent()) {
-                media.stream().filter(src -> src.tagName().equals("img")).forEach(src -> {
-                    if (src.attr("abs:src").split("logo").length > 1 || src.attr("abs:src").split("card").length > 1) {
-                        image.setImageUrl(src.attr("abs:src"));
-                    }
-                });
-            }
+        for (Element src : title) {
+            Optional<String> t = Optional.ofNullable(src.html().toString().replaceAll("amp;", ""));
+            if(t.isPresent()) image.setTitle(t.get());
+        }
 
-            imageUrl = Optional.ofNullable(image.getImageUrl());
-            if(imageUrl.isPresent()) {
-                image.setSourceUrl(url);
-                createImagePublicId(image);
-            } else {
-                image.setImageUrl(Constants.WHITE_IMAGE);
-                createImagePublicId(image);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Optional<String> imageUrl = Optional.ofNullable(image.getImageUrl());
+        if(!imageUrl.isPresent()) {
+            media.stream().filter(src -> src.tagName().equals("img")).forEach(src -> {
+                if (src.attr("abs:src").split("logo").length > 1 || src.attr("abs:src").split("card").length > 1) {
+                    image.setImageUrl(src.attr("abs:src"));
+                }
+            });
+        }
+
+        imageUrl = Optional.ofNullable(image.getImageUrl());
+        if(imageUrl.isPresent()) {
+            image.setSourceUrl(url);
+            createImagePublicId(image);
+        } else {
+            image.setImageUrl(Constants.WHITE_IMAGE);
+            createImagePublicId(image);
         }
 
         return image;
     }
 
-    private void createImagePublicId(Image image) {
-        try {
+    private void createImagePublicId(Image image) throws NoSuchAlgorithmException {
+        //Initialize SecureRandom: NativePRNG, SHA1PRNG
+        SecureRandom prng = new SecureRandom();
 
-            //Initialize SecureRandom: NativePRNG, SHA1PRNG
-            SecureRandom prng = new SecureRandom();
+        //generate a random number
+        String randomNum = Integer.toString(prng.nextInt());
 
-            //generate a random number
-            String randomNum = new Integer(prng.nextInt()).toString();
+        //get its digest
+        //Algorithm Name: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512
+        MessageDigest sha = MessageDigest.getInstance("MD2");
+        byte[] result = sha.digest(randomNum.getBytes());
 
-            //get its digest
-            //Algorithm Name: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512
-            MessageDigest sha = MessageDigest.getInstance("MD2");
-            byte[] result = sha.digest(randomNum.getBytes());
-
-            image.setPublicId(hexEncode(result));
-        } catch (NoSuchAlgorithmException ex) {
-            System.err.println(ex);
-        }
+        image.setPublicId(hexEncode(result));
     }
 
     /**

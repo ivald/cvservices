@@ -2,6 +2,7 @@ package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.UserService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
@@ -31,7 +32,7 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public UserInfo login(@RequestBody UserInfo userInfo) throws ServletException {
+	public UserInfo login(@RequestBody UserInfo userInfo) throws ServletException, ResourceNotFoundException {
 
 		if (userInfo.getUserName() == null || userInfo.getPassword() == null) {
 			throw new ServletException("Please fill in username and password");

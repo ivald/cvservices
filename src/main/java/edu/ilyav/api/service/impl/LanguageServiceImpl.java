@@ -5,10 +5,12 @@ import edu.ilyav.api.models.Language;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.LanguageService;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LanguageServiceImpl extends BaseServiceImpl implements LanguageService {
@@ -35,9 +37,12 @@ public class LanguageServiceImpl extends BaseServiceImpl implements LanguageServ
 	}
 	
 	@Override
-	public Language saveOrUpdate(Language language) {
-		Profile profile = profileService.findById(language.getProfileId());
-		language.setProfile(profile);
+	public Language saveOrUpdate(Language language) throws ResourceNotFoundException {
+		Optional<Profile> profile = Optional.ofNullable(profileService.findById(language.getProfileId()));
+		if(!profile.isPresent()) {
+			throw new ResourceNotFoundException("ProfileContent not found");
+		}
+		language.setProfile(profile.get());
 		updateHomeProfileObjects();
 		return languageRepository.save(language);
 	}

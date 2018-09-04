@@ -3,11 +3,13 @@ package edu.ilyav.api.service.impl;
 import edu.ilyav.api.dao.ProfileRepository;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl extends BaseServiceImpl implements ProfileService{
@@ -22,8 +24,12 @@ public class ProfileServiceImpl extends BaseServiceImpl implements ProfileServic
 
 	@Override
 	@Transactional
-	public Profile findById(Long id){
-		return profileDao.findById(id);
+	public Profile findById(Long id) throws ResourceNotFoundException {
+		Optional<Profile> profile = Optional.ofNullable(profileDao.findById(id));
+		if(!profile.isPresent()) {
+			throw new ResourceNotFoundException("Profile id: " + id.toString() + " not found");
+		}
+		return profile.get();
 	}
 
 	@Override

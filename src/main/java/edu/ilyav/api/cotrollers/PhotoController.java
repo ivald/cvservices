@@ -3,6 +3,8 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.PhotoUpload;
 import edu.ilyav.api.service.PhotoService;
+import edu.ilyav.api.service.exceptions.CloudinaryException;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import edu.ilyav.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -39,7 +42,7 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/private/experience/link/{id}", method = RequestMethod.POST)
-    public String uploadExpLinkImage(HttpServletRequest request, @PathVariable Long id) {
+    public String uploadExpLinkImage(HttpServletRequest request, @PathVariable Long id) throws ResourceNotFoundException, NoSuchAlgorithmException {
         Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
         Image image = new Image();
 
@@ -60,7 +63,7 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/private/education/link/{id}", method = RequestMethod.POST)
-    public String uploadEduLinkImage(HttpServletRequest request, @PathVariable Long id) {
+    public String uploadEduLinkImage(HttpServletRequest request, @PathVariable Long id) throws ResourceNotFoundException, NoSuchAlgorithmException {
         Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
         Image image = new Image();
 
@@ -81,7 +84,7 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/private/photo/experience/{id}/{desc}", method = RequestMethod.POST)
-    public String uploadExperienceImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) {
+    public String uploadExperienceImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) throws ResourceNotFoundException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Iterator<String> it = multipartRequest.getFileNames();
         MultipartFile multipartFile = multipartRequest.getFile(it.next());
@@ -94,7 +97,7 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/private/photo/education/{id}/{desc}", method = RequestMethod.POST)
-    public String uploadEducationImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) {
+    public String uploadEducationImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) throws ResourceNotFoundException, CloudinaryException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Iterator<String> it = multipartRequest.getFileNames();
         MultipartFile multipartFile = multipartRequest.getFile(it.next());
