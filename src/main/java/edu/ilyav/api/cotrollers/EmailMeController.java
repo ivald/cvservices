@@ -26,7 +26,7 @@ public class EmailMeController {
 	public JavaMailSender emailSender;
 
 	@RequestMapping(value="/emailMe", method = RequestMethod.POST)
-	public EmailMe forgotPassword(@RequestBody EmailMe email) {
+	public EmailMe sendMeAMessage(@RequestBody EmailMe email) {
 		EmailMe me = new EmailMe();
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(this.username);

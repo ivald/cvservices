@@ -2,7 +2,10 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 /**
  * Created by ilyav on 17/10/17.
@@ -18,6 +21,10 @@ public class UserInfo extends BaseModule {
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Profile profile;
+
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Login login;
 
     public String getUserName() {
         return userName;
@@ -57,5 +64,13 @@ public class UserInfo extends BaseModule {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public Login getLogin() {
+        return login;
+    }
+
+    public void setLogin(Login login) {
+        this.login = login;
     }
 }
