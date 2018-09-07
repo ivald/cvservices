@@ -79,6 +79,8 @@ public class HomeController {
                 Optional<Profile> profile = Optional.ofNullable(userInfo.getProfile());
                 if(!profile.isPresent()) {
                     this.profile = profileService.findById(userInfo.getProfileId());
+                } else {
+                    this.profile = profile.get();
                 }
                 updateLazyFetch(this.profile);
             }
