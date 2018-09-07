@@ -3,10 +3,13 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.UserService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
+import edu.ilyav.api.util.Constants;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +24,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
 public class UserController {
 
-	private final String EMPTY = "";
+	@Value("${guest.mode.pass}")
+	private String GUEST_PASSWORD;
+
+	private final String GUEST_USERNAME = "guest";
 
 	@Autowired
 	private UserService userService;
@@ -33,6 +40,10 @@ public class UserController {
 
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public UserInfo login(@RequestBody UserInfo userInfo) throws ServletException, ResourceNotFoundException {
+
+		if(GUEST_USERNAME.equals(userInfo.getUserName())) {
+			userInfo.setPassword(GUEST_PASSWORD);
+		}
 
 		if (userInfo.getUserName() == null || userInfo.getPassword() == null) {
 			throw new ServletException("Please fill in username and password");
@@ -54,7 +65,7 @@ public class UserController {
 				.setExpiration(currentTime.plusMinutes(5000).toDate())
 				.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
 
-		user.setPassword(EMPTY);
+		user.setPassword(Constants.EMPTY);
 
 		return user;
 	}

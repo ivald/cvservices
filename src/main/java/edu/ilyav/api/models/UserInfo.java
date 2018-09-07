@@ -2,10 +2,7 @@ package edu.ilyav.api.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * Created by ilyav on 17/10/17.

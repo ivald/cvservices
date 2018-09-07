@@ -22,6 +22,8 @@ public class Profile extends BaseModule {
     private Byte[] imageBytes;
     private String publicId;
     private Long userInfoId;
+    @Transient
+    private Login login;
 
     @OneToOne
     @JsonBackReference
@@ -129,5 +131,13 @@ public class Profile extends BaseModule {
 
     public void setImageBytes(Byte[] imageBytes) {
         this.imageBytes = imageBytes;
+    }
+
+    public Login getLogin() {
+        return login;
+    }
+
+    public void setLogin(Login login) {
+        this.login = login;
     }
 }
