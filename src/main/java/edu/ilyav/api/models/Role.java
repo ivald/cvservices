@@ -14,7 +14,7 @@ public class Role extends BaseModule {
     private String roleName;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value="login-role")
     private Login login;
 
     public String getRoleName() {

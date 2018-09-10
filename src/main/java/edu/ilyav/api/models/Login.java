@@ -18,8 +18,8 @@ public class Login extends BaseModule {
 
     private Long userInfoId;
 
-    @OneToMany(mappedBy = "login", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "login", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference(value="login-role")
     private List<Role> roles;
 
     public List<Role> getRoles() {
