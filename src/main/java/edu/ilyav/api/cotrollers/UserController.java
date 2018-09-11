@@ -76,7 +76,7 @@ public class UserController {
 		return userService.saveOrUpdate(user);
 	}
 
-	@RequestMapping(value="/all", method = RequestMethod.GET)
+	@RequestMapping(value="/private/all", method = RequestMethod.GET)
 	public List<UserInfo> getAllUsers() {
 		return userService.findAllUsers();
 	}

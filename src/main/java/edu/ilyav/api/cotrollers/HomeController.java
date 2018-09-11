@@ -22,7 +22,7 @@ import java.util.Optional;
  * Created by ilyav on 17/08/17.
  */
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/public")
 public class HomeController {
 
     public static Boolean isChanged = Boolean.FALSE;
@@ -39,22 +39,22 @@ public class HomeController {
     public HomeController() {
     }
 
-    @RequestMapping(value = "/public/run", method = RequestMethod.GET)
+    @RequestMapping(value = "/run", method = RequestMethod.GET)
     public Boolean isRunning() {
         return Boolean.TRUE;
     }
 
-    @RequestMapping(value = "/public/sideBar/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/sideBar/{id}", method = RequestMethod.GET)
     public Profile sideBar(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id);
     }
 
-    @RequestMapping(value = "/public/home/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/home/{id}", method = RequestMethod.GET)
     public ProfileContent home(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id).getProfileContent();
     }
 
-    @RequestMapping(value = "/public/main/home/{userName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/home/{userName}", method = RequestMethod.GET)
     public Profile home(@PathVariable String userName) throws ResourceNotFoundException {
         return getProfile(userName);
     }
