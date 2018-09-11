@@ -2,10 +2,12 @@ package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.models.ProfileContent;
+import edu.ilyav.api.models.Role;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.ProfileService;
 import edu.ilyav.api.service.UserService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
+import edu.ilyav.api.util.Constants;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ import java.util.Optional;
  * Created by ilyav on 17/08/17.
  */
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/public")
 public class HomeController {
 
     public static Boolean isChanged = Boolean.FALSE;
@@ -31,61 +33,74 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
-    private Profile profile;
+    private Optional<Profile> profile = Optional.ofNullable(null);
+    private Optional<UserInfo> userInfo = Optional.ofNullable(null);
 
     public HomeController() {
     }
 
-    @RequestMapping(value = "/public/run", method = RequestMethod.GET)
+    @RequestMapping(value = "/run", method = RequestMethod.GET)
     public Boolean isRunning() {
         return Boolean.TRUE;
     }
 
-    @RequestMapping(value = "/public/main/sideBar/{userName}", method = RequestMethod.GET)
-    public Profile sideBar(@PathVariable String userName) throws ResourceNotFoundException {
-        return getProfile(userName);
-    }
-
-    @RequestMapping(value = "/public/sideBar/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/sideBar/{id}", method = RequestMethod.GET)
     public Profile sideBar(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id);
     }
 
-    @RequestMapping(value = "/public/home/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/home/{id}", method = RequestMethod.GET)
     public ProfileContent home(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id).getProfileContent();
     }
 
-    @RequestMapping(value = "/public/main/home/{userName}", method = RequestMethod.GET)
-    public ProfileContent home(@PathVariable String userName) throws ResourceNotFoundException {
-        return getProfile(userName).getProfileContent();
+    @RequestMapping(value = "/main/home/{userName}", method = RequestMethod.GET)
+    public Profile home(@PathVariable String userName) throws ResourceNotFoundException {
+        return getProfile(userName);
     }
 
     public Profile getProfile(Long id) throws ResourceNotFoundException {
         synchronized (this) {
             if(this.profile == null || isChanged) {
-                this.profile = profileService.findById(id);
-                updateLazyFetch(this.profile);
+                this.profile = Optional.ofNullable(profileService.findById(id));
+                updateLazyFetch(this.profile.get());
             }
-            return this.profile;
+            return this.profile.get();
         }
     }
 
     @Transactional
     public Profile getProfile(String userName) throws ResourceNotFoundException {
         synchronized (this) {
-            if(this.profile == null || isChanged) {
-                UserInfo userInfo = userService.findByUserName(userName);
-                Optional<Profile> profile = Optional.ofNullable(userInfo.getProfile());
-                if(!profile.isPresent()) {
-                    this.profile = profileService.findById(userInfo.getProfileId());
-                } else {
-                    this.profile = profile.get();
+            if(!this.profile.isPresent() || (this.userInfo.isPresent() && !this.userInfo.get().getUserName().equals(userName)) || isChanged) {
+                this.userInfo = Optional.ofNullable(userService.findByUserName(userName));
+                this.profile = Optional.ofNullable(userInfo.get().getProfile());
+                if(!this.profile.isPresent()) {
+                    this.profile = Optional.ofNullable(profileService.findById(userInfo.get().getProfileId()));
                 }
-                updateLazyFetch(this.profile);
+
+                if(Constants.USERNAME_GUEST.equals(userName) && isGuestRole(this.userInfo.get())) {
+                    this.profile.get().setUserInfoId(userInfo.get().getId());
+                    this.profile.get().setLogin(userInfo.get().getLogin());
+                } else {
+                    this.profile.get().setLogin(userInfo.get().getLogin());
+                }
+
+                updateLazyFetch(this.profile.get());
             }
-            return this.profile;
+            return this.profile.get();
         }
+    }
+
+    private boolean isGuestRole(UserInfo userInfo) {
+        if(!userInfo.getLogin().getRoles().isEmpty()) {
+            for (Role role : userInfo.getLogin().getRoles()) {
+                if(Constants.GUEST.equals(role.getRoleName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void updateLazyFetch(Profile profile) {

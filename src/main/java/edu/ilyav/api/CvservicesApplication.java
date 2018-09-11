@@ -14,6 +14,7 @@ public class CvservicesApplication {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 		registrationBean.setFilter(new JwtFilter());
 		registrationBean.addUrlPatterns("/rest/private/*");
+		registrationBean.addUrlPatterns("/user/private/*");
 		return registrationBean;
 	}
 

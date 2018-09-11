@@ -3,7 +3,7 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Education;
 import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Profile;
-import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
+import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +59,8 @@ public class PdfController {
 
         profile = homeController.getProfile(userName);
 
-        printText("----------------------------------------------------------------------   SUMMARY   -----------------------------------------------------------------------", Boolean.FALSE);
+        printTitle(Color.DARK_GRAY, "                                                                                     " +
+                "SUMMARY                                                                          ");
         printText(EMPTY_STRING, Boolean.TRUE);
         printText(EMPTY_STRING, Boolean.TRUE);
 
@@ -66,105 +69,73 @@ public class PdfController {
             String[] descriptionList = profile.getProfileContent().getSummary().getDescription().split("\n");
             for (String input : descriptionList) {
                 List<String> wrappedLines = wrap(input, 125);
-                int cnt = 0;
-                for (String line : wrappedLines) {
-                    cnt++;
-                    printText(line.trim(), Boolean.FALSE);
-                    if (wrappedLines.size() > 1 && cnt != wrappedLines.size()) {
-                        printText(EMPTY_STRING, Boolean.TRUE);
-                    }
-                }
+                printWrappedLines(wrappedLines);
                 printText(EMPTY_STRING, Boolean.TRUE);
             }
         }
         printText(EMPTY_STRING, Boolean.TRUE);
-        printText("---------------------------------------------------------------------   EXPERIENCE   ---------------------------------------------------------------------", Boolean.FALSE);
+        printTitle(Color.DARK_GRAY, "                                                                                  " +
+                "EXPERIENCE                                                                        ");
         printText(EMPTY_STRING, Boolean.TRUE);
         printText(EMPTY_STRING, Boolean.TRUE);
 
         if (!profile.getProfileContent().getExperienceList().isEmpty()) {
             boolean isExpFirst = Boolean.TRUE;
             for (Experience exp : profile.getProfileContent().getExperienceList()) {
-                if(!isExpFirst) {
+                if (!isExpFirst) {
                     printText(EMPTY_STRING, Boolean.TRUE);
                 }
                 isExpFirst = Boolean.FALSE;
-                printText(exp.getCompany(), Boolean.FALSE);
+                printTitle(Color.BLUE, exp.getCompany());
                 printText(EMPTY_STRING, Boolean.TRUE);
-                printText(exp.getTitle(), Boolean.FALSE);
+                printTitle(Color.BLUE, exp.getTitle());
                 printText(EMPTY_STRING, Boolean.TRUE);
-                if(!exp.getCurrentlyWorkHere()) {
-                    printText(exp.getStartDate() + " - " + exp.getEndDate(), Boolean.FALSE);
+                if (!exp.getCurrentlyWorkHere()) {
+                    printTitle(Color.BLUE,exp.getStartDate() + " - " + exp.getEndDate());
                 } else {
-                    printText(exp.getStartDate() + " - Present", Boolean.FALSE);
+                    printTitle(Color.BLUE,exp.getStartDate() + " - Present");
                 }
                 printText(EMPTY_STRING, Boolean.TRUE);
-                printText(exp.getLocation(), Boolean.FALSE);
-                printText(EMPTY_STRING, Boolean.TRUE);
-                printText("---------------------------------------------------------------", Boolean.FALSE);
+                printTitle(Color.BLUE, exp.getLocation());
                 printText(EMPTY_STRING, Boolean.TRUE);
                 printText(EMPTY_STRING, Boolean.TRUE);
                 if (exp.getDescription() != null) {
-                    String[] descriptionList = exp.getDescription().replaceAll("\t", " ").split("\n");
-                    for (String input : descriptionList) {
-                        List<String> wrappedLines = wrap(input, 120);
-                        int cnt = 0;
-                        for (String line : wrappedLines) {
-                            cnt++;
-                            printText(line.trim(), Boolean.FALSE);
-                            if (wrappedLines.size() > 1 && cnt != wrappedLines.size()) {
-                                printText(EMPTY_STRING, Boolean.TRUE);
-                            }
-                        }
-                        printText(EMPTY_STRING, Boolean.TRUE);
-                    }
+                    printDescription(exp.getDescription());
                 }
             }
         }
 
-        printText("---------------------------------------------------------------------   EDUCATION   ---------------------------------------------------------------------", Boolean.FALSE);
+        printText(EMPTY_STRING, Boolean.TRUE);
+        printTitle(Color.DARK_GRAY, "                                                                                  " +
+                "EDUCATION                                                                        ");
         printText(EMPTY_STRING, Boolean.TRUE);
         printText(EMPTY_STRING, Boolean.TRUE);
 
         if (!profile.getProfileContent().getEducationList().isEmpty()) {
             boolean isEduFirst = Boolean.TRUE;
             for (Education edu : profile.getProfileContent().getEducationList()) {
-                if(!isEduFirst) {
+                if (!isEduFirst) {
                     printText(EMPTY_STRING, Boolean.TRUE);
                 }
                 isEduFirst = Boolean.FALSE;
-                printText(edu.getSchoolName(), Boolean.FALSE);
+                printTitle(Color.BLUE, edu.getSchoolName());
                 printText(EMPTY_STRING, Boolean.TRUE);
-                printText(edu.getDegreeName() + " , " + edu.getFieldOfStudy(), Boolean.FALSE);
+                printTitle(Color.BLUE,edu.getDegreeName() + " , " + edu.getFieldOfStudy());
                 printText(EMPTY_STRING, Boolean.TRUE);
-                if(edu.getFromYear() != edu.getToYearOrExpected()) {
-                    printText(edu.getFromYear() + " - " + edu.getToYearOrExpected(), Boolean.FALSE);
+                if (edu.getFromYear() != edu.getToYearOrExpected()) {
+                    printTitle(Color.BLUE, edu.getFromYear() + " - " + edu.getToYearOrExpected());
                 } else {
-                    printText(edu.getFromYear().toString(), Boolean.FALSE);
+                    printTitle(Color.BLUE, edu.getFromYear().toString());
                 }
                 printText(EMPTY_STRING, Boolean.TRUE);
                 Optional<String> loc = Optional.ofNullable(edu.getLocation());
-                if(loc.isPresent()) {
-                    printText(edu.getLocation(), Boolean.FALSE);
+                if (loc.isPresent()) {
+                    printTitle(Color.BLUE, edu.getLocation());
                     printText(EMPTY_STRING, Boolean.TRUE);
                 }
-                printText("---------------------------------------------------------------", Boolean.FALSE);
-                printText(EMPTY_STRING, Boolean.TRUE);
                 printText(EMPTY_STRING, Boolean.TRUE);
                 if (edu.getDescription() != null) {
-                    String[] descriptionList = edu.getDescription().replaceAll("\t", " ").split("\n");
-                    for (String input : descriptionList) {
-                        List<String> wrappedLines = wrap(input, 120);
-                        int cnt = 0;
-                        for (String line : wrappedLines) {
-                            cnt++;
-                            printText(line.trim(), Boolean.FALSE);
-                            if (wrappedLines.size() > 1 && cnt != wrappedLines.size()) {
-                                printText(EMPTY_STRING, Boolean.TRUE);
-                            }
-                        }
-                        printText(EMPTY_STRING, Boolean.TRUE);
-                    }
+                    printDescription(edu.getDescription());
                 }
             }
         }
@@ -217,6 +188,38 @@ public class PdfController {
         FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
 
+    private void printDescription(String description) throws Exception {
+        String[] descriptionList = description.replaceAll("\t", " ").split("\n");
+        for (String input : descriptionList) {
+            List<String> wrappedLines = wrap(input, 120);
+            printWrappedLines(wrappedLines);
+            printText(EMPTY_STRING, Boolean.TRUE);
+        }
+    }
+
+    private void printWrappedLines(List<String> wrappedLines) throws Exception {
+        int cnt = 0;
+        for (String line : wrappedLines) {
+            cnt++;
+            printText(line.trim(), Boolean.FALSE);
+            if (wrappedLines.size() > 1 && cnt != wrappedLines.size()) {
+                printText(EMPTY_STRING, Boolean.TRUE);
+            }
+        }
+    }
+
+    private void printTitle(Color color, String title) throws Exception {
+        numLine++;
+
+        if (isFirstPage) {
+            generateNewPage(Boolean.FALSE);
+        }
+
+        contentStream.setNonStrokingColor(color);
+        contentStream.showText(title);
+        contentStream.setNonStrokingColor(Color.BLACK);
+    }
+
     private void closeContent(Boolean isCloseContent) throws Exception {
         printText(EMPTY_STRING, Boolean.FALSE, isCloseContent);
     }
@@ -229,15 +232,15 @@ public class PdfController {
 
         numLine++;
 
-        if(isFirstPage || (!isNextPage && MAX_LINE_ON_THE_FIRST_PAGE  <= numLine) || (isNextPage && MAX_LINE_ON_THE_PAGE  <= numLine)) {
+        if (isFirstPage || (!isNextPage && MAX_LINE_ON_THE_FIRST_PAGE <= numLine) || (isNextPage && MAX_LINE_ON_THE_PAGE <= numLine)) {
             generateNewPage(isCloseContent);
         }
 
-        if(isCloseContent) {
+        if (isCloseContent) {
             return;
         }
 
-        if(isNewLine) {
+        if (isNewLine) {
             contentStream.newLine();
         } else {
             contentStream.showText(input);
@@ -246,7 +249,7 @@ public class PdfController {
 
     private void generateNewPage(Boolean isCloseContent) throws Exception {
 
-        if(isFirstPage) {
+        if (isFirstPage) {
             //Creating a blank page
             PDPage page = new PDPage();
 
@@ -324,7 +327,7 @@ public class PdfController {
 //            contentStream.setFont(PDType1Font.HELVETICA, 12);
 //
 //            contentStream.moveTextPositionByAmount(200, 640);
-//            contentStream.drawString("Mobile: XXX-XXX-XXXX");
+//            contentStream.drawString(this.profile.getMobile());
 //            contentStream.endText();
 
             //Begin the Content stream
@@ -373,7 +376,7 @@ public class PdfController {
             //Closing the content stream
             contentStream.close();
 
-            if(isCloseContent) return;
+            if (isCloseContent) return;
 
             numLine = 0;
 
