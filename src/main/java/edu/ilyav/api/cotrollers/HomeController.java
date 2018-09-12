@@ -104,4 +104,5 @@ public class HomeController {
         Hibernate.initialize(profile.getProfileContent().getEducationList());
         Hibernate.initialize(profile.getLanguageList());
     }
+
 }

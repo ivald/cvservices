@@ -22,7 +22,6 @@ public class BaseController {
         final String token = authHeader.substring(7);
 
         return Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
-
     }
 
 }

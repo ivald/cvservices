@@ -110,4 +110,5 @@ public class ProfileController extends BaseController {
 		Hibernate.initialize(profile.getProfileContent().getEducationList());
 		Hibernate.initialize(profile.getLanguageList());
 	}
+
 }
