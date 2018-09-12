@@ -44,11 +44,6 @@ public class HomeController {
         return Boolean.TRUE;
     }
 
-    @RequestMapping(value = "/sideBar/{id}", method = RequestMethod.GET)
-    public Profile sideBar(@PathVariable Long id) throws ResourceNotFoundException {
-        return getProfile(id);
-    }
-
     @RequestMapping(value = "/home/{id}", method = RequestMethod.GET)
     public ProfileContent home(@PathVariable Long id) throws ResourceNotFoundException {
         return getProfile(id).getProfileContent();
