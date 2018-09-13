@@ -1,57 +1,43 @@
 package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Profile;
-import edu.ilyav.api.models.ProfileContent;
-import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest/private/profile")
-public class ProfileController {
-
-	public static Boolean isChanged = Boolean.FALSE;
-
-	private Profile profile;
-
-	@Autowired
-	private ProfileService profileService;
+public class ProfileController extends BaseController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Profile add(@RequestBody Profile profile) {
-		return profileService.saveOrUpdate(profile);
+		return getProfileService().saveOrUpdate(profile);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public Profile update(@RequestBody Profile profile) {
-		return profileService.saveOrUpdate(profile);
+		return getProfileService().saveOrUpdate(profile);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public List<Profile> getAllUsers() {
-		return profileService.findAllProfiles();
+		return getProfileService().findAllProfiles();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ProfileContent profile(@PathVariable Long id) throws ResourceNotFoundException {
-		Profile profile = getProfile(id);
-		return profile.getProfileContent();
+	public Profile getProfileById(@PathVariable Long id) throws ResourceNotFoundException {
+		return getProfile(id);
 	}
 
-	public Profile getProfile(Long id) throws ResourceNotFoundException {
-		synchronized (this) {
-			if(this.profile == null || isChanged) {
-				this.profile = profileService.findById(id);
-				ProfileController.isChanged = Boolean.FALSE;
-				Hibernate.initialize(profile.getProfileContent().getExperienceList());
-				Hibernate.initialize(profile.getProfileContent().getEducationList());
-				Hibernate.initialize(profile.getLanguageList());
-			}
-			return this.profile;
-		}
+	@RequestMapping(method = RequestMethod.GET)
+	public Profile getProfile(HttpServletRequest req) throws ResourceNotFoundException, ServletException {
+		Optional<UserInfo> user = Optional.ofNullable(getUserService().findByUserName(getUserNameFromToken(req).getSubject()));
+		return getProfile(user.get().getUserName());
 	}
+
 }
