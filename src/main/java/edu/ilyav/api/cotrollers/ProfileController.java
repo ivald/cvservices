@@ -3,6 +3,7 @@ package edu.ilyav.api.cotrollers;
 import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
+import io.jsonwebtoken.Claims;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
@@ -36,8 +37,7 @@ public class ProfileController extends BaseController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public Profile getProfile(HttpServletRequest req) throws ResourceNotFoundException, ServletException {
-		Optional<UserInfo> user = Optional.ofNullable(getUserService().findByUserName(getUserNameFromToken(req).getSubject()));
-		return getProfile(user.get().getUserName());
+		return getProfile(getUserNameFromToken(req));
 	}
 
 }

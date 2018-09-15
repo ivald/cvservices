@@ -1,5 +1,6 @@
 package edu.ilyav.api.cotrollers;
 
+import edu.ilyav.api.models.Role;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.UserService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
@@ -61,9 +62,18 @@ public class UserController {
 
 		DateTime currentTime = new DateTime();
 
-		user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", "user").setIssuedAt(new Date())
+		String role = Constants.GUEST;
+		if(!user.getLogin().getRoles().isEmpty()) {
+			for (Role r: user.getLogin().getRoles()) {
+				role = r.getRoleName();
+			}
+		}
+
+		user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", role).setIssuedAt(new Date())
 				.setExpiration(currentTime.plusMinutes(5000).toDate())
 				.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+
+		userService.saveOrUpdate(user);
 
 		user.setPassword(Constants.EMPTY);
 
