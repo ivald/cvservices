@@ -69,10 +69,14 @@ public class UserController {
 			}
 		}
 
-		user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", role).setIssuedAt(new Date())
-				.setExpiration(currentTime.plusMinutes(5000).toDate())
-				.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-
+		if(Constants.GUEST.equals(role)) {
+			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", role).setIssuedAt(new Date())
+					.setExpiration(currentTime.plusMinutes(30).toDate())
+					.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+		} else {
+			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", role).setIssuedAt(new Date())
+					.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+		}
 		userService.saveOrUpdate(user);
 
 		user.setPassword(Constants.EMPTY);
