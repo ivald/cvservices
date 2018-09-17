@@ -56,19 +56,38 @@ public class BaseController {
         }
     }
 
-    @Transactional
     public Profile getProfile(String userName) throws ResourceNotFoundException {
+        return getProfileByParameter(userName);
+    }
+
+    public Profile getProfile(Claims claims) throws ResourceNotFoundException {
+        return getProfileByParameter(claims);
+    }
+
+    @Transactional
+    public Profile getProfileByParameter(Object parameter) throws ResourceNotFoundException {
         synchronized (this) {
-            if(!this.profile.isPresent() || (this.userInfo.isPresent() && !this.userInfo.get().getUserName().equals(userName)) || isChanged) {
-                this.userInfo = Optional.ofNullable(userService.findByUserName(userName));
+            Optional<UserInfo> user;
+            Role role = new Role();
+            if(parameter instanceof String) {
+                user = Optional.ofNullable(userService.findByUserName((String)parameter));
+            } else if( parameter instanceof Claims) {
+                user = Optional.ofNullable(userService.findByUserName(((Claims)parameter).getSubject()));
+                role.setRoleName(((Claims)parameter).get("roles").toString());
+            } else {
+                throw new ResourceNotFoundException("Missing or invalid input parameter");
+            }
+
+            if(!this.profile.isPresent() || (this.userInfo.isPresent() && !this.userInfo.get().getUserName().equals(user.get().getUserName())) || isChanged) {
+                this.userInfo = user;
                 this.profile = Optional.ofNullable(userInfo.get().getProfile());
                 if(!this.profile.isPresent()) {
                     this.profile = Optional.ofNullable(profileService.findById(userInfo.get().getProfileId()));
                 }
 
-                this.profile.get().setLogin(userInfo.get().getLogin());
+                this.profile.get().setRole(role);
 
-                if(Constants.USERNAME_GUEST.equals(userName) && isGuestRole(this.userInfo.get())) {
+                if(Constants.USERNAME_GUEST.equals(user.get().getUserName()) && isGuestRole(this.userInfo.get())) {
                     this.profile.get().setUserInfoId(userInfo.get().getId());
                 }
 

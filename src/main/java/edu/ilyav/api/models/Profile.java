@@ -17,14 +17,14 @@ public class Profile extends BaseModule {
     private String occupation;
     private String primaryEmail;
     private String linkedInUrl;
-//    private String mobile;
+    private String mobile;
     private String imageUrl;
     @Lob
     private Byte[] imageBytes;
     private String publicId;
     private Long userInfoId;
     @Transient
-    private Login login;
+    private Role role;
 
     @OneToOne
     @JsonBackReference
@@ -134,19 +134,19 @@ public class Profile extends BaseModule {
         this.imageBytes = imageBytes;
     }
 
-    public Login getLogin() {
-        return login;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setLogin(Login login) {
-        this.login = login;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-//    public String getMobile() {
-//        return mobile;
-//    }
-//
-//    public void setMobile(String mobile) {
-//        this.mobile = mobile;
-//    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
