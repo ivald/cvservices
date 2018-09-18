@@ -9,6 +9,7 @@ import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,7 @@ public class ImageServiceImpl extends BaseServiceImpl implements ImageService {
 	}
 
 	@Override
+	@Transactional
 	public Optional<Image> findById(Long id){
 		Optional<Image> image = Optional.ofNullable(imageRepository.findById(id));
 		return image;
@@ -39,11 +41,6 @@ public class ImageServiceImpl extends BaseServiceImpl implements ImageService {
 	
 	@Override
 	public Image saveOrUpdate(Image image) throws ResourceNotFoundException {
-		Optional<Experience> experience = Optional.ofNullable(experienceService.findById(image.getExperienceId()));
-		if(!experience.isPresent()) {
-			throw new ResourceNotFoundException("ProfileContent not found");
-		}
-		image.setExperience(experience.get());
 		updateHomeProfileObjects();
 		return imageRepository.save(image);
 	}

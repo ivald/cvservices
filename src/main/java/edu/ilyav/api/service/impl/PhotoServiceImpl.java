@@ -58,6 +58,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
     @Autowired
     private ProfileService profileService;
 
+    @Transactional
     public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException {
         Experience experience;
         List<Image> images;
@@ -98,6 +99,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
     }
 
+    @Transactional
     public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException, CloudinaryException {
         Education education;
         List<Image> images;
