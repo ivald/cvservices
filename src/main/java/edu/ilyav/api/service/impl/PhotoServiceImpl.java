@@ -140,6 +140,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
     }
 
+    @Transactional
     public Image uploadExperienceLink(String url, Long id) throws IOException, ResourceNotFoundException, NoSuchAlgorithmException {
         Experience experience;
         List<Image> images;
@@ -164,6 +165,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return image;
     }
 
+    @Transactional
     public Image uploadEducationLink(String url, Long id) throws IOException, ResourceNotFoundException, NoSuchAlgorithmException {
         Education education;
         List<Image> images;
