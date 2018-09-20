@@ -1,4 +1,4 @@
-package edu.ilyav.cvservices;
+package edu.ilyav.api;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

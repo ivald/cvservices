@@ -3,20 +3,15 @@ package edu.ilyav.api.service.impl;
 import edu.ilyav.api.dao.SummaryRepository;
 import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.models.Summary;
-import edu.ilyav.api.service.ProfileContentService;
 import edu.ilyav.api.service.SummaryService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SummaryServiceImpl extends BaseServiceImpl implements SummaryService {
-
-	@Autowired
-	private ProfileContentService profileContentService;
 
 	@Autowired
 	private SummaryRepository summaryRepository;
@@ -28,14 +23,14 @@ public class SummaryServiceImpl extends BaseServiceImpl implements SummaryServic
 
 	@Override
 	public Summary findById(Long id){
-		return summaryRepository.findById(id);
+		return summaryRepository.findById(id).get();
 	}
 	
 	@Override
 	public Summary saveOrUpdate(Summary summary) throws ResourceNotFoundException {
-		ProfileContent profileContent = profileContentService.findById(summary.getProfileContentId());
-		summary.setProfileContent(profileContent);
+		ProfileContent profileContent = getProfileContent(summary.getProfileContentId()).get();
 		updateHomeProfileObjects();
+		summary.setProfileContent(profileContent);
 		return summaryRepository.save(summary);
 	}
 

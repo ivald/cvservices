@@ -28,22 +28,22 @@ public class LanguageServiceImpl extends BaseServiceImpl implements LanguageServ
 
 	@Override
 	public Language findById(Long id){
-		return languageRepository.findById(id);
+		return languageRepository.findById(id).get();
 	}
 
 	@Override
 	public void delete(Long id){
-		languageRepository.delete(id);
+		languageRepository.deleteById(id);
 	}
 	
 	@Override
 	public Language saveOrUpdate(Language language) throws ResourceNotFoundException {
 		Optional<Profile> profile = Optional.ofNullable(profileService.findById(language.getProfileId()));
 		if(!profile.isPresent()) {
-			throw new ResourceNotFoundException("ProfileContent not found");
+			throw new ResourceNotFoundException("Profile not found");
 		}
-		language.setProfile(profile.get());
 		updateHomeProfileObjects();
+		language.setProfile(profile.get());
 		return languageRepository.save(language);
 	}
 	

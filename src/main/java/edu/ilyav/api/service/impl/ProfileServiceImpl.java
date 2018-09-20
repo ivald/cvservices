@@ -25,7 +25,7 @@ public class ProfileServiceImpl extends BaseServiceImpl implements ProfileServic
 	@Override
 	@Transactional
 	public Profile findById(Long id) throws ResourceNotFoundException {
-		Optional<Profile> profile = Optional.ofNullable(profileDao.findById(id));
+		Optional<Profile> profile = profileDao.findById(id);
 		if(!profile.isPresent()) {
 			throw new ResourceNotFoundException("Profile id: " + id.toString() + " not found");
 		}
