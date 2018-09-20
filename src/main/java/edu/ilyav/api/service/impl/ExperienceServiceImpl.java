@@ -7,7 +7,6 @@ import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.ProfileContent;
 import edu.ilyav.api.service.ExperienceService;
-import edu.ilyav.api.service.ProfileContentService;
 import edu.ilyav.api.service.exceptions.CloudinaryException;
 import edu.ilyav.api.service.exceptions.ExperienceServiceException;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
@@ -18,7 +17,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -35,9 +33,6 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 	private String apiSecret;
 
 	@Autowired
-	private ProfileContentService profileContentService;
-
-	@Autowired
 	private ExperienceRepository experienceRepository;
 
 	@Override
@@ -47,7 +42,7 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 
 	@Override
 	public Experience findById(Long id){
-		return experienceRepository.findById(id);
+		return experienceRepository.findById(id).get();
 	}
 
 	@Override
@@ -60,25 +55,17 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 				"api_key", this.apiKey,
 				"api_secret", this.apiSecret));
 
-		Optional<Experience> experience = Optional.ofNullable(experienceRepository.findById(id));
+		Optional<Experience> experience = experienceRepository.findById(id);
 		if (experience.isPresent()) {
-			List list = profileContentService.findById(experience.get().getProfileContentId()).getExperienceList();
+			List list = getProfileContentService().findById(experience.get().getProfileContentId()).getExperienceList();
 			if (list.isEmpty()) {
 				throw new ExperienceServiceException("Experience object cannot be removed. Experience list is empty.");
 			} else {
 				List<Image> images = experience.get().getImageList();
-				if (!images.isEmpty()) {
-					for(Image image : images)
-						try {
-							result = cloudinary.uploader().destroy(image.getPublicId(), null);
-						} catch (IOException e) {
-							e.printStackTrace();
-							throw new CloudinaryException("Cloudinary delete image: " + e.getMessage());
-						}
-				}
+				result = removeImageFromCloudinary(result, cloudinary, images);
 				ListIterator it = list.listIterator();
 				checkBaseObjExist(experience.get(), it, Constants.EXPERIENCE);
-				experienceRepository.delete(id);
+				experienceRepository.deleteById(id);
 				updateHomeProfileObjects();
 				result.put("result", "ok");
 			}
@@ -91,10 +78,7 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 	
 	@Override
 	public Experience saveOrUpdate(Experience experience) throws ResourceNotFoundException {
-		Optional<ProfileContent> profileContent = Optional.ofNullable(profileContentService.findById(experience.getProfileContentId()));
-		if(!profileContent.isPresent()) {
-			throw new ResourceNotFoundException("ProfileContent not found");
-		}
+		Optional<ProfileContent> profileContent = getProfileContent(experience.getProfileContentId());
 		experience.setProfileContent(profileContent.get());
 		updateHomeProfileObjects();
 		return experienceRepository.save(experience);

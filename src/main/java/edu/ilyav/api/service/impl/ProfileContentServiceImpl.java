@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ProfileContentServiceImpl implements ProfileContentService {
+public class ProfileContentServiceImpl extends BaseServiceImpl implements ProfileContentService {
 
 	@Autowired
 	private ProfileContentRepository profileContentRepository;
-	
+
 	@Override
 	public List<ProfileContent> findAll() {
 		return profileContentRepository.findAll();
@@ -24,12 +23,8 @@ public class ProfileContentServiceImpl implements ProfileContentService {
 
 	@Override
 	@Transactional
-	public ProfileContent findById(Long id) throws ResourceNotFoundException {
-		Optional<ProfileContent> profileContent = Optional.ofNullable(profileContentRepository.findById(id));
-		if(!profileContent.isPresent()) {
-			throw new ResourceNotFoundException("ProfileContent id: " + id.toString() + " not found");
-		}
-		return profileContent.get();
+	public ProfileContent findById(Long id) {
+		return profileContentRepository.findById(id).get();
 	}
 
 	@Override

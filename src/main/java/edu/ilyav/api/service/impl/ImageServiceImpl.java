@@ -17,9 +17,6 @@ import java.util.Optional;
 public class ImageServiceImpl extends BaseServiceImpl implements ImageService {
 
 	@Autowired
-	private ExperienceService experienceService;
-
-	@Autowired
 	private ImageRepository imageRepository;
 	
 	@Override
@@ -30,17 +27,17 @@ public class ImageServiceImpl extends BaseServiceImpl implements ImageService {
 	@Override
 	@Transactional
 	public Optional<Image> findById(Long id){
-		Optional<Image> image = Optional.ofNullable(imageRepository.findById(id));
+		Optional<Image> image = imageRepository.findById(id);
 		return image;
 	}
 
 	@Override
 	public void delete(Long id){
-		imageRepository.delete(id);
+		imageRepository.deleteById(id);
 	}
 	
 	@Override
-	public Image saveOrUpdate(Image image) throws ResourceNotFoundException {
+	public Image saveOrUpdate(Image image) {
 		updateHomeProfileObjects();
 		return imageRepository.save(image);
 	}
