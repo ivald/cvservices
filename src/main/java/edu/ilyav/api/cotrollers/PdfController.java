@@ -320,15 +320,15 @@ public class PdfController {
             contentStream.drawString(profile.getLinkedInUrl());
             contentStream.endText();
 
-//            //Begin the Content stream
-//            contentStream.beginText();
-//
-//            //Setting the font to the Content stream
-//            contentStream.setFont(PDType1Font.HELVETICA, 12);
-//
-//            contentStream.moveTextPositionByAmount(200, 640);
-//            contentStream.drawString(this.profile.getMobile());
-//            contentStream.endText();
+            //Begin the Content stream
+            contentStream.beginText();
+
+            //Setting the font to the Content stream
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+
+            contentStream.moveTextPositionByAmount(200, 640);
+            contentStream.drawString(this.profile.getMobile());
+            contentStream.endText();
 
             //Begin the Content stream
             contentStream.beginText();
