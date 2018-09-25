@@ -59,6 +59,8 @@ public class PdfController {
 
         profile = homeController.getProfile(userName);
 
+        printText(EMPTY_STRING, Boolean.TRUE);
+        printText(EMPTY_STRING, Boolean.TRUE);
         printTitle(Color.DARK_GRAY, "                                                                                     " +
                 "SUMMARY                                                                          ");
         printText(EMPTY_STRING, Boolean.TRUE);
@@ -86,22 +88,19 @@ public class PdfController {
                     printText(EMPTY_STRING, Boolean.TRUE);
                 }
                 isExpFirst = Boolean.FALSE;
-                printTitle(Color.BLUE, exp.getCompany());
-                printText(EMPTY_STRING, Boolean.TRUE);
-                printTitle(Color.BLUE, exp.getTitle());
-                printText(EMPTY_STRING, Boolean.TRUE);
                 if (!exp.getCurrentlyWorkHere()) {
-                    printTitle(Color.BLUE,exp.getStartDate() + " - " + exp.getEndDate());
+                    printTitle(Color.BLUE, exp.getCompany() + " ,  " + exp.getLocation() + "                                                                                                           " + exp.getStartDate() + " - " + exp.getEndDate());
                 } else {
-                    printTitle(Color.BLUE,exp.getStartDate() + " - Present");
+                    printTitle(Color.BLUE, exp.getCompany() + " ,  " + exp.getLocation() + "                                                                                                                " + exp.getStartDate() + " - Present");
                 }
                 printText(EMPTY_STRING, Boolean.TRUE);
-                printTitle(Color.BLUE, exp.getLocation());
+                printTitle(Color.BLUE, exp.getTitle());
                 printText(EMPTY_STRING, Boolean.TRUE);
                 printText(EMPTY_STRING, Boolean.TRUE);
                 if (exp.getDescription() != null) {
                     printDescription(exp.getDescription());
                 }
+                printText(EMPTY_STRING, Boolean.TRUE);
             }
         }
 
@@ -118,21 +117,30 @@ public class PdfController {
                     printText(EMPTY_STRING, Boolean.TRUE);
                 }
                 isEduFirst = Boolean.FALSE;
-                printTitle(Color.BLUE, edu.getSchoolName());
-                printText(EMPTY_STRING, Boolean.TRUE);
-                printTitle(Color.BLUE,edu.getDegreeName() + " , " + edu.getFieldOfStudy());
-                printText(EMPTY_STRING, Boolean.TRUE);
-                if (edu.getFromYear() != edu.getToYearOrExpected()) {
-                    printTitle(Color.BLUE, edu.getFromYear() + " - " + edu.getToYearOrExpected());
-                } else {
-                    printTitle(Color.BLUE, edu.getFromYear().toString());
-                }
-                printText(EMPTY_STRING, Boolean.TRUE);
                 Optional<String> loc = Optional.ofNullable(edu.getLocation());
+                int spaces = 161;
+                if(edu.getFromYear().equals(2004L) )
+                    spaces = 148;
+                else if(edu.getFromYear().equals(2017L) )
+                    spaces = 164;
+
+                String nameSpaces = "";
                 if (loc.isPresent()) {
-                    printTitle(Color.BLUE, edu.getLocation());
-                    printText(EMPTY_STRING, Boolean.TRUE);
+                    nameSpaces = " ,   " + edu.getLocation();
                 }
+
+                String str1 = edu.getSchoolName() + nameSpaces;
+                String str2 = edu.getFromYear() + " - " + edu.getToYearOrExpected();
+                StringBuilder str3 = new StringBuilder();
+                int count = 0;
+                count += str1.length() + str2.length();
+                for (int i = 0; i < (spaces - count); i++)
+                    str3.append(" ");
+                printTitle(Color.BLUE, str1 + str3.toString() + str2);
+
+                printText(EMPTY_STRING, Boolean.TRUE);
+                printTitle(Color.BLUE, edu.getDegreeName() + " , " + edu.getFieldOfStudy());
+                printText(EMPTY_STRING, Boolean.TRUE);
                 printText(EMPTY_STRING, Boolean.TRUE);
                 if (edu.getDescription() != null) {
                     printDescription(edu.getDescription());
@@ -328,6 +336,16 @@ public class PdfController {
 
             contentStream.moveTextPositionByAmount(200, 640);
             contentStream.drawString(this.profile.getMobile());
+            contentStream.endText();
+
+            //Begin the Content stream
+            contentStream.beginText();
+
+            //Setting the font to the Content stream
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+
+            contentStream.moveTextPositionByAmount(200, 620);
+            contentStream.drawString(this.profile.getGithub());
             contentStream.endText();
 
             //Begin the Content stream

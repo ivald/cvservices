@@ -290,7 +290,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             uploadResult = cloudinary.uploader().upload(photoUpload.getFile().getBytes(), ObjectUtils.emptyMap());
 
             String[] arr = uploadResult.get("secure_url").toString().split("upload/");
-            URL url = new URL(arr[0] + "upload/w_130,h_130,c_thumb,g_face,r_max/" + arr[1]);
+            URL url = new URL(arr[0] + "upload/w_110,h_110,c_thumb,g_face,r_max/" + arr[1]);
             BufferedImage img = ImageIO.read(url);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ImageIO.write( img, "jpg", outputStream );

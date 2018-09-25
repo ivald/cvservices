@@ -18,6 +18,7 @@ public class Profile extends BaseModule {
     private String primaryEmail;
     private String linkedInUrl;
     private String mobile;
+    private String github;
     private String imageUrl;
     @Lob
     private Byte[] imageBytes;
@@ -148,5 +149,13 @@ public class Profile extends BaseModule {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getGithub() {
+        return github;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
     }
 }
