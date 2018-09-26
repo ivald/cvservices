@@ -171,8 +171,8 @@ public class PdfController {
         //Drawing a text
         contentStream.setNonStrokingColor(Color.GRAY);
         contentStream.beginText();
-        contentStream.moveTextPositionByAmount(300, 10);
-        contentStream.drawString(pageNumber.toString());
+        contentStream.moveTextPositionByAmount(285, 10);
+        contentStream.drawString("Page " + pageNumber.toString());
         contentStream.endText();
 
         contentStream.close();
@@ -284,7 +284,7 @@ public class PdfController {
             contentStream = new PDPageContentStream(document, page);
 
             //Drawing the image in the PDF document
-            contentStream.drawImage(pdImage, 25, 625);
+            //contentStream.drawImage(pdImage, 25, 625);
 
             contentStream.setNonStrokingColor(Color.BLACK);
 
@@ -294,7 +294,10 @@ public class PdfController {
             //Setting the font to the Content stream
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
 
-            contentStream.moveTextPositionByAmount(200, 730);
+            short leftStartPosition = 30;
+            short rightStartPosition = 400;
+
+            contentStream.moveTextPositionByAmount(leftStartPosition, 730);
             contentStream.drawString(profile.getFirstName() + ' ' + profile.getLastName());
             contentStream.endText();
 
@@ -304,7 +307,7 @@ public class PdfController {
             //Setting the font to the Content stream
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
 
-            contentStream.moveTextPositionByAmount(200, 710);
+            contentStream.moveTextPositionByAmount(leftStartPosition, 710);
             contentStream.drawString(profile.getOccupation());
             contentStream.endText();
 
@@ -314,7 +317,7 @@ public class PdfController {
             //Setting the font to the Content stream
             contentStream.setFont(PDType1Font.HELVETICA, 12);
 
-            contentStream.moveTextPositionByAmount(200, 680);
+            contentStream.moveTextPositionByAmount(rightStartPosition, 730);
             contentStream.drawString(profile.getPrimaryEmail());
             contentStream.endText();
 
@@ -324,7 +327,7 @@ public class PdfController {
             //Setting the font to the Content stream
             contentStream.setFont(PDType1Font.HELVETICA, 12);
 
-            contentStream.moveTextPositionByAmount(200, 660);
+            contentStream.moveTextPositionByAmount(rightStartPosition, 710);
             contentStream.drawString(profile.getLinkedInUrl());
             contentStream.endText();
 
@@ -334,7 +337,7 @@ public class PdfController {
             //Setting the font to the Content stream
             contentStream.setFont(PDType1Font.HELVETICA, 12);
 
-            contentStream.moveTextPositionByAmount(200, 640);
+            contentStream.moveTextPositionByAmount(rightStartPosition, 690);
             contentStream.drawString(this.profile.getMobile());
             contentStream.endText();
 
@@ -344,8 +347,18 @@ public class PdfController {
             //Setting the font to the Content stream
             contentStream.setFont(PDType1Font.HELVETICA, 12);
 
-            contentStream.moveTextPositionByAmount(200, 620);
+            contentStream.moveTextPositionByAmount(rightStartPosition, 670);
             contentStream.drawString(this.profile.getGithub());
+            contentStream.endText();
+
+            //Begin the Content stream
+            contentStream.beginText();
+
+            //Setting the font to the Content stream
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+
+            contentStream.moveTextPositionByAmount(rightStartPosition, 650);
+            contentStream.drawString("www.ivald.net");
             contentStream.endText();
 
             //Begin the Content stream
@@ -358,7 +371,7 @@ public class PdfController {
             contentStream.setLeading(12.5f);
 
             //Setting the position for the line
-            contentStream.newLineAtOffset(25, 600);
+            contentStream.newLineAtOffset(25, 620);
 
             isFirstPage = Boolean.FALSE;
 
@@ -387,8 +400,8 @@ public class PdfController {
             //Drawing a text
             contentStream.setNonStrokingColor(Color.GRAY);
             contentStream.beginText();
-            contentStream.moveTextPositionByAmount(300, 15);
-            contentStream.drawString(pageNumber.toString());
+            contentStream.moveTextPositionByAmount(285, 15);
+            contentStream.drawString("Page " + pageNumber.toString());
             contentStream.endText();
 
             //Closing the content stream
