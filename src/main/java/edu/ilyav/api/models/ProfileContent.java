@@ -14,6 +14,7 @@ import java.util.List;
 public class ProfileContent extends BaseModule {
 
     private Long profileId;
+    private Long summaryId;
 
     @OneToOne
     @JsonBackReference
@@ -85,5 +86,13 @@ public class ProfileContent extends BaseModule {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public Long getSummaryId() {
+        return summaryId;
+    }
+
+    public void setSummaryId(Long summaryId) {
+        this.summaryId = summaryId;
     }
 }

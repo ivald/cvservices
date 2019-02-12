@@ -14,6 +14,7 @@ public class UserInfo extends BaseModule {
     private String password;
     private String token;
     private Long profileId;
+    private Long loginId;
 
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -69,5 +70,13 @@ public class UserInfo extends BaseModule {
 
     public void setLogin(Login login) {
         this.login = login;
+    }
+
+    public Long getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(Long loginId) {
+        this.loginId = loginId;
     }
 }

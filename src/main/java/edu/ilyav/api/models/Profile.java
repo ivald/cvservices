@@ -24,6 +24,7 @@ public class Profile extends BaseModule {
     private Byte[] imageBytes;
     private String publicId;
     private Long userInfoId;
+    private Long profileContentId;
     @Transient
     private Role role;
 
@@ -149,6 +150,14 @@ public class Profile extends BaseModule {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Long getProfileContentId() {
+        return profileContentId;
+    }
+
+    public void setProfileContentId(Long profileContentId) {
+        this.profileContentId = profileContentId;
     }
 
     public String getGithub() {
