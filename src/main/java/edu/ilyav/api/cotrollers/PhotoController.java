@@ -24,7 +24,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rest")
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
-public class PhotoController {
+public class PhotoController
+
+
+{
 
     @Autowired
     private PhotoService photoService;
