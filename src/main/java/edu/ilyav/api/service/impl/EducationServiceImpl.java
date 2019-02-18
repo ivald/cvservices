@@ -6,6 +6,7 @@ import edu.ilyav.api.dao.EducationRepository;
 import edu.ilyav.api.models.Education;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.ProfileContent;
+import edu.ilyav.api.models.WebResponse;
 import edu.ilyav.api.service.EducationService;
 import edu.ilyav.api.service.exceptions.CloudinaryException;
 import edu.ilyav.api.service.exceptions.EducationServiceException;
@@ -47,9 +48,9 @@ public class EducationServiceImpl extends BaseServiceImpl implements EducationSe
 
     @Override
     @Transactional
-    public String delete(Long id) throws EducationServiceException, CloudinaryException, ResourceNotFoundException {
+    public WebResponse delete(Long id) throws EducationServiceException, CloudinaryException, ResourceNotFoundException {
         Map result = new HashMap<>();
-
+        WebResponse response = new WebResponse();
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
@@ -68,12 +69,13 @@ public class EducationServiceImpl extends BaseServiceImpl implements EducationSe
                 educationRepository.deleteById(id);
                 updateHomeProfileObjects();
                 result.put("result", "ok");
+                response.setResult("ok");
             }
         } else {
             throw new EducationServiceException("Education id: " + id.toString() + " does not exist.");
         }
 
-        return result.toString();
+        return response;
     }
 
     @Override

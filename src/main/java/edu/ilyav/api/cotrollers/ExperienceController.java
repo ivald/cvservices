@@ -2,6 +2,7 @@ package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.ProfileContent;
+import edu.ilyav.api.models.WebResponse;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.ProfileContentService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
@@ -29,7 +30,7 @@ public class ExperienceController {
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws Exception {
+	public WebResponse delete(@PathVariable Long id) throws Exception {
 		return experienceService.delete(id);
 	}
 

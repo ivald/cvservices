@@ -6,6 +6,7 @@ import edu.ilyav.api.dao.ExperienceRepository;
 import edu.ilyav.api.models.Experience;
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.ProfileContent;
+import edu.ilyav.api.models.WebResponse;
 import edu.ilyav.api.service.ExperienceService;
 import edu.ilyav.api.service.exceptions.CloudinaryException;
 import edu.ilyav.api.service.exceptions.ExperienceServiceException;
@@ -47,9 +48,9 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 
 	@Override
 	@Transactional
-	public String delete(Long id) throws ExperienceServiceException, CloudinaryException, ResourceNotFoundException {
+	public WebResponse delete(Long id) throws ExperienceServiceException, CloudinaryException, ResourceNotFoundException {
 		Map result = new HashMap<>();
-
+		WebResponse response = new WebResponse();
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
 				"cloud_name", this.cloudName,
 				"api_key", this.apiKey,
@@ -68,12 +69,13 @@ public class ExperienceServiceImpl extends BaseServiceImpl implements Experience
 				experienceRepository.deleteById(id);
 				updateHomeProfileObjects();
 				result.put("result", "ok");
+				response.setResult("ok");
 			}
 		} else {
 			throw new ExperienceServiceException("Experience id: " + id.toString() + " does not exist.");
 		}
 
-		return result.toString();
+		return response;
 	}
 	
 	@Override
