@@ -22,6 +22,7 @@ public class Profile extends BaseModule {
     private String imageUrl;
     @Lob
     private Byte[] imageBytes;
+    private String imageFormat;
     private String publicId;
     private Long userInfoId;
     private Long profileContentId;
@@ -166,5 +167,13 @@ public class Profile extends BaseModule {
 
     public void setGithub(String github) {
         this.github = github;
+    }
+
+    public String getImageFormat() {
+        return imageFormat;
+    }
+
+    public void setImageFormat(String imageFormat) {
+        this.imageFormat = imageFormat;
     }
 }

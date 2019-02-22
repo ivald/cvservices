@@ -264,7 +264,7 @@ public class PdfController {
             //Adding the blank page to the document
             document.addPage(page);
 
-            File imgFile = new File("downloaded.jpg");
+            File imgFile = new File("downloaded." + profile.getImageFormat());
 
             OutputStream os = new FileOutputStream(imgFile);
 

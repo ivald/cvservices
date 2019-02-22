@@ -313,6 +313,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             }
 
             profile.setImageBytes(byteObjects);
+            profile.setImageFormat((String) uploadResult.get("format"));
             profile.setImageUrl(uploadResult.get("secure_url").toString());
             profile.setPublicId(uploadResult.get("public_id").toString());
 
