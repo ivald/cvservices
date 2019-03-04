@@ -264,23 +264,6 @@ public class PdfController {
             //Adding the blank page to the document
             document.addPage(page);
 
-            File imgFile = new File("downloaded." + profile.getImageFormat());
-
-            OutputStream os = new FileOutputStream(imgFile);
-
-            byte[] byteObjects = new byte[profile.getImageBytes().length];
-            int i = 0;
-            for (byte b : profile.getImageBytes()) {
-                byteObjects[i++] = b;
-            }
-
-            os.write(byteObjects);
-
-            //Creating PDImageXObject object
-            PDImageXObject pdImage = PDImageXObject.createFromFileByExtension(imgFile, document);
-
-            os.close();
-
             contentStream = new PDPageContentStream(document, page);
 
             //Drawing the image in the PDF document
