@@ -266,9 +266,6 @@ public class PdfController {
 
             contentStream = new PDPageContentStream(document, page);
 
-            //Drawing the image in the PDF document
-            //contentStream.drawImage(pdImage, 25, 625);
-
             contentStream.setNonStrokingColor(Color.BLACK);
 
             //Begin the Content stream
