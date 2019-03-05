@@ -1,6 +1,7 @@
 package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Education;
+import edu.ilyav.api.models.WebResponse;
 import edu.ilyav.api.service.EducationService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class EducationController {
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws Exception {
+	public WebResponse delete(@PathVariable Long id) throws Exception {
 		return educationService.delete(id);
 	}
 

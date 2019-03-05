@@ -59,7 +59,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
     private ProfileService profileService;
 
     @Transactional
-    public String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException {
+    public Image uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException {
         Experience experience;
         List<Image> images;
         Image image = null;
@@ -96,11 +96,11 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             e.printStackTrace();
         }
 
-        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+        return image;
     }
 
     @Transactional
-    public String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException, CloudinaryException {
+    public Image uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException, CloudinaryException {
         Education education;
         List<Image> images;
         Image image;
@@ -137,7 +137,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         education.setImageList(images);
         educationService.saveOrUpdate(education);
 
-        return image.getImageUrl() + "@" + image.getPublicId() + "@" + image.getId();
+        return image;
     }
 
     @Transactional
@@ -293,7 +293,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             URL url = new URL(arr[0] + "upload/w_110,h_110,c_thumb,g_face,r_max/" + arr[1]);
             BufferedImage img = ImageIO.read(url);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write( img, "jpg", outputStream );
+            ImageIO.write( img, (String) uploadResult.get("format"), outputStream );
             outputStream.flush();
             byte[] imageInByte = outputStream.toByteArray();
             outputStream.close();
@@ -313,6 +313,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             }
 
             profile.setImageBytes(byteObjects);
+            profile.setImageFormat((String) uploadResult.get("format"));
             profile.setImageUrl(uploadResult.get("secure_url").toString());
             profile.setPublicId(uploadResult.get("public_id").toString());
 
@@ -325,11 +326,12 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
         return profile.getImageUrl();
     }
 
-    public String deleteImage(Long id, String objectType) throws Exception {
+    public WebResponse deleteImage(Long id, String objectType) throws Exception {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", this.cloudName,
                 "api_key", this.apiKey,
                 "api_secret", this.apiSecret));
+        WebResponse response = new WebResponse();
         Map result;
         try {
             Optional<Image> image = imageService.findById(id);
@@ -342,6 +344,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             } else {
                 result = new HashMap();
                 result.put("result", "empty");
+                response.setResult("empty");
             }
             ListIterator it;
             Optional<Long> objectId = Optional.ofNullable(getObjectIdByObjectType(image.get(), objectType));
@@ -349,6 +352,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
                 it = getListIteratorByObjectType(image.get(), objectType);
                 checkBaseObjExist(image.get(), it, objectType);
                 imageService.delete(image.get().getId());
+                response.setResult("ok");
             } else if (image.isPresent()) {
                 if (objectId.isPresent()) {
                     it = getListIteratorByObjectType(image.get(), objectType);
@@ -359,6 +363,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
                 }
                 imageService.delete(image.get().getId());
                 result.put("result", "ok");
+                response.setResult("ok");
             }
             updateHomeProfileObjects();
         } catch (Exception e) {
@@ -366,7 +371,7 @@ public class PhotoServiceImpl extends BaseServiceImpl implements PhotoService {
             throw new Exception(e.getMessage());
         }
 
-        return result.toString();
+        return response;
     }
 
     private ListIterator<Image> getListIteratorByObjectType(Image image, String objectType) {

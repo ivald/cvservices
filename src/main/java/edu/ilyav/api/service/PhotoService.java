@@ -2,6 +2,7 @@ package edu.ilyav.api.service;
 
 import edu.ilyav.api.models.Image;
 import edu.ilyav.api.models.PhotoUpload;
+import edu.ilyav.api.models.WebResponse;
 import edu.ilyav.api.service.exceptions.CloudinaryException;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,9 +16,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public interface PhotoService {
 
-    String uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException;
+    Image uploadExperienceImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException;
 
-    String uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException, CloudinaryException;
+    Image uploadEducationImage(@ModelAttribute PhotoUpload photoUpload) throws ResourceNotFoundException, CloudinaryException;
 
     Image uploadExperienceLink(String url, Long id) throws IOException, ResourceNotFoundException, NoSuchAlgorithmException;
 
@@ -25,6 +26,6 @@ public interface PhotoService {
 
     String uploadImage(@ModelAttribute PhotoUpload photoUpload) throws Exception;
 
-    String deleteImage(Long id, String objectType) throws Exception;
+    WebResponse deleteImage(Long id, String objectType) throws Exception;
 
 }
