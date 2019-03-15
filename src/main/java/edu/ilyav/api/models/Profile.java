@@ -19,6 +19,7 @@ public class Profile extends BaseModule {
     private String linkedInUrl;
     private String mobile;
     private String github;
+    private String docker;
     private String imageUrl;
     @Lob
     private Byte[] imageBytes;
@@ -175,5 +176,13 @@ public class Profile extends BaseModule {
 
     public void setImageFormat(String imageFormat) {
         this.imageFormat = imageFormat;
+    }
+
+    public String getDocker() {
+        return docker;
+    }
+
+    public void setDocker(String docker) {
+        this.docker = docker;
     }
 }
