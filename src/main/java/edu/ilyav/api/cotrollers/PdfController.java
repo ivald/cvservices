@@ -57,6 +57,7 @@ public class PdfController {
         numLine = 0;
         pageNumber = 0;
 
+        HomeController.isChanged = Boolean.TRUE;
         profile = homeController.getProfile(userName);
 
         printText(EMPTY_STRING, Boolean.TRUE);
@@ -97,7 +98,7 @@ public class PdfController {
                 printTitle(Color.BLUE, exp.getTitle());
                 printText(EMPTY_STRING, Boolean.TRUE);
                 printText(EMPTY_STRING, Boolean.TRUE);
-                if (exp.getDescription() != null) {
+                if (exp.getDescription() != null && exp.getDescription().length() > 0) {
                     printDescription(exp.getDescription());
                 }
                 printText(EMPTY_STRING, Boolean.TRUE);
@@ -142,8 +143,10 @@ public class PdfController {
                 printTitle(Color.BLUE, edu.getDegreeName() + " , " + edu.getFieldOfStudy());
                 printText(EMPTY_STRING, Boolean.TRUE);
                 printText(EMPTY_STRING, Boolean.TRUE);
-                if (edu.getDescription() != null) {
+                if (edu.getDescription() != null && edu.getDescription().length() > 0) {
                     printDescription(edu.getDescription());
+                } else {
+                    printText(EMPTY_STRING, Boolean.TRUE);
                 }
             }
         }
@@ -338,7 +341,7 @@ public class PdfController {
             contentStream.setFont(PDType1Font.HELVETICA, 12);
 
             contentStream.moveTextPositionByAmount(rightStartPosition, 650);
-            contentStream.drawString("www.ivald.net");
+            contentStream.drawString(profile.getWebsite());
             contentStream.endText();
 
             //Begin the Content stream

@@ -20,6 +20,7 @@ public class Profile extends BaseModule {
     private String mobile;
     private String github;
     private String docker;
+    private String website;
     private String imageUrl;
     @Lob
     private Byte[] imageBytes;
@@ -184,5 +185,13 @@ public class Profile extends BaseModule {
 
     public void setDocker(String docker) {
         this.docker = docker;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }
