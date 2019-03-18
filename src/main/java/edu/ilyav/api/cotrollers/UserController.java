@@ -63,7 +63,7 @@ public class UserController {
 		DateTime currentTime = new DateTime();
 
 		String role = Constants.GUEST;
-		if(!user.getLogin().getRoles().isEmpty()) {
+		if(user.getLogin() != null && !user.getLogin().getRoles().isEmpty()) {
 			for (Role r: user.getLogin().getRoles()) {
 				role = r.getRoleName();
 			}
