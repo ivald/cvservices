@@ -144,6 +144,13 @@ curl -X GET \
     --header '${TOKEN}' 'http://localhost:8090/user/private/all'
 ```
 
+*Where:*
+
+| #   | Key            | Value                  |
+| --- |:---------------| :----------------------|
+| 1   | `${TOKEN}`     | `"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOiJHVUVTVCIsImlhdCI6MTU1MjkyMTE5NiwiZXhwIjoxNTUyOTIyOTgxfQ.ZdcZ_6iW1rWQiKdvMaShGXdg_euthS_BpualGwkxjQ8"` |
+
+
 Response in the format 
 ```json
 [
