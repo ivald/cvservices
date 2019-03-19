@@ -4,9 +4,24 @@
 
 - [Service start](#service-start)
 - [API](#api)
-  - [User Registration](#user-registration)
-  - [User Login](#user-login)
-  - [User All](#user-all)
+    - [User](#user)
+        - [Registration](#user-registration)
+        - [Login](#user-login)
+        - [All](#user-all)
+    - [Home](#home)
+        - [UserId](#home-user-id)
+        - [UserName](#home-user-name)
+        - [Run](#run-app)    
+    - [Profile](#profile)
+    - [Summary](#summary)
+    - [Role](#role)
+    - [Photo](#photo)
+    - [Pdf](#pdf)
+    - [Login](#login)
+    - [Language](#language)
+    - [Experience](#experience)
+    - [Education](#education)
+    - [EmailMe](#emailme)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -79,47 +94,95 @@ I recommend use Swagger console `http:/localhost:8090/swagger-ui.html` \
 OR \
 I recommend use Postman https://www.getpostman.com/apps
 
-User Registration
------------------
+User
+====
+
+Registration
+------------
 
 ```bash
 curl -X POST \
     --header 'Content-Type: application/json' \
-    --header 'Accept: application/json' \
-    --header 'Authorization: ${TOKEN}' \ 
+    --header 'Accept: application/json' \ 
     -d '{ \ 
-        "userName": "test", \ 
-        "password": "12345" \ 
+        "userName": ${USER_NAME}, \ 
+        "password": ${PASSWORD} \ 
     }' 'http://localhost:8090/user/register'
 ```
+
+*Where:*
+
+| #   | Key            | Value                  |
+| --- |:---------------| :----------------------|
+| 1   | `${USER_NAME}`     | `"test"` |
+| 2   | `${PASSWORD}`     | `"12345"` |
+
 
 Response in the format 
 ```json
 {
-  "id": 592,
+  "id": 607,
   "userName": "test",
-  "password": "$2a$10$gff/ZeVyHI3waQotjGtatue49esQGLp0WaZguN1lPy.mdYdnonXwe",
+  "password": "$2a$10$CoeQRaieOZ94vZOawzxvW.3d6LRZQ0cF4n0y4iDan.mf9eJ4WLS9.",
   "token": null,
-  "profileId": null,
+  "profileId": 606,
   "loginId": null,
-  "profile": null,
+  "profile": {
+    "id": 606,
+    "firstName": null,
+    "lastName": null,
+    "occupation": null,
+    "primaryEmail": null,
+    "linkedInUrl": null,
+    "mobile": null,
+    "github": null,
+    "docker": null,
+    "website": null,
+    "imageUrl": null,
+    "imageBytes": null,
+    "imageFormat": null,
+    "publicId": null,
+    "userInfoId": 607,
+    "profileContentId": null,
+    "role": null,
+    "profileContent": {
+      "id": 605,
+      "profileId": 606,
+      "summaryId": 604,
+      "summary": {
+        "id": 604,
+        "description": null,
+        "profileContentId": 605
+      },
+      "experienceList": [],
+      "educationList": []
+    },
+    "languageList": []
+  },
   "login": null
 }
 ```
 
-User Login
------------------
+Login
+-----
 
 ```bash
 curl -X POST \
     --header 'Content-Type: application/json' \
-    --header 'Accept: application/json' 
-    --header 'Authorization: ${TOKEN}' \  
+    --header 'Accept: application/json' \  
     -d '{ \ 
-        "userName": "test", \ 
-        "password": "12345" \ 
+        "userName": ${USER_NAME}, \ 
+        "password": ${PASSWORD} \ 
     }' 'http://localhost:8090/user/login'
 ```
+
+*Where:*
+
+| #   | Key            | Value                  |
+| --- |:---------------| :----------------------|
+| 1   | `${USER_NAME}`     | `"test"` |
+| 2   | `${PASSWORD}`     | `"12345"` |
+
 
 Response in the format 
 ```json
@@ -135,8 +198,8 @@ Response in the format
 }
 ```
 
-User ALL
------------------
+ALL
+---
 
 ```bash
 curl -X GET \
@@ -166,3 +229,147 @@ Response in the format
   }
 ]
 ```
+
+Home
+====
+
+UserId
+------
+
+```bash
+curl -X GET \
+    --header 'Accept: application/json' \ 
+    'http://localhost:8090/rest/public/home/${USER_ID}'
+```
+
+*Where:*
+
+| #   | Key            | Value                  |
+| --- |:---------------| :----------------------|
+| 1   | `${USER_ID}`     | `"607"` |
+
+
+Response in the format 
+```json
+{
+  "id": 605,
+  "profileId": 606,
+  "summaryId": 604,
+  "summary": {
+    "id": 604,
+    "description": null,
+    "profileContentId": 605
+  },
+  "experienceList": [],
+  "educationList": []
+}
+```
+
+UserName
+--------
+
+```bash
+curl -X GET \
+    --header 'Accept: application/json' \
+    'http://localhost:8090/rest/public/main/home/${USER_NAME}'
+```
+
+*Where:*
+
+| #   | Key            | Value                  |
+| --- |:---------------| :----------------------|
+| 1   | `${USER_NAME}`     | `"test"` |
+
+
+Response in the format 
+```json
+{
+  "id": 606,
+  "firstName": null,
+  "lastName": null,
+  "occupation": null,
+  "primaryEmail": null,
+  "linkedInUrl": null,
+  "mobile": null,
+  "github": null,
+  "docker": null,
+  "website": null,
+  "imageUrl": null,
+  "imageBytes": null,
+  "imageFormat": null,
+  "publicId": null,
+  "userInfoId": 607,
+  "profileContentId": null,
+  "role": {
+    "id": null,
+    "roleName": null
+  },
+  "profileContent": {
+    "id": 605,
+    "profileId": 606,
+    "summaryId": 604,
+    "summary": {
+      "id": 604,
+      "description": null,
+      "profileContentId": 605
+    },
+    "experienceList": [],
+    "educationList": []
+  },
+  "languageList": []
+}
+```
+
+Run
+---
+
+```bash
+curl -X GET \
+    --header 'Accept: application/json' \
+    'http://localhost:8090/rest/public/run'
+```
+
+Response in the format 
+```json
+true
+```
+
+Profile
+=======
+TBD
+
+Summary
+=======
+TBD
+
+Role
+====
+TBD
+
+Photo
+=====
+TBD
+
+Pdf
+===
+TBD
+
+Login
+=====
+TBD
+
+Language
+========
+TBD
+
+Experience
+==========
+TBD
+
+Education
+=========
+TBD
+
+EmailMe
+=======
+TBD
