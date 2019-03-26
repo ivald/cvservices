@@ -23,6 +23,10 @@
     - [Education](#education)
     - [EmailMe](#emailme)
 
+Services
+========
+<img src="https://cdn-images-1.medium.com/max/800/1*jMQ9lkY5SBnbcOlJB4aizg.png" width="200"> <img src="http://jwt.io/img/logo-asset.svg" width="120"> <img src="https://cloudinary-res.cloudinary.com/image/upload/v1538583988/cloudinary_logo_for_white_bg.svg" width="200"><img src="https://cdn-images-1.medium.com/max/800/1*7AOhGDnRL2eyJMUidCHZEA.jpeg" width="120"><img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2016/04/1461122387heroku-logo.jpg" width="60">
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 Maven commands
@@ -81,11 +85,6 @@ For example password for database can be passed like:
 ```bash
 java -jar apiservices.jar --spring.profiles.active=local --spring.datasource.password=AcSrAMLIVPpA8L3M 
 ```
-  
-
-test issue 2
--------------
-
 
 API
 ===
