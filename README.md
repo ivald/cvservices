@@ -25,7 +25,7 @@
 
 Services
 ========
-<img src="https://cdn-images-1.medium.com/max/800/1*jMQ9lkY5SBnbcOlJB4aizg.png" width="200"> <img src="http://jwt.io/img/logo-asset.svg" width="120"> <img src="https://cloudinary-res.cloudinary.com/image/upload/v1538583988/cloudinary_logo_for_white_bg.svg" width="200"><img src="https://cdn-images-1.medium.com/max/800/1*7AOhGDnRL2eyJMUidCHZEA.jpeg" width="120"><img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2016/04/1461122387heroku-logo.jpg" width="60">
+<img src="https://cdn-images-1.medium.com/max/800/1*jMQ9lkY5SBnbcOlJB4aizg.png" width="200"> <img class="irc_mi" src="https://cdn-images-1.medium.com/max/1200/1*aKVg84SP5oPV9fwOnbl6yQ.png" width="170"> <img src="http://jwt.io/img/logo-asset.svg" width="120"> <img src="https://cloudinary-res.cloudinary.com/image/upload/v1538583988/cloudinary_logo_for_white_bg.svg" width="200"><img src="https://cdn-images-1.medium.com/max/800/1*7AOhGDnRL2eyJMUidCHZEA.jpeg" width="120"><img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2016/04/1461122387heroku-logo.jpg" width="60">
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
