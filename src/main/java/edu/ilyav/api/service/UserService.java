@@ -12,4 +12,6 @@ public interface UserService {
 
 	UserInfo saveOrUpdate(UserInfo userInfo);
 
+	UserInfo createNewOne(UserInfo userInfo);
+
 }

@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public UserInfo saveOrUpdate(UserInfo userInfo) {
+		return userRepository.save(userInfo);
+	}
+
+	@Override
+	public UserInfo createNewOne(UserInfo userInfo) {
 		Summary summary = new Summary();
 		summary = summaryRepository.save(summary);
 
