@@ -1,6 +1,5 @@
 package edu.ilyav.api.cotrollers;
 
-import edu.ilyav.api.models.Login;
 import edu.ilyav.api.models.Role;
 import edu.ilyav.api.service.RoleService;
 import edu.ilyav.api.service.exceptions.ResourceNotFoundException;

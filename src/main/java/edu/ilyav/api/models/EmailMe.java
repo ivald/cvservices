@@ -1,12 +1,17 @@
 package edu.ilyav.api.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 /**
  * Created by ivald on 2018-08-11.
  */
-public class EmailMe {
+@Entity
+public class EmailMe extends BaseModule {
 
     private String name;
     private String email;
+    @Column(length = 10240)
     private String message;
     private String error;
 
