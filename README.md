@@ -83,7 +83,7 @@ Sensitive data can be passed to the app using command line arguments.
 For example password for database can be passed like:
 
 ```bash
-java -jar apiservices.jar --spring.profiles.active=local --spring.datasource.password=AcSrAMLIVPpA8L3M 
+java -jar cvservices.jar --spring.profiles.active=local --spring.datasource.password=AcSrAMLIVPpA8L3M 
 ```
 
 API
