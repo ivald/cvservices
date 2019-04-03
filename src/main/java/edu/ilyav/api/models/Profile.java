@@ -39,6 +39,10 @@ public class Profile extends BaseModule {
     @JsonManagedReference
     private ProfileContent profileContent;
 
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private EmailMe emailMe;
+
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private List<Language> languageList;
@@ -193,5 +197,13 @@ public class Profile extends BaseModule {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public EmailMe getEmailMe() {
+        return emailMe;
+    }
+
+    public void setEmailMe(EmailMe emailMe) {
+        this.emailMe = emailMe;
     }
 }
