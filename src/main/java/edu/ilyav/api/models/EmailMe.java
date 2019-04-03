@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
@@ -19,7 +20,7 @@ public class EmailMe extends BaseModule {
     private String error;
     private Long profileId;
 
-    @OneToOne
+    @ManyToOne
     @JsonBackReference
     private Profile profile;
 
