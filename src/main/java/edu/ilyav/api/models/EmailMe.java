@@ -1,7 +1,10 @@
 package edu.ilyav.api.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 /**
  * Created by ivald on 2018-08-11.
@@ -14,6 +17,11 @@ public class EmailMe extends BaseModule {
     @Column(length = 10240)
     private String message;
     private String error;
+    private Long profileId;
+
+    @OneToOne
+    @JsonBackReference
+    private Profile profile;
 
     public String getName() {
         return name;
@@ -45,5 +53,21 @@ public class EmailMe extends BaseModule {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 }
