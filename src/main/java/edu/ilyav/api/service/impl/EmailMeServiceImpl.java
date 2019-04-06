@@ -1,19 +1,27 @@
 package edu.ilyav.api.service.impl;
 
 import edu.ilyav.api.dao.EmailMeRepository;
+import edu.ilyav.api.dao.ProfileRepository;
 import edu.ilyav.api.models.EmailMe;
+import edu.ilyav.api.models.Profile;
 import edu.ilyav.api.models.Role;
 import edu.ilyav.api.service.EmailMeService;
+import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmailMeServiceImpl extends BaseServiceImpl implements EmailMeService {
 
     @Autowired
     private EmailMeRepository emailMeRepository;
+
+    @Autowired
+    private ProfileService profileService;
 
     @Override
     public List<EmailMe> findAll() {
@@ -31,8 +39,10 @@ public class EmailMeServiceImpl extends BaseServiceImpl implements EmailMeServic
     }
 
     @Override
-    public EmailMe saveOrUpdate(EmailMe role) {
-        return emailMeRepository.save(role);
+    public EmailMe saveOrUpdate(EmailMe emailMe) throws ResourceNotFoundException {
+        Profile profile = profileService.findById(emailMe.getProfileId());
+        emailMe.setProfile(profile);
+        return emailMeRepository.save(emailMe);
     }
 
 }
