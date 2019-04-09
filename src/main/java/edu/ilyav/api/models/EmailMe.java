@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 /**
  * Created by ivald on 2018-08-11.
@@ -15,10 +14,11 @@ public class EmailMe extends BaseModule {
 
     private String name;
     private String email;
-    @Column(length = 10240)
+    @Column(columnDefinition="text", length=10485760)
     private String message;
     private String error;
     private Long profileId;
+    private Boolean unread;
 
     @ManyToOne
     @JsonBackReference
@@ -70,5 +70,13 @@ public class EmailMe extends BaseModule {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public Boolean getUnread() {
+        return unread;
+    }
+
+    public void setUnread(Boolean unread) {
+        this.unread = unread;
     }
 }
