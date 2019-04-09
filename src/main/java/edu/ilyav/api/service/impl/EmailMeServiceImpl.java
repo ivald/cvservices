@@ -42,6 +42,7 @@ public class EmailMeServiceImpl extends BaseServiceImpl implements EmailMeServic
     public EmailMe saveOrUpdate(EmailMe emailMe) throws ResourceNotFoundException {
         Profile profile = profileService.findById(emailMe.getProfileId());
         emailMe.setProfile(profile);
+        emailMe.setUnread(Boolean.TRUE);
         return emailMeRepository.save(emailMe);
     }
 
