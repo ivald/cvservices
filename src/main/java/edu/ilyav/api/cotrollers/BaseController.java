@@ -56,26 +56,25 @@ public class BaseController {
         }
     }
 
-    public Profile getProfile(String userName) throws ResourceNotFoundException {
-        return getProfileByParameter(userName);
+    public Profile getProfile(HttpServletRequest req, String userName) throws ResourceNotFoundException {
+        return getProfileByParameter(req, userName);
     }
 
-    public Profile getProfile(Claims claims) throws ResourceNotFoundException {
-        return getProfileByParameter(claims);
+    public Profile getProfile(HttpServletRequest req, Claims claims) throws ResourceNotFoundException {
+        return getProfileByParameter(req, claims);
     }
 
     @Transactional
-    public Profile getProfileByParameter(Object parameter) throws ResourceNotFoundException {
+    public Profile getProfileByParameter(HttpServletRequest req, Object parameter) throws ResourceNotFoundException {
         synchronized (this) {
-            Optional<UserInfo> user;
+            Optional<UserInfo> user = Optional.ofNullable((UserInfo)req.getAttribute("currentUser"));
+
             Role role = new Role();
-            if(parameter instanceof String) {
-                user = Optional.ofNullable(userService.findByUserName((String)parameter));
-            } else if( parameter instanceof Claims) {
-                user = Optional.ofNullable(userService.findByUserName(((Claims)parameter).getSubject()));
-                role.setRoleName(((Claims)parameter).get("roles").toString());
-            } else {
-                throw new ResourceNotFoundException("Missing or invalid input parameter");
+            if(!user.get().getLogin().getRoles().isEmpty()) {
+                for (Role r : user.get().getLogin().getRoles()) {
+                    role.setRoleName(r.getRoleName());
+                    break;
+                }
             }
 
             if(!this.profile.isPresent() || (this.userInfo.isPresent() && !this.userInfo.get().getUserName().equals(user.get().getUserName())) || isChanged) {
@@ -106,6 +105,10 @@ public class BaseController {
             }
         }
         return false;
+    }
+
+    protected boolean isGuestMode(HttpServletRequest req) {
+        return isGuestRole((UserInfo)req.getAttribute("currentUser"));
     }
 
     private void updateLazyFetch(Profile profile) {
