@@ -67,17 +67,28 @@ public class BaseController {
     @Transactional
     public Profile getProfileByParameter(HttpServletRequest req, Object parameter) throws ResourceNotFoundException {
         synchronized (this) {
-            Optional<UserInfo> user = Optional.ofNullable((UserInfo)req.getAttribute("currentUser"));
-
+            Optional<UserInfo> user = Optional.ofNullable((UserInfo) req.getAttribute("currentUser"));
             Role role = new Role();
-            if(!user.get().getLogin().getRoles().isEmpty()) {
-                for (Role r : user.get().getLogin().getRoles()) {
-                    role.setRoleName(r.getRoleName());
-                    break;
-                }
+            String userName = null;
+            if(user.isPresent()) {
+                userName = user.get().getUserName();
             }
 
-            if(!this.profile.isPresent() || (this.userInfo.isPresent() && !this.userInfo.get().getUserName().equals(user.get().getUserName())) || isChanged) {
+            if(!this.profile.isPresent() || (this.userInfo.isPresent() && !this.userInfo.get().getUserName().equals(userName)) || isChanged) {
+                if(parameter instanceof String) {
+                    user = Optional.ofNullable(userService.findByUserName((String)parameter));
+                } else if( parameter instanceof Claims) {
+                    user = Optional.ofNullable(userService.findByUserName(((Claims)parameter).getSubject()));
+                    if(!user.get().getLogin().getRoles().isEmpty()) {
+                        for (Role r : user.get().getLogin().getRoles()) {
+                            role.setRoleName(r.getRoleName());
+                            break;
+                        }
+                    }
+                } else {
+                    throw new ResourceNotFoundException("Missing or invalid input parameter");
+                }
+
                 this.userInfo = user;
                 this.profile = Optional.ofNullable(userInfo.get().getProfile());
                 if(!this.profile.isPresent()) {

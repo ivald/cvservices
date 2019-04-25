@@ -52,6 +52,7 @@ public class JwtFilter extends GenericFilterBean {
                 final Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
                 Optional<UserInfo> user = Optional.ofNullable(userService.findByUserName(claims.getSubject()));
                 request.setAttribute("currentUser", user.get());
+                request.setAttribute("claims", claims);
             } catch (final SignatureException e) {
                 throw new ServletException("Invalid token.");
             } catch (ResourceNotFoundException e) {
