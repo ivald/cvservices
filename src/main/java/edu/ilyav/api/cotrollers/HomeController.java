@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by ilyav on 17/08/17.
  */
@@ -26,8 +28,8 @@ public class HomeController extends BaseController {
     }
 
     @RequestMapping(value = "/main/home/{userName}", method = RequestMethod.GET)
-    public Profile home(@PathVariable String userName) throws ResourceNotFoundException {
-        return getProfile(userName);
+    public Profile home(HttpServletRequest req, @PathVariable String userName) throws ResourceNotFoundException {
+        return getProfile(req, userName);
     }
 
 }

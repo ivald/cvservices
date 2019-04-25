@@ -25,69 +25,89 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rest")
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
-public class PhotoController {
+public class PhotoController extends BaseController {
 
     @Autowired
     private PhotoService photoService;
 
     @RequestMapping(value = "/private/photo/profile/{id}", method = RequestMethod.POST)
     public Image uploadProfileImage(HttpServletRequest request, @PathVariable Long id) throws Exception {
-        PhotoUpload photoUpload = parseMultipartReqToPhotoUpload(request);
-        photoUpload.setProfileId(id);
-        String url = uploadImage(photoUpload);
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            PhotoUpload photoUpload = parseMultipartReqToPhotoUpload(request);
+            photoUpload.setProfileId(id);
+            String url = uploadImage(request, photoUpload);
 
-        Image image = new Image();
-        image.setImageUrl(url);
+            Image image = new Image();
+            image.setImageUrl(url);
 
-        return image;
+            return image;
+        }
     }
 
     @RequestMapping(value = "/private/experience/link/{id}", method = RequestMethod.POST)
     public Image uploadExpLinkImage(HttpServletRequest request, @PathVariable Long id) throws ResourceNotFoundException, NoSuchAlgorithmException {
-        Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
-        Image image = new Image();
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
+            Image image = new Image();
 
-        try {
-            if (multipartRequest.isPresent() && multipartRequest.get().getParameter("url") != null) {
-                image = photoService.uploadExperienceLink(multipartRequest.get().getParameter("url"), id);
+            try {
+                if (multipartRequest.isPresent() && multipartRequest.get().getParameter("url") != null) {
+                    image = photoService.uploadExperienceLink(multipartRequest.get().getParameter("url"), id);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return image;
+            return image;
+        }
     }
 
     @RequestMapping(value = "/private/education/link/{id}", method = RequestMethod.POST)
     public Image uploadEduLinkImage(HttpServletRequest request, @PathVariable Long id) throws ResourceNotFoundException, NoSuchAlgorithmException {
-        Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
-        Image image = new Image();
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            Optional<MultipartHttpServletRequest> multipartRequest = Optional.of((MultipartHttpServletRequest) request);
+            Image image = new Image();
 
-        try {
-            if (multipartRequest.isPresent() && multipartRequest.get().getParameter("url") != null) {
-                image = photoService.uploadEducationLink(multipartRequest.get().getParameter("url"), id);
+            try {
+                if (multipartRequest.isPresent() && multipartRequest.get().getParameter("url") != null) {
+                    image = photoService.uploadEducationLink(multipartRequest.get().getParameter("url"), id);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return image;
+            return image;
+        }
     }
 
     @RequestMapping(value = "/private/photo/experience/{id}/{desc}", method = RequestMethod.POST)
     public Image uploadExperienceImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) throws ResourceNotFoundException {
-        PhotoUpload photoUpload = parseMultipartReqToPhotoUpload(request);
-        photoUpload.setExperienceId(id);
-        photoUpload.setTitle(desc);
-        return photoService.uploadExperienceImage(photoUpload);
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            PhotoUpload photoUpload = parseMultipartReqToPhotoUpload(request);
+            photoUpload.setExperienceId(id);
+            photoUpload.setTitle(desc);
+            return photoService.uploadExperienceImage(photoUpload);
+        }
     }
 
     @RequestMapping(value = "/private/photo/education/{id}/{desc}", method = RequestMethod.POST)
     public Image uploadEducationImage(HttpServletRequest request, @PathVariable Long id, @PathVariable String desc) throws ResourceNotFoundException, CloudinaryException {
-        PhotoUpload photoUpload = parseMultipartReqToPhotoUpload(request);
-        photoUpload.setEducationId(id);
-        photoUpload.setTitle(desc);
-        return photoService.uploadEducationImage(photoUpload);
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            PhotoUpload photoUpload = parseMultipartReqToPhotoUpload(request);
+            photoUpload.setEducationId(id);
+            photoUpload.setTitle(desc);
+            return photoService.uploadEducationImage(photoUpload);
+        }
     }
 
     private PhotoUpload parseMultipartReqToPhotoUpload(HttpServletRequest request) {
@@ -102,18 +122,30 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/private/photo/upload", method = RequestMethod.POST)
-    public String uploadImage(@ModelAttribute PhotoUpload photoUpload) throws Exception {
-        return photoService.uploadImage(photoUpload);
+    public String uploadImage(HttpServletRequest request, @ModelAttribute PhotoUpload photoUpload) throws Exception {
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            return photoService.uploadImage(photoUpload);
+        }
     }
 
     @RequestMapping(value = "/private/image/education/delete/{id}", method = RequestMethod.DELETE)
-    public WebResponse deleteEducationImage(@PathVariable Long id) throws Exception {
-        return photoService.deleteImage(id, Constants.EDUCATION);
+    public WebResponse deleteEducationImage(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            return photoService.deleteImage(id, Constants.EDUCATION);
+        }
     }
 
     @RequestMapping(value = "/private/image/experience/delete/{id}", method = RequestMethod.DELETE)
-    public WebResponse deleteExperienceImage(@PathVariable Long id) throws Exception {
-        return photoService.deleteImage(id, Constants.EXPERIENCE);
+    public WebResponse deleteExperienceImage(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        if(isGuestMode(request))
+            throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+        else {
+            return photoService.deleteImage(id, Constants.EXPERIENCE);
+        }
     }
 
 }

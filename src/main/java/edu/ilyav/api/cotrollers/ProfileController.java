@@ -16,18 +16,27 @@ import java.util.Optional;
 public class ProfileController extends BaseController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Profile add(@RequestBody Profile profile) {
-		return getProfileService().saveOrUpdate(profile);
+	public Profile add(HttpServletRequest req, @RequestBody Profile profile) throws ResourceNotFoundException {
+		if(isGuestMode(req))
+			throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+		else
+			return getProfileService().saveOrUpdate(profile);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public Profile update(@RequestBody Profile profile) {
-		return getProfileService().saveOrUpdate(profile);
+	public Profile update(HttpServletRequest req, @RequestBody Profile profile) throws ResourceNotFoundException {
+		if(isGuestMode(req))
+			throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+		else
+			return getProfileService().saveOrUpdate(profile);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public List<Profile> getAllUsers() {
-		return getProfileService().findAllProfiles();
+	public List<Profile> getAllUsers(HttpServletRequest req) throws ResourceNotFoundException {
+		if(isGuestMode(req))
+			throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+		else
+			return getProfileService().findAllProfiles();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -37,7 +46,7 @@ public class ProfileController extends BaseController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public Profile getProfile(HttpServletRequest req) throws ResourceNotFoundException, ServletException {
-		return getProfile(getUserNameFromToken(req));
+		return getProfile(req, getUserNameFromToken(req));
 	}
 
 }

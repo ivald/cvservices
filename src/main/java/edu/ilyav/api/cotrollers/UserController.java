@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
-public class UserController {
+public class UserController extends BaseController {
 
 	@Value("${guest.mode.pass}")
 	private String GUEST_PASSWORD;
@@ -70,11 +71,11 @@ public class UserController {
 		}
 
 		if(Constants.GUEST.equals(role)) {
-			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", role).setIssuedAt(new Date())
+			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).setIssuedAt(new Date())
 					.setExpiration(currentTime.plusMinutes(30).toDate())
 					.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
 		} else {
-			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).claim("roles", role).setIssuedAt(new Date())
+			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).setIssuedAt(new Date())
 					.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
 		}
 		userService.saveOrUpdate(user);
@@ -91,7 +92,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/private/all", method = RequestMethod.GET)
-	public List<UserInfo> getAllUsers() {
-		return userService.findAllUsers();
+	public List<UserInfo> getAllUsers(HttpServletRequest req) throws ResourceNotFoundException {
+		if(isGuestMode(req))
+			throw new ResourceNotFoundException("You do not have this privilege in Guest mode.");
+		else
+			return userService.findAllUsers();
 	}
 }
