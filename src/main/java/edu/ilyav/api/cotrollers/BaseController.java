@@ -11,16 +11,23 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 /**
  * Created by ivald on 2018-09-11.
  */
+@PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
 public class BaseController {
+
+    @Value("${secret.key}")
+    protected String SECRET_KEY;
 
     public static Boolean isChanged = Boolean.FALSE;
 
@@ -33,7 +40,7 @@ public class BaseController {
     @Autowired
     private ProfileService profileService;
 
-    protected Claims getUserNameFromToken(HttpServletRequest req) throws ServletException {
+    protected Claims getUserNameFromToken(HttpServletRequest req) throws ServletException, UnsupportedEncodingException {
 
         final String authHeader = req.getHeader("authorization");
 
@@ -43,7 +50,7 @@ public class BaseController {
 
         final String token = authHeader.substring(7);
 
-        return Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey("MyWebSiteToken".getBytes("UTF-8")).parseClaimsJws(token).getBody();
     }
 
     public Profile getProfile(Long id) throws ResourceNotFoundException {

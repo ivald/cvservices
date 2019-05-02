@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class ProfileController extends BaseController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public Profile getProfile(HttpServletRequest req) throws ResourceNotFoundException, ServletException {
+	public Profile getProfile(HttpServletRequest req) throws ResourceNotFoundException, ServletException, UnsupportedEncodingException {
 		return getProfile(req, getUserNameFromToken(req));
 	}
 

@@ -10,7 +10,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,13 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-@PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
 public class UserController extends BaseController {
 
 	@Value("${guest.mode.pass}")
@@ -69,15 +67,21 @@ public class UserController extends BaseController {
 				role = r.getRoleName();
 			}
 		}
+        try {
+            if (Constants.GUEST.equals(role)) {
 
-		if(Constants.GUEST.equals(role)) {
-			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).setIssuedAt(new Date())
-					.setExpiration(currentTime.plusMinutes(30).toDate())
-					.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-		} else {
-			user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).setIssuedAt(new Date())
-					.signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-		}
+                user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).setIssuedAt(new Date())
+                        .setExpiration(currentTime.plusMinutes(30).toDate())
+                        .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes("UTF-8")).compact());
+
+            } else {
+                user.setToken(Jwts.builder().setSubject(userInfo.getUserName()).setIssuedAt(new Date())
+                        .setExpiration(currentTime.plusMinutes(30).toDate())
+                        .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes("UTF-8")).compact());
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 		userService.saveOrUpdate(user);
 
 		user.setPassword(Constants.EMPTY);
