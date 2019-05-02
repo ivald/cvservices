@@ -6,7 +6,8 @@ import edu.ilyav.api.service.exceptions.ResourceNotFoundException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -17,9 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+@PropertySource("classpath:application.properties")
 public class JwtFilter extends GenericFilterBean {
 
+    private Environment env;
     private UserService userService;
+
+    private final String SECRET_KEY = "secret.key";
 
     @Override
     public void doFilter(final ServletRequest req,
@@ -46,10 +51,11 @@ public class JwtFilter extends GenericFilterBean {
                 ServletContext servletContext = request.getServletContext();
                 WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
                 userService = webApplicationContext.getBean(UserService.class);
+                env = webApplicationContext.getBean(Environment.class);
             }
 
             try {
-                final Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
+                final Claims claims = Jwts.parser().setSigningKey(env.getProperty(SECRET_KEY).getBytes("UTF-8")).parseClaimsJws(token).getBody();
                 Optional<UserInfo> user = Optional.ofNullable(userService.findByUserName(claims.getSubject()));
                 request.setAttribute("currentUser", user.get());
                 request.setAttribute("claims", claims);
