@@ -1,8 +1,13 @@
 package edu.ilyav.api.cotrollers;
 
 import edu.ilyav.api.models.Education;
+import edu.ilyav.api.models.Login;
+import edu.ilyav.api.models.Role;
 import edu.ilyav.api.models.UserInfo;
 import edu.ilyav.api.service.EducationService;
+import edu.ilyav.api.service.ProfileService;
+import edu.ilyav.api.service.UserService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
@@ -10,16 +15,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -32,25 +38,49 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(EducationController.class)
+@PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
 public class EducationControllerTest {
+
+    @Value("${secret.key}")
+    protected String SECRET_KEY;
+
+    private final String USER_NAME = "ilyav";
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    private UserService userService;
+
+    @MockBean
+    private ProfileService profileService;
+
+    @MockBean
     private EducationService educationService;
 
-    private UserInfo user;
+    private Optional<UserInfo> user;
 
     @Before
     public void setUp() throws Exception {
-        this.user = new UserInfo();
+        this.user = Optional.of(new UserInfo());
 
         DateTime currentTime = new DateTime();
 
-        user.setToken(Jwts.builder().setSubject("ilyav").claim("roles", "user").setIssuedAt(new Date())
-                .setExpiration(currentTime.plusMinutes(5000).toDate())
-                .signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+        user.get().setToken(Jwts.builder().setSubject(USER_NAME).setIssuedAt(new Date())
+                .setExpiration(currentTime.plusMinutes(30).toDate())
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes("UTF-8")).compact());
+
+        final Claims claims = Jwts.parser().setSigningKey(SECRET_KEY.getBytes("UTF-8")).parseClaimsJws(user.get().getToken()).getBody();
+
+        Login login = new Login();
+        List<Role> roles = new ArrayList<>();
+        Role role = new Role();
+        role.setRoleName("ADMIN");
+        roles.add(role);
+        login.setRoles(roles);
+        user.get().setLogin(login);
+
+        when(userService.findByUserName(claims.getSubject())).thenReturn(this.user.get());
     }
 
     private String eduArray = "[\n" +
@@ -126,7 +156,7 @@ public class EducationControllerTest {
     @Test
     public void testDelete() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/rest/private/education/delete/222").header("Authorization", "Bearer " + this.user.getToken())
+                .delete("/rest/private/education/delete/222").header("Authorization", "Bearer " + this.user.get().getToken())
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -148,7 +178,7 @@ public class EducationControllerTest {
         when(educationService.findAll()).thenReturn(Arrays.asList(education, education1));
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/rest/private/education/all").header("Authorization", "Bearer " + this.user.getToken())
+                .get("/rest/private/education/all").header("Authorization", "Bearer " + this.user.get().getToken())
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
