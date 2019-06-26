@@ -12,6 +12,6 @@ public interface ProfileService {
 
 	Profile findByPrimaryEmail(String primaryEmail);
 
-	Profile saveOrUpdate(Profile profile);
+	Profile saveOrUpdate(Profile profile) throws ResourceNotFoundException;
 
 }
