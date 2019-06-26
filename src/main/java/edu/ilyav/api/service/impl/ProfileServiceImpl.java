@@ -38,9 +38,18 @@ public class ProfileServiceImpl extends BaseServiceImpl implements ProfileServic
 	}
 
 	@Override
-	public Profile saveOrUpdate(Profile profile) {
+	public Profile saveOrUpdate(Profile profile) throws ResourceNotFoundException {
+	    Profile currentProfile = findById(profile.getId());
 		updateHomeProfileObjects();
-		return profileDao.save(profile);
+        currentProfile.setFirstName(profile.getFirstName());
+        currentProfile.setLastName(profile.getLastName());
+        currentProfile.setOccupation(profile.getOccupation());
+        currentProfile.setPrimaryEmail(profile.getPrimaryEmail());
+        currentProfile.setLinkedInUrl(profile.getLinkedInUrl());
+        currentProfile.setMobile(profile.getMobile());
+        currentProfile.setGithub(profile.getGithub());
+        currentProfile.setDocker(profile.getDocker());
+		return profileDao.save(currentProfile);
 	}
 	
 }
